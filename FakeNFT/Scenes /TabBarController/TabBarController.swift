@@ -6,13 +6,14 @@ final class TabBarController: UITabBarController {
 
     private let catalogTabBarItem = UITabBarItem(
         title: NSLocalizedString("Tab.catalog", comment: ""),
-        image: UIImage(systemName: "square.stack.3d.up.fill"),
+        image: UIImage(resource: .tbCatalogNoActive),
         tag: 0
     )
     private let basketTabBarItem = UITabBarItem(
         title: NSLocalizedString("Tab.basket", comment: ""),
         image: UIImage(resource: .tbBasketNoActive),
-        tag: 1)
+        tag: 1
+    )
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,9 +24,11 @@ final class TabBarController: UITabBarController {
         catalogController.tabBarItem = catalogTabBarItem
         
         let basketController = BasketViewController()
+        let navigationBasketController = UINavigationController(rootViewController: basketController)
         basketController.tabBarItem = basketTabBarItem
 
-        viewControllers = [catalogController, basketController]
+        tabBar.unselectedItemTintColor = UIColor(resource: .ypBlack)
+        viewControllers = [catalogController, navigationBasketController]
 
         view.backgroundColor = UIColor(resource: .ypWhite)
     }
