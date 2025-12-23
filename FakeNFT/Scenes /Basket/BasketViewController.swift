@@ -6,6 +6,7 @@ final class BasketViewController: UIViewController {
     
     private enum Constants {
         static let sortingButtonImage = UIImage(resource: .nbSort)
+        static let heightOfCardView: CGFloat = 76.0
     }
     
     // MARK: - UI-elements
@@ -19,6 +20,12 @@ final class BasketViewController: UIViewController {
         )
         button.tintColor = UIColor(resource: .ypBlack)
         return button
+    }()
+    
+    private lazy var paymentCard: PaymentCardView = {
+        PaymentCardView {
+            // TODO: - will be done later
+        }
     }()
     
     // MARK: - Lifecycle
@@ -38,5 +45,20 @@ final class BasketViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = UIColor(resource: .ypWhite)
         navigationItem.rightBarButtonItem = sortingButton
+        
+        [paymentCard]
+            .forEach({
+                view.addSubview($0)
+                $0.translatesAutoresizingMaskIntoConstraints = false
+            })
+        NSLayoutConstraint.activate([
+            
+            // paymentCard Constraints
+            
+            paymentCard.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            paymentCard.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            paymentCard.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            paymentCard.heightAnchor.constraint(equalToConstant: Constants.heightOfCardView)
+        ])
     }
 }
