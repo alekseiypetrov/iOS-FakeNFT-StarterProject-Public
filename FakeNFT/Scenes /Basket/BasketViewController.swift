@@ -23,8 +23,11 @@ final class BasketViewController: UIViewController {
     }()
     
     private lazy var paymentCard: PaymentCardView = {
-        PaymentCardView {
-            // TODO: - will be done later
+        PaymentCardView { [weak self] in
+            let paymentController = PaymentViewController()
+            let navigationController = UINavigationController(rootViewController: paymentController)
+            navigationController.modalPresentationStyle = .fullScreen
+            self?.present(navigationController, animated: true)
         }
     }()
     
