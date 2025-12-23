@@ -6,3 +6,4 @@
 "Error.repeat" = "Повторить";
 "Error.title" = "Ошибка";
 "Basket.paymentButton" = "К оплате";
+"Payment.navigationTitle" = "Выберите способ оплаты";
