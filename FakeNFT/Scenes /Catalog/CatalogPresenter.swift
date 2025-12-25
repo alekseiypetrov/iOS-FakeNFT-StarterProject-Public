@@ -2,15 +2,20 @@ import Foundation
 
 final class CatalogPresenter: CatalogPresenterProtocol {
 
+    // MARK: - Properties
+
+    weak var view: CatalogViewProtocol?
+
     // MARK: - Lifecycle
 
-    init() {
-        // пока без зависимостей
+    init(view: CatalogViewProtocol? = nil) {
+        self.view = view
     }
 
     // MARK: - CatalogPresenterProtocol
 
     func viewDidLoad() {
-        // логика загрузки
+        view?.showLoading()
+        view?.hideLoading()
     }
 }
