@@ -75,6 +75,10 @@ final class ProductTableViewCell: UITableViewCell, ReuseIdentifying {
         return button
     }()
     
+    // MARK: - Public Properties
+    
+    var delegate: ProductTableViewCellDelegate?
+    
     // MARK: - Initializers
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -87,11 +91,15 @@ final class ProductTableViewCell: UITableViewCell, ReuseIdentifying {
     // MARK: - Actions
     
     @objc
-    private func deleteProductFromBasket() { }
+    private func deleteProductFromBasket() {
+        guard let title = productTitle.text else { return }
+        delegate?.deleteButtonPushedInCell(withTitle: title)
+    }
     
     // MARK: - Public Methods
     
-    func configure(by model: BasketProduct) {
+    func configure(by model: BasketProduct, withDelegate delegate: ProductTableViewCellDelegate) {
+        self.delegate = delegate
         productImage.kf.indicatorType = .activity
         productImage.kf.setImage(with: URL(string: model.imageUrl),
                                  options: [

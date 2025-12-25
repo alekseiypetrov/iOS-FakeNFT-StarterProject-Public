@@ -1,0 +1,153 @@
+import UIKit
+
+final class ConfirmingDeletionView: UIView {
+    
+    // MARK: - Constants
+    
+    private enum Constants {
+        static let cornerRadius: CGFloat = 12.0
+        static let heightOfQuestionLabel: CGFloat = 40.0
+        
+        enum Sizes {
+            static let sizeOfImageView = CGSize(width: 108, height: 108)
+            static let sizeOfButtons = CGSize(width: 127, height: 44)
+        }
+        enum Fonts {
+            static let titleFont = UIFont.systemFont(ofSize: 13.0, weight: .regular)
+            static let buttonFont = UIFont.systemFont(ofSize: 17.0, weight: .regular)
+        }
+        enum AttributedTitles {
+            static let forQuestion = NSAttributedString(
+                string: NSLocalizedString("ConfirmingDeletion.question", comment: ""),
+                attributes: [.font: Fonts.buttonFont,
+                             .foregroundColor: UIColor(resource: .ypBlack)
+                ]
+            )
+            static let forDeleteButton = NSAttributedString(
+                string: NSLocalizedString("ConfirmingDeletion.deleteButton", comment: ""),
+                attributes: [.font: Fonts.buttonFont,
+                             .foregroundColor: UIColor(resource: .ypRed)
+                ]
+            )
+            static let forCancelButton = NSAttributedString(
+                string: NSLocalizedString("ConfirmingDeletion.cancelButton", comment: ""),
+                attributes: [.font: Fonts.buttonFont,
+                             .foregroundColor: UIColor(resource: .ypWhite)
+                ]
+            )
+        }
+    }
+    
+    // MARK: - UI-elements
+    
+    private lazy var imageView: UIImageView = {
+        let imageView = UIImageView(
+            image: UIImage(resource: .copConfirmingDeletion)
+        )
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = Constants.cornerRadius
+        return imageView
+    }()
+    
+    private lazy var questionLabel: UILabel = {
+        let label = UILabel()
+        label.attributedText = Constants.AttributedTitles.forQuestion
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        return label
+    }()
+    
+    private lazy var deleteButton: UIButton = {
+        let button = UIButton()
+        button.setAttributedTitle(Constants.AttributedTitles.forDeleteButton, for: .normal)
+        button.backgroundColor = UIColor(resource: .ypBlack)
+        button.layer.masksToBounds = true
+        button.layer.cornerRadius = Constants.cornerRadius
+        button.addTarget(self, action: #selector(deleteButtonTouched), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var cancelButton: UIButton = {
+        let button = UIButton()
+        button.setAttributedTitle(Constants.AttributedTitles.forCancelButton, for: .normal)
+        button.backgroundColor = UIColor(resource: .ypBlack)
+        button.layer.masksToBounds = true
+        button.layer.cornerRadius = Constants.cornerRadius
+        button.addTarget(self, action: #selector(cancelButtonTouched), for: .touchUpInside)
+        return button
+    }()
+    
+    // MARK: - Private Properties
+    
+    private var buttonAction: ((Bool) -> ())?
+    
+    // MARK: - Initializers
+    
+    init(_ buttonAction: ((Bool) -> ())?) {
+        super.init(frame: .zero)
+        self.buttonAction = buttonAction
+        setupView()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
+    }
+
+    // MARK: - Actions
+    
+    @objc
+    private func deleteButtonTouched() {
+        buttonAction?(true)
+    }
+    
+    @objc
+    private func cancelButtonTouched() {
+        buttonAction?(false)
+    }
+    
+    // MARK: - Private Methods
+    
+    private func setupView() {
+        backgroundColor = .clear
+        translatesAutoresizingMaskIntoConstraints = false
+        
+        [imageView, questionLabel, deleteButton, cancelButton]
+            .forEach({
+                addSubview($0)
+                $0.translatesAutoresizingMaskIntoConstraints = false
+            })
+        
+        NSLayoutConstraint.activate([
+            
+            // imageView Constraints
+            
+            imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            imageView.bottomAnchor.constraint(equalTo: questionLabel.topAnchor, constant: -12.0),
+            imageView.widthAnchor.constraint(equalToConstant: Constants.Sizes.sizeOfImageView.width),
+            imageView.heightAnchor.constraint(equalToConstant: Constants.Sizes.sizeOfImageView.height),
+            
+            // questionLabel Constraints
+            
+            questionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20.0),
+            questionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20.0),
+            questionLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            questionLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: -24.0),
+            
+            // deleteButton Constraints
+            
+            deleteButton.heightAnchor.constraint(equalToConstant: Constants.Sizes.sizeOfButtons.height),
+            deleteButton.topAnchor.constraint(equalTo: questionLabel.bottomAnchor, constant: 20.0),
+            deleteButton.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor, constant: -8.0),
+            deleteButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 56.0),
+            
+            // cancelButton Constraints
+            
+            cancelButton.heightAnchor.constraint(equalTo: deleteButton.heightAnchor),
+            cancelButton.widthAnchor.constraint(equalTo: deleteButton.widthAnchor),
+            cancelButton.topAnchor.constraint(equalTo: deleteButton.topAnchor),
+            cancelButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -56.0),
+        ])
+    }
+}
