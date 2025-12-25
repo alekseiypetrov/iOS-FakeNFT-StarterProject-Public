@@ -6,4 +6,5 @@
 "Error.repeat" = "Повторить";
 "Error.title" = "Ошибка";
 "Basket.paymentButton" = "К оплате";
+"Basket.cell.staticPriceLabel" = "Цена";
 "Payment.navigationTitle" = "Выберите способ оплаты";

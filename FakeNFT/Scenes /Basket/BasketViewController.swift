@@ -5,7 +5,6 @@ final class BasketViewController: UIViewController {
     // MARK: - Constants
     
     private enum Constants {
-        static let sortingButtonImage = UIImage(resource: .nbSort)
         static let heightOfCardView: CGFloat = 76.0
         static let heightOfCellInTable: CGFloat = 140.0
     }
@@ -14,7 +13,7 @@ final class BasketViewController: UIViewController {
     
     private lazy var sortingButton: UIBarButtonItem = {
         let button = UIBarButtonItem(
-            image: Constants.sortingButtonImage,
+            image: UIImage(resource: .nbSort),
             style: .plain,
             target: self,
             action: #selector(sortingButtonPressed)
@@ -26,6 +25,7 @@ final class BasketViewController: UIViewController {
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero)
         tableView.rowHeight = Constants.heightOfCellInTable
+        tableView.backgroundColor = UIColor(resource: .ypWhite)
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
         tableView.isScrollEnabled = true
@@ -45,7 +45,16 @@ final class BasketViewController: UIViewController {
     
     // MARK: - Private Properties
     
-    private var products: [BasketProduct] = []
+    // TODO: - will be removed later (моковые данные)
+    private var products: [BasketProduct] = [
+        BasketProduct(name: "Title0", rating: 4, price: 12.0, imageUrl: "https://avatars.mds.yandex.net/i?id=8218634f6414d86b4a8c4f24146f8d5d06643f87-16441608-images-thumbs&n=13"),
+        BasketProduct(name: "Title1", rating: 1, price: 1.0, imageUrl: "https://avatars.mds.yandex.net/i?id=8218634f6414d86b4a8c4f24146f8d5d06643f87-16441608-images-thumbs&n=13"),
+        BasketProduct(name: "Title2", rating: 2, price: 2.0, imageUrl: "https://avatars.mds.yandex.net/i?id=8218634f6414d86b4a8c4f24146f8d5d06643f87-16441608-images-thumbs&n=13"),
+        BasketProduct(name: "Title3", rating: 3, price: 121.0, imageUrl: "https://avatars.mds.yandex.net/i?id=8218634f6414d86b4a8c4f24146f8d5d06643f87-16441608-images-thumbs&n=13"),
+        BasketProduct(name: "Title4", rating: 4, price: 21.0, imageUrl: "https://avatars.mds.yandex.net/i?id=8218634f6414d86b4a8c4f24146f8d5d06643f87-16441608-images-thumbs&n=13"),
+        BasketProduct(name: "Title5", rating: 5, price: 22.0, imageUrl: "https://avatars.mds.yandex.net/i?id=8218634f6414d86b4a8c4f24146f8d5d06643f87-16441608-images-thumbs&n=13"),
+        BasketProduct(name: "Title6", rating: 6, price: 11.0, imageUrl: "https://avatars.mds.yandex.net/i?id=8218634f6414d86b4a8c4f24146f8d5d06643f87-16441608-images-thumbs&n=13"),
+    ]
     
     // MARK: - Lifecycle
     
