@@ -7,4 +7,7 @@
 "Error.title" = "Ошибка";
 "Basket.paymentButton" = "К оплате";
 "Basket.cell.staticPriceLabel" = "Цена";
+"ConfirmingDeletion.question" = "Вы уверены, что хотите\nудалить объект из корзины?";
+"ConfirmingDeletion.deleteButton" = "Удалить";
+"ConfirmingDeletion.cancelButton" = "Вернуться";
 "Payment.navigationTitle" = "Выберите способ оплаты";
