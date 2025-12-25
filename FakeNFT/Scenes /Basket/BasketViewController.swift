@@ -7,6 +7,7 @@ final class BasketViewController: UIViewController {
     private enum Constants {
         static let sortingButtonImage = UIImage(resource: .nbSort)
         static let heightOfCardView: CGFloat = 76.0
+        static let heightOfCellInTable: CGFloat = 140.0
     }
     
     // MARK: - UI-elements
@@ -22,6 +23,17 @@ final class BasketViewController: UIViewController {
         return button
     }()
     
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero)
+        tableView.rowHeight = Constants.heightOfCellInTable
+        tableView.separatorStyle = .none
+        tableView.allowsSelection = false
+        tableView.isScrollEnabled = true
+        tableView.dataSource = self
+        tableView.register(ProductTableViewCell.self)
+        return tableView
+    }()
+    
     private lazy var paymentCard: PaymentCardView = {
         PaymentCardView { [weak self] in
             let paymentController = PaymentViewController()
@@ -30,6 +42,10 @@ final class BasketViewController: UIViewController {
             self?.present(navigationController, animated: true)
         }
     }()
+    
+    // MARK: - Private Properties
+    
+    private var products: [BasketProduct] = []
     
     // MARK: - Lifecycle
     
@@ -49,12 +65,19 @@ final class BasketViewController: UIViewController {
         view.backgroundColor = UIColor(resource: .ypWhite)
         navigationItem.rightBarButtonItem = sortingButton
         
-        [paymentCard]
+        [tableView, paymentCard]
             .forEach({
                 view.addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
             })
         NSLayoutConstraint.activate([
+            
+            // tableView Constraints
+            
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: paymentCard.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
             // paymentCard Constraints
             
@@ -63,5 +86,19 @@ final class BasketViewController: UIViewController {
             paymentCard.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             paymentCard.heightAnchor.constraint(equalToConstant: Constants.heightOfCardView)
         ])
+    }
+}
+
+// MARK: - BasketViewController + UITabelViewDataSource
+
+extension BasketViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        products.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell: ProductTableViewCell = tableView.dequeueReusableCell()
+        cell.configure(by: products[indexPath.row])
+        return cell
     }
 }
