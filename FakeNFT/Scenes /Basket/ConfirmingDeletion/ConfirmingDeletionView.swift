@@ -12,26 +12,22 @@ final class ConfirmingDeletionView: UIView {
             static let sizeOfImageView = CGSize(width: 108, height: 108)
             static let sizeOfButtons = CGSize(width: 127, height: 44)
         }
-        enum Fonts {
-            static let titleFont = UIFont.systemFont(ofSize: 13.0, weight: .regular)
-            static let buttonFont = UIFont.systemFont(ofSize: 17.0, weight: .regular)
-        }
         enum AttributedTitles {
             static let forQuestion = NSAttributedString(
                 string: NSLocalizedString("ConfirmingDeletion.question", comment: ""),
-                attributes: [.font: Fonts.buttonFont,
+                attributes: [.font: UIFont.caption2,
                              .foregroundColor: UIColor(resource: .ypBlack)
                 ]
             )
             static let forDeleteButton = NSAttributedString(
                 string: NSLocalizedString("ConfirmingDeletion.deleteButton", comment: ""),
-                attributes: [.font: Fonts.buttonFont,
+                attributes: [.font: UIFont.bodyBold,
                              .foregroundColor: UIColor(resource: .ypRed)
                 ]
             )
             static let forCancelButton = NSAttributedString(
                 string: NSLocalizedString("ConfirmingDeletion.cancelButton", comment: ""),
-                attributes: [.font: Fonts.buttonFont,
+                attributes: [.font: UIFont.bodyBold,
                              .foregroundColor: UIColor(resource: .ypWhite)
                 ]
             )

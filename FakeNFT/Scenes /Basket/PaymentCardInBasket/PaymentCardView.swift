@@ -12,17 +12,13 @@ final class PaymentCardView: UIView {
             static let cornerRadiusOfView: CGFloat = 12.0
             static let cornerRadiusOfButton: CGFloat = 16.0
         }
-        enum Fonts {
-            static let fontOfAmountNftsLabel = UIFont.systemFont(ofSize: 15.0, weight: .regular)
-            static let fontOfTotalCostLabelAndButton = UIFont.boldSystemFont(ofSize: 17.0)
-        }
         enum Sizes {
             static let sizeOfAmountNftsLabel = CGSize(width: 42, height: 20)
             static let sizeOfTotalCostLabel = CGSize(width: 79, height: 22)
         }
         static let attributedStringForButton = NSAttributedString(
             string: NSLocalizedString("Basket.paymentButton", comment: ""),
-            attributes: [.font: Fonts.fontOfTotalCostLabelAndButton,
+            attributes: [.font: UIFont.bodyBold,
                          .foregroundColor: UIColor(resource: .ypWhite)]
         )
     }
@@ -31,14 +27,14 @@ final class PaymentCardView: UIView {
     
     private lazy var amountNftsLabel: UILabel = {
         let label = UILabel()
-        label.font = Constants.Fonts.fontOfAmountNftsLabel
+        label.font = .caption1
         label.textColor = UIColor(resource: .ypBlack)
         return label
     }()
     
     private lazy var totalCostLabel: UILabel = {
         let label = UILabel()
-        label.font = Constants.Fonts.fontOfTotalCostLabelAndButton
+        label.font = .bodyBold
         label.textColor = UIColor(resource: .ypGreen)
         return label
     }()
