@@ -1,41 +1,66 @@
 import UIKit
 
 final class TestCatalogViewController: UIViewController {
-
+    
     let servicesAssembly: ServicesAssembly
-    let testNftButton = UIButton()
-
+    
+    // MARK: - UI
+    
+    private let tableView = UITableView()
+    
+    // MARK: - Init
+    
     init(servicesAssembly: ServicesAssembly) {
         self.servicesAssembly = servicesAssembly
         super.init(nibName: nil, bundle: nil)
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
+    // MARK: - Lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        setupUI()
+        setupTableView()
+        
         view.backgroundColor = .systemBackground
-
-        view.addSubview(testNftButton)
-        testNftButton.constraintCenters(to: view)
-        testNftButton.setTitle(Constants.openNftTitle, for: .normal)
-        testNftButton.addTarget(self, action: #selector(showNft), for: .touchUpInside)
-        testNftButton.setTitleColor(.systemBlue, for: .normal)
     }
-
-    @objc
-    func showNft() {
-        let assembly = NftDetailAssembly(servicesAssembler: servicesAssembly)
-        let nftInput = NftDetailInput(id: Constants.testNftId)
-        let nftViewController = assembly.build(with: nftInput)
-        present(nftViewController, animated: true)
+    
+    // MARK: - Setup
+    
+    private func setupUI() {
+        view.backgroundColor = .systemBackground
+    }
+    
+    private func setupTableView() {
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(tableView)
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        tableView.dataSource = self
     }
 }
 
-private enum Constants {
-    static let openNftTitle = NSLocalizedString("Catalog.openNft", comment: "")
-    static let testNftId = "7773e33c-ec15-4230-a102-92426a3a6d5a"
+
+extension TestCatalogViewController: UITableViewDataSource {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        0
+    }
+
+    func tableView(
+        _ tableView: UITableView,
+        cellForRowAt indexPath: IndexPath
+    ) -> UITableViewCell {
+        UITableViewCell()
+    }
 }
