@@ -26,7 +26,7 @@ final class TabBarController: UITabBarController {
         let basketController = BasketViewController()
         let navigationBasketController = UINavigationController(rootViewController: basketController)
         basketController.tabBarItem = basketTabBarItem
-        let basketPresenter = BasketPresenter()
+        let basketPresenter = BasketPresenter(viewController: basketController)
         basketController.configure(basketPresenter)
 
         tabBar.unselectedItemTintColor = UIColor(resource: .ypBlack)

@@ -5,6 +5,7 @@
 "Error.unknown" = "Произошла неизвестная ошибка";
 "Error.repeat" = "Повторить";
 "Error.title" = "Ошибка";
+"Basket.emptyBasketTitle" = "Корзина пуста";
 "Basket.paymentButton" = "К оплате";
 "Basket.cell.staticPriceLabel" = "Цена";
 "ConfirmingDeletion.question" = "Вы уверены, что хотите\nудалить объект из корзины?";

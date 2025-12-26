@@ -1,8 +1,9 @@
 import Foundation
 
-struct BasketProduct {
+struct BasketProduct: Decodable {
+    let id: String
     let name: String
     let rating: Int
     let price: Double
-    let imageUrl: String
+    let images: [String]
 }
