@@ -101,15 +101,16 @@ final class ProductTableViewCell: UITableViewCell, ReuseIdentifying {
     func configure(by model: BasketProduct, withDelegate delegate: ProductTableViewCellDelegate) {
         self.delegate = delegate
         productImage.kf.indicatorType = .activity
-        productImage.kf.setImage(with: URL(string: model.imageUrl),
+        productTitle.text = model.name
+        productRating.image = getRating(from: model.rating)
+        priceLabel.text = "\(model.price) ETH"
+        guard let imageUrl = model.images.first else { return }
+        productImage.kf.setImage(with: URL(string: imageUrl),
                                  options: [
                                     .transition(.fade(0.3)),
                                     .cacheOriginalImage
                                  ]
         )
-        productTitle.text = model.name
-        productRating.image = getRating(from: model.rating)
-        priceLabel.text = "\(model.price) ETH"
     }
     
     // MARK: - Private Methods

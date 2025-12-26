@@ -1,4 +1,5 @@
 import UIKit
+import ProgressHUD
 
 protocol ProductTableViewCellDelegate: AnyObject {
     func deleteButtonPushedInCell(withTitle name: String)
@@ -6,7 +7,10 @@ protocol ProductTableViewCellDelegate: AnyObject {
 
 protocol BasketViewControllerProtocol: AnyObject {
     func updateInfoInPaymentCard(newCount: Int, newCost: Double)
+    func updateCellsFromTable()
     func deleteCellFromTable(at index: Int)
+    func showTable()
+    func hideTable()
 }
 
 final class BasketViewController: UIViewController {
@@ -19,6 +23,14 @@ final class BasketViewController: UIViewController {
     }
     
     // MARK: - UI-elements
+    
+    private lazy var emptyBasketLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.text = NSLocalizedString("Basket.emptyBasketTitle", comment: "")
+        label.font = .bodyBold
+        return label
+    }()
     
     private lazy var sortingButton: UIBarButtonItem = {
         let button = UIBarButtonItem(
@@ -77,7 +89,7 @@ final class BasketViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        presenter?.viewDidLoad(viewController: self)
+        presenter?.viewDidLoad()
     }
     
     // MARK: - Actions
@@ -97,11 +109,12 @@ final class BasketViewController: UIViewController {
         view.backgroundColor = UIColor(resource: .ypWhite)
         navigationItem.rightBarButtonItem = sortingButton
         
-        [tableView, paymentCard]
+        [emptyBasketLabel, tableView, paymentCard]
             .forEach({
                 view.addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
             })
+        emptyBasketLabel.constraintCenters(to: view)
         NSLayoutConstraint.activate([
             
             // tableView Constraints
@@ -129,6 +142,13 @@ extension BasketViewController: BasketViewControllerProtocol {
         paymentCard.updateTotalCost(newCost)
     }
     
+    func updateCellsFromTable() {
+        ProgressHUD.dismiss()
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.reloadData()
+        }
+    }
+    
     func deleteCellFromTable(at index: Int) {
         tableView.performBatchUpdates({
             let indexPath = IndexPath(row: index, section: 0)
@@ -136,6 +156,25 @@ extension BasketViewController: BasketViewControllerProtocol {
         }, completion: { [weak self] _ in
             self?.presenter?.countNewInfoForPaymentCard()
         })
+    }
+    
+    func showTable() {
+        emptyBasketLabel.isHidden = true
+        ProgressHUD.show()
+        [tableView, paymentCard]
+            .forEach({
+                $0.isHidden = false
+            })
+        sortingButton.isHidden = false
+    }
+    
+    func hideTable() {
+        [tableView, paymentCard]
+            .forEach({
+                $0.isHidden = true
+            })
+        sortingButton.isHidden = true
+        emptyBasketLabel.isHidden = false
     }
 }
 
@@ -167,7 +206,8 @@ extension BasketViewController: ProductTableViewCellDelegate {
     }
     
     private func showBlur() {
-        guard let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow })
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first(where: { $0.isKeyWindow })
         else { return }
         blurView.frame = window.bounds
         blurView.alpha = 0
