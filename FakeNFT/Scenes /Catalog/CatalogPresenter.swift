@@ -16,6 +16,9 @@ final class CatalogPresenter: CatalogPresenterProtocol {
 
     func viewDidLoad() {
         view?.showLoading()
-        view?.hideLoading()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.view?.hideLoading()
+        }
     }
 }

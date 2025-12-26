@@ -3,16 +3,24 @@ import UIKit
 final class TestCatalogViewController: UIViewController {
     
     let servicesAssembly: ServicesAssembly
+    private let presenter: CatalogPresenterProtocol
     
     // MARK: - UI
     
     private let tableView = UITableView()
+    private let activityIndicator = UIActivityIndicatorView(style: .large)
     
     // MARK: - Init
     
     init(servicesAssembly: ServicesAssembly) {
         self.servicesAssembly = servicesAssembly
+
+        let presenter = CatalogPresenter()
+        self.presenter = presenter
+
         super.init(nibName: nil, bundle: nil)
+
+        presenter.view = self
     }
     
     required init?(coder: NSCoder) {
@@ -25,8 +33,8 @@ final class TestCatalogViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupTableView()
-        
-        view.backgroundColor = .systemBackground
+        setupActivityIndicator()
+        presenter.viewDidLoad()
     }
     
     // MARK: - Setup
@@ -52,6 +60,18 @@ final class TestCatalogViewController: UIViewController {
         ])
         
         tableView.dataSource = self
+    }
+    
+    private func setupActivityIndicator() {
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(activityIndicator)
+
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+
+        activityIndicator.hidesWhenStopped = true
     }
 }
 
@@ -80,5 +100,16 @@ extension TestCatalogViewController: UITableViewDataSource {
         )
 
         return cell
+    }
+}
+
+extension TestCatalogViewController: CatalogViewProtocol {
+
+    func showLoading() {
+        activityIndicator.startAnimating()
+    }
+
+    func hideLoading() {
+        activityIndicator.stopAnimating()
     }
 }
