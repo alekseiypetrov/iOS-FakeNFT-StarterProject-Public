@@ -39,6 +39,11 @@ final class TestCatalogViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(tableView)
         
+        tableView.register(
+            CatalogTableViewCell.self,
+            forCellReuseIdentifier: CatalogTableViewCell.reuseIdentifier
+        )
+        
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -54,13 +59,26 @@ final class TestCatalogViewController: UIViewController {
 extension TestCatalogViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        0
+        5
     }
 
     func tableView(
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
-        UITableViewCell()
+
+        guard let cell = tableView.dequeueReusableCell(
+            withIdentifier: CatalogTableViewCell.reuseIdentifier,
+            for: indexPath
+        ) as? CatalogTableViewCell else {
+            return UITableViewCell()
+        }
+
+        cell.configure(
+            title: "Test collection",
+            countText: "10 NFT"
+        )
+
+        return cell
     }
 }
