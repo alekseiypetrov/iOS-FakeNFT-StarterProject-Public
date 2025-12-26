@@ -4,6 +4,11 @@ protocol ProductTableViewCellDelegate: AnyObject {
     func deleteButtonPushedInCell(withTitle name: String)
 }
 
+protocol BasketViewControllerProtocol: AnyObject {
+    func updateInfoInPaymentCard(newCount: Int, newCost: Double)
+    func deleteCellFromTable(at index: Int)
+}
+
 final class BasketViewController: UIViewController {
     
     // MARK: - Constants
@@ -57,7 +62,7 @@ final class BasketViewController: UIViewController {
     private lazy var confirmingDeletionView: ConfirmingDeletionView = {
         ConfirmingDeletionView { [weak self] isDelete in
             if isDelete {
-                self?.deleteProduct()
+                self?.presenter?.deleteProduct()
             }
             self?.hideBlur()
         }
@@ -65,25 +70,14 @@ final class BasketViewController: UIViewController {
     
     // MARK: - Private Properties
     
-    // TODO: - will be removed later (моковые данные)
-    private var products: [BasketProduct] = [
-        BasketProduct(name: "Title0", rating: 4, price: 12.0, imageUrl: "https://avatars.mds.yandex.net/i?id=8218634f6414d86b4a8c4f24146f8d5d06643f87-16441608-images-thumbs&n=13"),
-        BasketProduct(name: "Title1", rating: 1, price: 1.0, imageUrl: "https://avatars.mds.yandex.net/i?id=8218634f6414d86b4a8c4f24146f8d5d06643f87-16441608-images-thumbs&n=13"),
-        BasketProduct(name: "Title2", rating: 2, price: 2.0, imageUrl: "https://avatars.mds.yandex.net/i?id=8218634f6414d86b4a8c4f24146f8d5d06643f87-16441608-images-thumbs&n=13"),
-        BasketProduct(name: "Title3", rating: 3, price: 121.0, imageUrl: "https://avatars.mds.yandex.net/i?id=8218634f6414d86b4a8c4f24146f8d5d06643f87-16441608-images-thumbs&n=13"),
-        BasketProduct(name: "Title4", rating: 4, price: 21.0, imageUrl: "https://avatars.mds.yandex.net/i?id=8218634f6414d86b4a8c4f24146f8d5d06643f87-16441608-images-thumbs&n=13"),
-        BasketProduct(name: "Title5", rating: 5, price: 22.0, imageUrl: "https://avatars.mds.yandex.net/i?id=8218634f6414d86b4a8c4f24146f8d5d06643f87-16441608-images-thumbs&n=13"),
-        BasketProduct(name: "Title6", rating: 6, price: 11.0, imageUrl: "https://avatars.mds.yandex.net/i?id=8218634f6414d86b4a8c4f24146f8d5d06643f87-16441608-images-thumbs&n=13"),
-    ]
-    private var chosenProductIndex: Int?
+    private var presenter: BasketPresenterProtocol?
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        // TODO: - will be removed later (проверка работы карточки на моковых данных)
-        updateInfoInPaymentCard()
+        presenter?.viewDidLoad(viewController: self)
     }
     
     // MARK: - Actions
@@ -91,13 +85,13 @@ final class BasketViewController: UIViewController {
     @objc
     private func sortingButtonPressed() { }
     
-    // MARK: - Private Methods
+    // MARK: - Public Methods
     
-    private func updateInfoInPaymentCard() {
-        let newCost = products.reduce(0.0, { $0 + $1.price })
-        paymentCard.updateAmountNfts(products.count)
-        paymentCard.updateTotalCost(newCost)
+    func configure(_ presenter: BasketPresenterProtocol) {
+        self.presenter = presenter
     }
+    
+    // MARK: - Private Methods
     
     private func setupUI() {
         view.backgroundColor = UIColor(resource: .ypWhite)
@@ -127,32 +121,37 @@ final class BasketViewController: UIViewController {
     }
 }
 
+// MARK: - BasketViewController + BasketViewControllerProtocol
+
+extension BasketViewController: BasketViewControllerProtocol {
+    func updateInfoInPaymentCard(newCount: Int, newCost: Double) {
+        paymentCard.updateAmountNfts(newCount)
+        paymentCard.updateTotalCost(newCost)
+    }
+    
+    func deleteCellFromTable(at index: Int) {
+        tableView.performBatchUpdates({
+            let indexPath = IndexPath(row: index, section: 0)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }, completion: { [weak self] _ in
+            self?.presenter?.countNewInfoForPaymentCard()
+        })
+    }
+}
+
 // MARK: - BasketViewController + UITabelViewDataSource
 
 extension BasketViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        products.count
+        presenter?.getCountOfProducts() ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: ProductTableViewCell = tableView.dequeueReusableCell()
-        cell.configure(by: products[indexPath.row], withDelegate: self)
+        guard let currentProduct = presenter?.getCurrentProduct(at: indexPath.row)
+        else { return cell }
+        cell.configure(by: currentProduct, withDelegate: self)
         return cell
-    }
-    
-    private func deleteProduct() {
-        guard let chosenProductIndex,
-              chosenProductIndex >= 0
-        else { return }
-        products.remove(at: chosenProductIndex)
-        tableView.performBatchUpdates({
-            let indexPath = IndexPath(row: chosenProductIndex, section: 0)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-        }, completion: { [weak self] _ in
-            self?.chosenProductIndex = nil
-            self?.updateInfoInPaymentCard()
-        })
-        // TODO: - wll be done later (запрос в сеть об изменении содержимого корзины)
     }
 }
 
@@ -160,9 +159,9 @@ extension BasketViewController: UITableViewDataSource {
 
 extension BasketViewController: ProductTableViewCellDelegate {
     func deleteButtonPushedInCell(withTitle name: String) {
-        guard let index = products.firstIndex(where: { $0.name == name })
+        guard let isFounded = presenter?.findProduct(withName: name),
+              isFounded
         else { return }
-        chosenProductIndex = index
         showBlur()
         showConfirmingDeletionView()
     }
@@ -189,7 +188,6 @@ extension BasketViewController: ProductTableViewCellDelegate {
     private func showConfirmingDeletionView() {
         confirmingDeletionView.removeFromSuperview()
         confirmingDeletionView.isUserInteractionEnabled = true
-        
         blurView.contentView.addSubview(confirmingDeletionView)
         NSLayoutConstraint.activate([
             confirmingDeletionView.centerXAnchor.constraint(equalTo: blurView.contentView.centerXAnchor),
