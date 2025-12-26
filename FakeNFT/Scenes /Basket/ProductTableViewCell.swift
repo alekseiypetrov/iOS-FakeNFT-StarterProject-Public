@@ -14,10 +14,6 @@ final class ProductTableViewCell: UITableViewCell, ReuseIdentifying {
             static let heightOfTitleAndPrice: CGFloat = 22.0
             static let heightOfStaticPriceLabel: CGFloat = 18.0
         }
-        enum Fonts {
-            static let bold = UIFont.boldSystemFont(ofSize: 17.0)
-            static let regular = UIFont.systemFont(ofSize: 13.0, weight: .regular)
-        }
         static let cornerRadius: CGFloat = 12.0
     }
     
@@ -34,7 +30,7 @@ final class ProductTableViewCell: UITableViewCell, ReuseIdentifying {
     
     private lazy var productTitle: UILabel = {
         let label = UILabel()
-        label.font = Constants.Fonts.bold
+        label.font = .bodyBold
         label.textAlignment = .left
         label.textColor = UIColor(resource: .ypBlack)
         label.text = "Title"
@@ -49,7 +45,7 @@ final class ProductTableViewCell: UITableViewCell, ReuseIdentifying {
     
     private lazy var staticPriceLabel: UILabel = {
         let label = UILabel()
-        label.font = Constants.Fonts.regular
+        label.font = .caption2
         label.textAlignment = .left
         label.textColor = UIColor(resource: .ypBlack)
         label.text = NSLocalizedString("Basket.cell.staticPriceLabel", comment: "")
@@ -58,7 +54,7 @@ final class ProductTableViewCell: UITableViewCell, ReuseIdentifying {
     
     private lazy var priceLabel: UILabel = {
         let label = UILabel()
-        label.font = Constants.Fonts.bold
+        label.font = .bodyBold
         label.textAlignment = .left
         label.textColor = UIColor(resource: .ypBlack)
         label.text = "0 ETH"
