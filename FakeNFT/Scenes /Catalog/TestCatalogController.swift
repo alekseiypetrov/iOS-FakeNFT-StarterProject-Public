@@ -2,7 +2,6 @@ import UIKit
 
 final class TestCatalogViewController: UIViewController {
     
-    let servicesAssembly: ServicesAssembly
     private let presenter: CatalogPresenterProtocol
     
     // MARK: - UI
@@ -12,15 +11,9 @@ final class TestCatalogViewController: UIViewController {
     
     // MARK: - Init
     
-    init(servicesAssembly: ServicesAssembly) {
-        self.servicesAssembly = servicesAssembly
-
-        let presenter = CatalogPresenter()
+    init(presenter: CatalogPresenterProtocol) {
         self.presenter = presenter
-
         super.init(nibName: nil, bundle: nil)
-
-        presenter.view = self
     }
     
     required init?(coder: NSCoder) {
@@ -73,13 +66,14 @@ final class TestCatalogViewController: UIViewController {
 
         activityIndicator.hidesWhenStopped = true
     }
+    
 }
 
 
 extension TestCatalogViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        5
+        presenter.numberOfItems()
     }
 
     func tableView(
@@ -94,9 +88,11 @@ extension TestCatalogViewController: UITableViewDataSource {
             return UITableViewCell()
         }
 
+        let collection = presenter.collection(at: indexPath.row)
+
         cell.configure(
-            title: "Test collection",
-            countText: "10 NFT"
+            title: collection.name,
+            countText: "\(collection.nfts.count) NFT"
         )
 
         return cell
@@ -111,5 +107,9 @@ extension TestCatalogViewController: CatalogViewProtocol {
 
     func hideLoading() {
         activityIndicator.stopAnimating()
+    }
+    
+    func reloadData() {
+        tableView.reloadData()
     }
 }

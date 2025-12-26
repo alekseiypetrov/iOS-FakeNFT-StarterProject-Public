@@ -5,11 +5,14 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     // MARK: - Properties
 
     weak var view: CatalogViewProtocol?
+    
+    private let catalogService: CatalogService
+    private var collections: [Collection] = []
+    
+    // MARK: - Init
 
-    // MARK: - Lifecycle
-
-    init(view: CatalogViewProtocol? = nil) {
-        self.view = view
+    init(catalogService: CatalogService) {
+        self.catalogService = catalogService
     }
 
     // MARK: - CatalogPresenterProtocol
@@ -17,8 +20,28 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     func viewDidLoad() {
         view?.showLoading()
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        catalogService.loadCollections { [weak self] result in
+            guard let self else { return }
+
             self.view?.hideLoading()
+
+            switch result {
+            case .success(let collections):
+                self.collections = collections
+                self.view?.reloadData()
+
+            case .failure:
+                // обработка ошибок будет отдельной карточкой
+                break
+            }
         }
+    }
+    
+    func numberOfItems() -> Int {
+        collections.count
+    }
+
+    func collection(at index: Int) -> Collection {
+        collections[index]
     }
 }

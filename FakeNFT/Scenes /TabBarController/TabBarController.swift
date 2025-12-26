@@ -18,9 +18,8 @@ final class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let catalogController = TestCatalogViewController(
-            servicesAssembly: servicesAssembly
-        )
+        let catalogAssembly = CatalogAssembly(servicesAssembly: servicesAssembly)
+        let catalogController = catalogAssembly.build()
         catalogController.tabBarItem = catalogTabBarItem
         
         let basketController = BasketViewController()
