@@ -5,8 +5,9 @@ final class PaymentCardView: UIView {
     // MARK: - Constants
     
     private enum Constants {
-        enum Heights {
-            static let heightOfPaymentButton: CGFloat = 44.0
+        enum Widths {
+            static let minimumWidthForButton: CGFloat = 100.0
+            static let maximumWidthForButton: CGFloat = 240.0
         }
         enum CornerRadiuses {
             static let cornerRadiusOfView: CGFloat = 12.0
@@ -119,23 +120,23 @@ final class PaymentCardView: UIView {
             // amountNftsLabel Constraints
             
             amountNftsLabel.heightAnchor.constraint(equalToConstant: Constants.Sizes.sizeOfAmountNftsLabel.height),
-            amountNftsLabel.widthAnchor.constraint(equalToConstant: Constants.Sizes.sizeOfAmountNftsLabel.width),
             amountNftsLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16.0),
             amountNftsLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16.0),
             
             // totalCostLabel Constraints
             
             totalCostLabel.heightAnchor.constraint(equalToConstant: Constants.Sizes.sizeOfTotalCostLabel.height),
-            totalCostLabel.widthAnchor.constraint(equalToConstant: Constants.Sizes.sizeOfTotalCostLabel.width),
             totalCostLabel.topAnchor.constraint(equalTo: amountNftsLabel.bottomAnchor, constant: 2.0),
             totalCostLabel.leadingAnchor.constraint(equalTo: amountNftsLabel.leadingAnchor),
             
             // paymentButton Constraints
             
-            paymentButton.heightAnchor.constraint(equalToConstant: Constants.Heights.heightOfPaymentButton),
             paymentButton.topAnchor.constraint(equalTo: amountNftsLabel.topAnchor),
+            paymentButton.bottomAnchor.constraint(equalTo: totalCostLabel.bottomAnchor),
             paymentButton.leadingAnchor.constraint(equalTo: totalCostLabel.trailingAnchor, constant: 24.0),
             paymentButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16.0),
+            paymentButton.widthAnchor.constraint(lessThanOrEqualToConstant: Constants.Widths.maximumWidthForButton),
+            paymentButton.widthAnchor.constraint(greaterThanOrEqualToConstant: Constants.Widths.minimumWidthForButton),
         ])
         
         updateAmountNfts(0)
