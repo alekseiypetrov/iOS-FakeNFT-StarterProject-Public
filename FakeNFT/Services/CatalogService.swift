@@ -8,10 +8,10 @@ final class CatalogService {
         self.networkClient = networkClient
     }
 
-    func loadCollections(completion: @escaping (Result<[Collection], Error>) -> Void) {
+    func loadCollections(completion: @escaping (Result<[NFTCollection], Error>) -> Void) {
         let request = CollectionsRequest()
 
-        networkClient.send(request: request, type: [Collection].self) { result in
+        networkClient.send(request: request, type: [NFTCollection].self) { result in
             DispatchQueue.main.async {
                 completion(result)
             }

@@ -1,6 +1,6 @@
 import UIKit
 
-final class TestCatalogViewController: UIViewController {
+final class CatalogViewController: UIViewController {
     
     private let presenter: CatalogPresenterProtocol
     
@@ -70,10 +70,10 @@ final class TestCatalogViewController: UIViewController {
 }
 
 
-extension TestCatalogViewController: UITableViewDataSource {
+extension CatalogViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter.numberOfItems()
+        presenter.itemsAmount
     }
 
     func tableView(
@@ -99,7 +99,7 @@ extension TestCatalogViewController: UITableViewDataSource {
     }
 }
 
-extension TestCatalogViewController: CatalogViewProtocol {
+extension CatalogViewController: CatalogViewProtocol {
 
     func showLoading() {
         activityIndicator.startAnimating()

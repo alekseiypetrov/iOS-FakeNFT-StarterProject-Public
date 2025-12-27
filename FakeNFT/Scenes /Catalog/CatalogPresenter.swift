@@ -7,7 +7,9 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     weak var view: CatalogViewProtocol?
     
     private let catalogService: CatalogService
-    private var collections: [Collection] = []
+    private var collections: [NFTCollection] = []
+    
+    var itemsAmount: Int { collections.count }
     
     // MARK: - Init
 
@@ -36,12 +38,8 @@ final class CatalogPresenter: CatalogPresenterProtocol {
             }
         }
     }
-    
-    func numberOfItems() -> Int {
-        collections.count
-    }
 
-    func collection(at index: Int) -> Collection {
+    func collection(at index: Int) -> NFTCollection {
         collections[index]
     }
 }

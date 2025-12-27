@@ -6,9 +6,20 @@ final class CatalogTableViewCell: UITableViewCell {
 
     // MARK: - UI
 
-    private let coverImageView = UIImageView()
-    private let titleLabel = UILabel()
-    private let countLabel = UILabel()
+    private lazy var coverImageView: UIImageView = {
+        let imageView = UIImageView()
+        return imageView
+    }()
+
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        return label
+    }()
+
+    private lazy var countLabel: UILabel = {
+        let label = UILabel()
+        return label
+    }()
 
     // MARK: - Init
 
@@ -18,8 +29,9 @@ final class CatalogTableViewCell: UITableViewCell {
         setupLayout()
     }
 
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        nil
     }
 
     // MARK: - Setup

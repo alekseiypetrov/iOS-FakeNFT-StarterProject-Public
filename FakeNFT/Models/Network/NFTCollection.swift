@@ -1,6 +1,6 @@
 import Foundation
 
-struct Collection: Decodable {
+struct NFTCollection: Decodable {
     let id: String
     let name: String
     let cover: URL

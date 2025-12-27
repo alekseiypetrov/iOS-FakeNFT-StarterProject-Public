@@ -1,7 +1,7 @@
 import Foundation
 
 protocol CatalogPresenterProtocol: AnyObject {
+    var itemsAmount: Int { get }
     func viewDidLoad()
-    func numberOfItems() -> Int
-    func collection(at index: Int) -> Collection
+    func collection(at index: Int) -> NFTCollection
 }
