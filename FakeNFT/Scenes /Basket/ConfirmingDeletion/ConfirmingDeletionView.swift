@@ -21,13 +21,13 @@ final class ConfirmingDeletionView: UIView {
             )
             static let forDeleteButton = NSAttributedString(
                 string: NSLocalizedString("ConfirmingDeletion.deleteButton", comment: ""),
-                attributes: [.font: UIFont.bodyBold,
+                attributes: [.font: UIFont.bodyRegular,
                              .foregroundColor: UIColor(resource: .ypRed)
                 ]
             )
             static let forCancelButton = NSAttributedString(
                 string: NSLocalizedString("ConfirmingDeletion.cancelButton", comment: ""),
-                attributes: [.font: UIFont.bodyBold,
+                attributes: [.font: UIFont.bodyRegular,
                              .foregroundColor: UIColor(resource: .ypWhite)
                 ]
             )
