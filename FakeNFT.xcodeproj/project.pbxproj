@@ -43,6 +43,7 @@
 		558E39E72C68CE0A00FB86AC /* NftService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558E39E62C68CE0900FB86AC /* NftService.swift */; };
 		974147B12EFED02A004EC15C /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 974147B02EFED02A004EC15C /* Kingfisher */; };
 		974147B42EFED045004EC15C /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 974147B32EFED045004EC15C /* ProgressHUD */; };
+		974147B62F011FB4004EC15C /* UIProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 974147B52F011FB4004EC15C /* UIProgressHUD.swift */; };
 		97ACA2FE2EF99B5D00450217 /* BasketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA2FD2EF99B5D00450217 /* BasketViewController.swift */; };
 		97ACA3012EFB06ED00450217 /* PaymentCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA3002EFB06ED00450217 /* PaymentCardView.swift */; };
 		97ACA3032EFB20B200450217 /* PaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA3022EFB20B200450217 /* PaymentViewController.swift */; };
@@ -115,6 +116,7 @@
 		3FC8C39029D2453B0081F015 /* ExamplePutRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamplePutRequest.swift; sourceTree = "<group>"; };
 		3FC8C39229D246BA0081F015 /* DateFormatters+Presets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatters+Presets.swift"; sourceTree = "<group>"; };
 		558E39E62C68CE0900FB86AC /* NftService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftService.swift; sourceTree = "<group>"; };
+		974147B52F011FB4004EC15C /* UIProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIProgressHUD.swift; sourceTree = "<group>"; };
 		97ACA2FD2EF99B5D00450217 /* BasketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketViewController.swift; sourceTree = "<group>"; };
 		97ACA3002EFB06ED00450217 /* PaymentCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCardView.swift; sourceTree = "<group>"; };
 		97ACA3022EFB20B200450217 /* PaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentViewController.swift; sourceTree = "<group>"; };
@@ -326,6 +328,7 @@
 				3F6806D629CBC50A00B4F915 /* CellsReusingUtils.swift */,
 				3FC8C39229D246BA0081F015 /* DateFormatters+Presets.swift */,
 				0CFCB74A2A780EA80009A829 /* UIView+Constraints.swift */,
+				974147B52F011FB4004EC15C /* UIProgressHUD.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -597,6 +600,7 @@
 				0CF2C2DD2A783CE600FDC837 /* ErrorView.swift in Sources */,
 				97ACA3012EFB06ED00450217 /* PaymentCardView.swift in Sources */,
 				0C79EE682A76DE0900EE90EA /* NftDetailPresenter.swift in Sources */,
+				974147B62F011FB4004EC15C /* UIProgressHUD.swift in Sources */,
 				3F68069B29CBBAF100B4F915 /* ProductDetailsTableViewController.swift in Sources */,
 				0CFCB7402A78002A0009A829 /* ExamplePutService.swift in Sources */,
 				3F6806D529CBBEC700B4F915 /* NetworkTask.swift in Sources */,

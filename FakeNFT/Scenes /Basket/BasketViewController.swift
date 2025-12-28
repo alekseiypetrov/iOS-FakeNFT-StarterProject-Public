@@ -1,5 +1,4 @@
 import UIKit
-import ProgressHUD
 
 protocol ProductTableViewCellDelegate: AnyObject {
     func deleteButtonPushedInCell(withTitle name: String)
@@ -143,7 +142,7 @@ extension BasketViewController: BasketViewControllerProtocol {
     }
     
     func updateCellsFromTable() {
-        ProgressHUD.dismiss()
+        UIProgressHUD.dismiss()
         DispatchQueue.main.async { [weak self] in
             self?.tableView.reloadData()
         }
@@ -160,7 +159,7 @@ extension BasketViewController: BasketViewControllerProtocol {
     
     func showTable() {
         emptyBasketLabel.isHidden = true
-        ProgressHUD.show()
+        UIProgressHUD.show()
         [tableView, paymentCard]
             .forEach({
                 $0.isHidden = false
