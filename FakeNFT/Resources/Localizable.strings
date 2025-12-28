@@ -7,6 +7,11 @@
 "Error.title" = "Ошибка";
 "Basket.emptyBasketTitle" = "Корзина пуста";
 "Basket.paymentButton" = "К оплате";
+"Basket.alertController.title" = "Сортировка";
+"Basket.alertController.sortByPrice" = "По цене";
+"Basket.alertController.sortByRating" = "По рейтингу";
+"Basket.alertController.sortByName" = "По названию";
+"Basket.alertController.close" = "Закрыть";
 "Basket.cell.staticPriceLabel" = "Цена";
 "ConfirmingDeletion.question" = "Вы уверены, что хотите\nудалить объект из корзины?";
 "ConfirmingDeletion.deleteButton" = "Удалить";
