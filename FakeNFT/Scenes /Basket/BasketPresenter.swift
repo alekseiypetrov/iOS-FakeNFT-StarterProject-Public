@@ -148,6 +148,11 @@ extension BasketPresenter: BasketPresenterProtocol {
               chosenProductIndex > -1
         else { return }
         products.remove(at: chosenProductIndex)
+        var newNftsArray = order.nfts
+        newNftsArray.remove(at: chosenProductIndex)
+        order = Order(
+            nfts: newNftsArray
+        )
         viewController?.deleteCellFromTable(at: chosenProductIndex)
         self.chosenProductIndex = nil
         // TODO: - wll be done later (запрос в сеть об изменении содержимого корзины)
