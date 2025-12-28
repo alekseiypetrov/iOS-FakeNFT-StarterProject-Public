@@ -1,8 +1,17 @@
 import Foundation
 
 final class SortingParametersStorage {
-    private static let standard = UserDefaults.standard
+    static let shared = SortingParametersStorage()
+    private let standard = UserDefaults.standard
+    
     private init() { }
     
-    static let shared = SortingParametersStorage()
+    static func getParameter(fromKey key: String) -> String? {
+        shared.standard.string(forKey: key)
+    }
+    
+    static func save(parameter: String, forKey key: String) {
+        shared.standard.setValue(parameter, forKey: key)
+        shared.standard.synchronize()
+    }
 }
