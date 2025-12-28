@@ -2,11 +2,19 @@ import UIKit
 import ProgressHUD
 
 final class UIProgressHUD {
+    private static var isShowingProgress: Bool = false
+    
     static func show() {
-        ProgressHUD.show()
+        if !UIProgressHUD.isShowingProgress {
+            ProgressHUD.show()
+        }
+        UIProgressHUD.isShowingProgress = true
     }
     
     static func dismiss() {
-        ProgressHUD.dismiss()
+        if UIProgressHUD.isShowingProgress {
+            ProgressHUD.dismiss()
+        }
+        UIProgressHUD.isShowingProgress = false
     }
 }
