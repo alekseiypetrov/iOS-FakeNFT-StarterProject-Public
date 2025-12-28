@@ -16,7 +16,7 @@ final class OrderLoader: OrderService {
     }
     
     func loadOrder(completion: @escaping OrderCompletion) {
-        if let task { return }
+        if task != nil { return }
         
         let request = OrderRequest()
         task = networkClient.send(request: request, type: Order.self) { result in
