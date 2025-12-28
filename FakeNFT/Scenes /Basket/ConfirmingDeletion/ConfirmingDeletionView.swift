@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class ConfirmingDeletionView: UIView {
     
@@ -73,6 +74,14 @@ final class ConfirmingDeletionView: UIView {
         button.addTarget(self, action: #selector(cancelButtonTouched), for: .touchUpInside)
         return button
     }()
+    
+    // MARK: - Public Properties
+    
+    var imageOfNft: String = "" {
+        didSet {
+            imageView.kf.setImage(with: URL(string: imageOfNft))
+        }
+    }
     
     // MARK: - Private Properties
     
