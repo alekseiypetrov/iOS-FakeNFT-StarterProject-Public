@@ -6,7 +6,7 @@ protocol BasketPresenterProtocol {
     func getCountOfProducts() -> Int
     func getCurrentProduct(at index: Int) -> BasketProduct
     func deleteProduct()
-    func findProduct(withName name: String) -> Bool
+    func findProduct(withName name: String) -> BasketProduct?
     func countNewInfoForPaymentCard()
     func sortParameterChanged(to newParameter: String)
 }
@@ -153,11 +153,11 @@ extension BasketPresenter: BasketPresenterProtocol {
         // TODO: - wll be done later (запрос в сеть об изменении содержимого корзины)
     }
     
-    func findProduct(withName name: String) -> Bool {
+    func findProduct(withName name: String) -> BasketProduct? {
         guard let index = products.firstIndex(where: { $0.name == name })
-        else { return false }
+        else { return nil }
         chosenProductIndex = index
-        return true
+        return getCurrentProduct(at: index)
     }
     
     func countNewInfoForPaymentCard() {

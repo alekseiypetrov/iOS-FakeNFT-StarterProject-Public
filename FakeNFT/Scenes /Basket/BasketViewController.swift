@@ -240,11 +240,11 @@ extension BasketViewController: UITableViewDataSource {
 
 extension BasketViewController: ProductTableViewCellDelegate {
     func deleteButtonPushedInCell(withTitle name: String) {
-        guard let isFounded = presenter?.findProduct(withName: name),
-              isFounded
+        guard let product = presenter?.findProduct(withName: name),
+              let imageUrl = product.images.first
         else { return }
         showBlur()
-        showConfirmingDeletionView()
+        showConfirmingDeletionView(withImageUrl: imageUrl)
     }
     
     private func showBlur() {
@@ -267,7 +267,8 @@ extension BasketViewController: ProductTableViewCellDelegate {
         })
     }
     
-    private func showConfirmingDeletionView() {
+    private func showConfirmingDeletionView(withImageUrl imageUrl: String) {
+        confirmingDeletionView.imageOfNft = imageUrl
         confirmingDeletionView.removeFromSuperview()
         confirmingDeletionView.isUserInteractionEnabled = true
         blurView.contentView.addSubview(confirmingDeletionView)
