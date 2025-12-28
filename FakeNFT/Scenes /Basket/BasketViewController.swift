@@ -19,6 +19,7 @@ final class BasketViewController: UIViewController {
     private enum Constants {
         static let heightOfCardView: CGFloat = 76.0
         static let heightOfCellInTable: CGFloat = 140.0
+        static let parameters = ["price", "rating", "name"]
     }
     
     // MARK: - UI-elements
@@ -106,7 +107,37 @@ final class BasketViewController: UIViewController {
     // MARK: - Actions
     
     @objc
-    private func sortingButtonPressed() { }
+    private func sortingButtonPressed() {
+        let alert = UIAlertController(
+            title: NSLocalizedString("Basket.alertController.title", comment: ""),
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+        let parameterTitles = [
+            NSLocalizedString("Basket.alertController.sortByPrice", comment: ""),
+            NSLocalizedString("Basket.alertController.sortByRating", comment: ""),
+            NSLocalizedString("Basket.alertController.sortByName", comment: ""),
+        ]
+        for (index, title) in parameterTitles.enumerated() {
+            alert.addAction(
+                UIAlertAction(
+                    title: title,
+                    style: .default,
+                    handler: { [weak self] _ in
+                        UIProgressHUD.show()
+                        self?.presenter?.sortParameterChanged(to: Constants.parameters[index])
+                    }
+                )
+            )
+        }
+        alert.addAction(
+            UIAlertAction(
+                title: NSLocalizedString("Basket.alertController.close", comment: ""),
+                style: .cancel
+            )
+        )
+        present(alert, animated: true)
+    }
     
     // MARK: - Public Methods
     

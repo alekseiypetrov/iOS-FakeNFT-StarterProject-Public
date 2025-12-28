@@ -8,12 +8,14 @@ protocol BasketPresenterProtocol {
     func deleteProduct()
     func findProduct(withName name: String) -> Bool
     func countNewInfoForPaymentCard()
+    func sortParameterChanged(to newParameter: String)
 }
 
 final class BasketPresenter {
     
     // MARK: - Private Properties
     
+    private let storageKey = "basket.sortParameter"
     private var order: Order = Order(nfts: [])
     private var products: [BasketProduct] = []
     private var chosenProductIndex: Int?
@@ -35,6 +37,26 @@ final class BasketPresenter {
     }
     
     // MARK: - Private Methods
+    
+    private func getParameterAndSort() {
+        guard let sortParameter = SortingParametersStorage.getParameter(fromKey: storageKey)
+        else { return }
+        sortProducts(by: sortParameter)
+    }
+    
+    private func sortProducts(by parameter: String) {
+        var predicate: (BasketProduct, BasketProduct) -> Bool
+        switch parameter {
+        case "price":
+            predicate = { $0.price > $1.price }
+        case "rating":
+            predicate = { $0.rating > $1.rating }
+        default:
+            predicate = { $0.name < $1.name }
+        }
+        products
+            .sort(by: predicate)
+    }
     
     private func orderDelivered() {
         viewController?.showTable()
@@ -58,6 +80,7 @@ final class BasketPresenter {
         }
         group.notify(queue: .main) { [weak self] in
             self?.products = loadedProducts
+            self?.getParameterAndSort()
             self?.countNewInfoForPaymentCard()
             self?.viewController?.updateCellsFromTable()
         }
@@ -68,6 +91,12 @@ final class BasketPresenter {
 // MARK: - BasketPresenter + BasketPresenterProtocol
 
 extension BasketPresenter: BasketPresenterProtocol {
+    func sortParameterChanged(to newParameter: String) {
+        SortingParametersStorage.save(parameter: newParameter, forKey: storageKey)
+        sortProducts(by: newParameter)
+        viewController?.updateCellsFromTable()
+    }
+    
     func viewWillAppear() {
         if order.nfts.isEmpty {
             viewController?.hideTable()
