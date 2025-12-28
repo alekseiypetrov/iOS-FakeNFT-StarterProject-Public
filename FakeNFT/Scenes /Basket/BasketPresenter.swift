@@ -1,7 +1,8 @@
 import Foundation
 
 protocol BasketPresenterProtocol {
-    func viewDidLoad()
+    func viewWillAppear()
+    func viewDidDisappear()
     func getCountOfProducts() -> Int
     func getCurrentProduct(at index: Int) -> BasketProduct
     func deleteProduct()
@@ -38,10 +39,11 @@ final class BasketPresenter {
     private func orderDelivered() {
         viewController?.showTable()
         let group = DispatchGroup()
+        var loadedProducts: [BasketProduct] = []
         for nftId in order.nfts {
             group.enter()
             nftQueue.async {
-                self.productsService.loadProduct(id: nftId) { [weak self] result in
+                self.productsService.loadProduct(id: nftId) { result in
                     defer { group.leave() }
                     print("[presenter/loadProduct]: продукт загружен")
                     switch result {
@@ -49,24 +51,27 @@ final class BasketPresenter {
                         print("[presenter/loadProduct]: error - \(error)")
                     case .success(let product):
                         print("[presenter/loadProduct]: product - \(product.name)")
-                        self?.products.append(product)
+                        loadedProducts.append(product)
                     }
                 }
             }
         }
         group.notify(queue: .main) { [weak self] in
+            self?.products = loadedProducts
             self?.countNewInfoForPaymentCard()
             self?.viewController?.updateCellsFromTable()
         }
+        productsService.clearTasks()
     }
 }
 
 // MARK: - BasketPresenter + BasketPresenterProtocol
 
 extension BasketPresenter: BasketPresenterProtocol {
-    
-    func viewDidLoad() {
-        viewController?.hideTable()
+    func viewWillAppear() {
+        if order.nfts.isEmpty {
+            viewController?.hideTable()
+        }
         orderService.loadOrder { [weak self] result in
             guard let self else { return }
             print("[presenter/loadOrder]: заказ загружен")
@@ -94,6 +99,11 @@ extension BasketPresenter: BasketPresenterProtocol {
                 }
             }
         }
+    }
+    
+    func viewDidDisappear() {
+        orderService.stopLoading()
+        productsService.stopLoadingProducts()
     }
     
     func getCountOfProducts() -> Int {
