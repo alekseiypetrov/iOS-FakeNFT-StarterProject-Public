@@ -24,7 +24,6 @@ final class PaymentViewController: UIViewController {
         let collection = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collection.backgroundColor = self.view.backgroundColor
         collection.allowsSelection = true
-        collection.allowsMultipleSelection = false
         collection.isScrollEnabled = false
         collection.delegate = self
         collection.dataSource = self
@@ -118,10 +117,19 @@ extension PaymentViewController: UICollectionViewDataSource {
 // MARK: - PaymentViewController + UICollectionViewDelegate
 
 extension PaymentViewController: UICollectionViewDelegateFlowLayout {
-    // TODO: - will be done later (обработка нажатия на определенную валюту)
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) { }
-    // TODO: - will be done later (обработка нажатия на определенную валюту)
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) { }
+    private func changeStateOfCell(_ collectionView: UICollectionView, atIndexPath indexPath: IndexPath) {
+        guard let cell = collectionView.cellForItem(at: indexPath) as? PaymentCollectionViewCell
+        else { return }
+        cell.changeBorder()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) { 
+        changeStateOfCell(collectionView, atIndexPath: indexPath)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        changeStateOfCell(collectionView, atIndexPath: indexPath)
+    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         CGSize(
