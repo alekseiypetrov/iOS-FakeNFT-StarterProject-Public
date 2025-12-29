@@ -7,19 +7,12 @@ final class PaymentCollectionViewCell: UICollectionViewCell, ReuseIdentifying {
     
     private enum Constants {
         static let sizeOfImage = CGSize(width: 36.0, height: 36.0)
+        static let borderWidth: CGFloat = 1.0
         static let cornerRadiusOfImage: CGFloat = 6.0
-        static let cornerRadiusOfView: CGFloat = 12.0
+        static let cornerRadiusOfCell: CGFloat = 12.0
     }
     
     // MARK: - UI-elements
-    
-    private lazy var background: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(resource: .ypLightGrey)
-        view.layer.cornerRadius = Constants.cornerRadiusOfImage
-        view.clipsToBounds = true
-        return view
-    }()
     
     private lazy var currencyImageView: UIImageView = {
         let imageView = UIImageView()
@@ -61,22 +54,38 @@ final class PaymentCollectionViewCell: UICollectionViewCell, ReuseIdentifying {
     // MARK: - Public Methods
     
     func config(from currency: Currency) {
+        changeBorder()
         currencyFullNameLabel.text = currency.title
         currencyShortNameLabel.text = currency.name
         currencyImageView.kf.indicatorType = .activity
         currencyImageView.kf.setImage(with: URL(string: currency.image))
     }
     
+    func changeBorder() {
+        contentView.layer.borderColor = isSelected
+        ? UIColor(resource: .ypBlack).cgColor
+        : UIColor(resource: .ypLightGrey).cgColor
+    }
+    
     // MARK: - Private Methods
     
+    private func setupContentView() {
+        contentView.layer.cornerRadius = Constants.cornerRadiusOfCell
+        contentView.clipsToBounds = true
+        contentView.layer.borderWidth = Constants.borderWidth
+        contentView.backgroundColor = UIColor(resource: .ypLightGrey)
+        registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (self: Self, _: UITraitCollection) in
+            self.changeBorder()
+        }
+    }
+    
     private func setupUI() {
-        contentView.backgroundColor = UIColor(resource: .ypWhite)
-        [background, currencyImageView, currencyFullNameLabel, currencyShortNameLabel]
+        setupContentView()
+        [currencyImageView, currencyFullNameLabel, currencyShortNameLabel]
             .forEach{
                 contentView.addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
             }
-        background.constraintEdges(to: contentView)
         NSLayoutConstraint.activate([
             
             // currencyImageView Constraints
