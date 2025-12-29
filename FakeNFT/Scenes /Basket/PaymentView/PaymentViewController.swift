@@ -2,6 +2,11 @@ import UIKit
 
 final class PaymentViewController: UIViewController {
     
+    private enum Constants {
+        static let heightOfCell: CGFloat = 46.0
+        static let spacing: CGFloat = 7.0
+    }
+    
     // MARK: - UI-elements
     
     private lazy var backButton: UIBarButtonItem = {
@@ -27,6 +32,35 @@ final class PaymentViewController: UIViewController {
         return collection
     }()
     
+    // MARK: - Private Properties
+    
+    // TODO: - will be removed later (моковые данные)
+    private var currencies: [Currency] = [
+        Currency(
+            title: "Shiba_Inu",
+            name: "SHIB",
+            image: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Shiba_Inu_(SHIB).png"
+        ),
+        Currency(
+            title: "Cardano",
+            name: "ADA",
+            image: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Cardano_(ADA).png"
+        ),
+        Currency(title: "Tether",
+                 name: "USDT",
+                 image: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Tether_(USDT).png"
+        ),
+        Currency(title: "ApeCoin",
+                 name: "APE",
+                 image: "https://code.s3.yandex.net/Mobile/iOS/Currencies/ApeCoin_(APE).png"
+        ),
+        Currency(
+            title: "Solana",
+            name: "SOL",
+            image: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Solana_(SOL).png"
+        ),
+    ]
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -48,6 +82,11 @@ final class PaymentViewController: UIViewController {
         navigationItem.leftBarButtonItem = backButton
         navigationItem.title = NSLocalizedString("Payment.navigationTitle", comment: "")
         
+        [collectionView]
+            .forEach{
+                view.addSubview($0)
+                $0.translatesAutoresizingMaskIntoConstraints = false
+            }
         NSLayoutConstraint.activate([
             
             // collectionView Constraints
@@ -65,30 +104,37 @@ final class PaymentViewController: UIViewController {
 
 extension PaymentViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        <#code#>
+        currencies.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        <#code#>
+        let cell: PaymentCollectionViewCell = collectionView.dequeueReusableCell(indexPath: indexPath)
+        let currency = currencies[indexPath.row]
+        cell.config(from: currency)
+        return cell
     }
 }
 
 // MARK: - PaymentViewController + UICollectionViewDelegate
 
 extension PaymentViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        <#code#>
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        <#code#>
-    }
+    // TODO: - will be done later (обработка нажатия на определенную валюту)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) { }
+    // TODO: - will be done later (обработка нажатия на определенную валюту)
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) { }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        <#code#>
+        CGSize(
+            width: (collectionView.frame.width - Constants.spacing) / 2,
+            height: Constants.heightOfCell
+        )
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        <#code#>
+        Constants.spacing
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        Constants.spacing
     }
 }
