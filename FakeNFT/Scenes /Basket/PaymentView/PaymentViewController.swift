@@ -2,18 +2,11 @@ import UIKit
 
 final class PaymentViewController: UIViewController {
     
-    // MARK: - Constants
-    
-    private enum Constants {
-        static let backButtonImage = UIImage(resource: .nbBack)
-        static let navigationBarTitle = NSLocalizedString("Payment.navigationTitle", comment: "")
-    }
-    
     // MARK: - UI-elements
     
     private lazy var backButton: UIBarButtonItem = {
         let button = UIBarButtonItem(
-            image: Constants.backButtonImage,
+            image: UIImage(resource: .nbBack),
             style: .plain,
             target: self,
             action: #selector(backButtonPressed)
@@ -53,7 +46,7 @@ final class PaymentViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = UIColor(resource: .ypWhite)
         navigationItem.leftBarButtonItem = backButton
-        navigationItem.title = Constants.navigationBarTitle
+        navigationItem.title = NSLocalizedString("Payment.navigationTitle", comment: "")
         
         NSLayoutConstraint.activate([
             
