@@ -43,6 +43,7 @@
 		558E39E72C68CE0A00FB86AC /* NftService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 558E39E62C68CE0900FB86AC /* NftService.swift */; };
 		974147B82F013685004EC15C /* SortingParametersStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 974147B72F013685004EC15C /* SortingParametersStorage.swift */; };
 		9747BF132F02B47B0029F5F3 /* PaymentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9747BF122F02B47B0029F5F3 /* PaymentCollectionViewCell.swift */; };
+		9747BF152F02C5630029F5F3 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9747BF142F02C5630029F5F3 /* Currency.swift */; };
 		9747E8B92F014FCE00AB3C70 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 974147B02EFED02A004EC15C /* Kingfisher */; };
 		9747E8BA2F014FCE00AB3C70 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 974147B32EFED045004EC15C /* ProgressHUD */; };
 		9747E8BC2F0151AB00AB3C70 /* UIProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9747E8BB2F0151AB00AB3C70 /* UIProgressHUD.swift */; };
@@ -120,6 +121,7 @@
 		558E39E62C68CE0900FB86AC /* NftService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftService.swift; sourceTree = "<group>"; };
 		974147B72F013685004EC15C /* SortingParametersStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortingParametersStorage.swift; sourceTree = "<group>"; };
 		9747BF122F02B47B0029F5F3 /* PaymentCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCollectionViewCell.swift; sourceTree = "<group>"; };
+		9747BF142F02C5630029F5F3 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		9747E8BB2F0151AB00AB3C70 /* UIProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIProgressHUD.swift; sourceTree = "<group>"; };
 		97ACA2FD2EF99B5D00450217 /* BasketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketViewController.swift; sourceTree = "<group>"; };
 		97ACA3002EFB06ED00450217 /* PaymentCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCardView.swift; sourceTree = "<group>"; };
@@ -402,6 +404,7 @@
 			isa = PBXGroup;
 			children = (
 				97ACA3082EFD3B4600450217 /* BasketProduct.swift */,
+				9747BF142F02C5630029F5F3 /* Currency.swift */,
 			);
 			path = Basket;
 			sourceTree = "<group>";
@@ -606,6 +609,7 @@
 				0CF2C2DD2A783CE600FDC837 /* ErrorView.swift in Sources */,
 				9747BF132F02B47B0029F5F3 /* PaymentCollectionViewCell.swift in Sources */,
 				97ACA3012EFB06ED00450217 /* PaymentCardView.swift in Sources */,
+				9747BF152F02C5630029F5F3 /* Currency.swift in Sources */,
 				0C79EE682A76DE0900EE90EA /* NftDetailPresenter.swift in Sources */,
 				3F68069B29CBBAF100B4F915 /* ProductDetailsTableViewController.swift in Sources */,
 				0CFCB7402A78002A0009A829 /* ExamplePutService.swift in Sources */,
