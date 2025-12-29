@@ -1,11 +1,11 @@
 import UIKit
 
+protocol PaymentViewControllerProtocol: AnyObject {
+    func hideCollection()
+    func showCollection()
+}
+
 final class PaymentViewController: UIViewController {
-    
-    private enum Constants {
-        static let heightOfCell: CGFloat = 46.0
-        static let spacing: CGFloat = 7.0
-    }
     
     // MARK: - UI-elements
     
@@ -33,38 +33,16 @@ final class PaymentViewController: UIViewController {
     
     // MARK: - Private Properties
     
-    // TODO: - will be removed later (моковые данные)
-    private var currencies: [Currency] = [
-        Currency(
-            title: "Shiba_Inu",
-            name: "SHIB",
-            image: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Shiba_Inu_(SHIB).png"
-        ),
-        Currency(
-            title: "Cardano",
-            name: "ADA",
-            image: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Cardano_(ADA).png"
-        ),
-        Currency(title: "Tether",
-                 name: "USDT",
-                 image: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Tether_(USDT).png"
-        ),
-        Currency(title: "ApeCoin",
-                 name: "APE",
-                 image: "https://code.s3.yandex.net/Mobile/iOS/Currencies/ApeCoin_(APE).png"
-        ),
-        Currency(
-            title: "Solana",
-            name: "SOL",
-            image: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Solana_(SOL).png"
-        ),
-    ]
+    private var presenter: PaymentPresenterProtocol?
     
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        DispatchQueue.main.async {
+            self.setupUI()
+        }
+        presenter?.viewDidLoad()
     }
     
     // MARK: - Actions
@@ -72,6 +50,12 @@ final class PaymentViewController: UIViewController {
     @objc
     private func backButtonPressed() {
         dismiss(animated: true)
+    }
+    
+    // MARK: - Public Methods
+    
+    func configure(_ presenter: PaymentPresenterProtocol) {
+        self.presenter = presenter
     }
     
     // MARK: - Private Methods
@@ -93,9 +77,26 @@ final class PaymentViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20.0),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16.0),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16.0),
-            // TODO: - will be fixed later (поменять на topAnchor "карточки" для подтверждения и выполнения оплаты)
+            // TODO: - will be fixed later (поменять на topAnchor "карточки" для подтверждения и выполнения оплаты при выполнении 3/3 эпика)
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
+    }
+}
+
+// MARK: - PaymentViewController + PaymentViewControllerProtocol
+
+extension PaymentViewController: PaymentViewControllerProtocol {
+    func hideCollection() {
+        UIProgressHUD.show()
+        collectionView.isHidden = true
+    }
+    
+    func showCollection() {
+        DispatchQueue.main.async { [weak self] in
+            self?.collectionView.reloadData()
+        }
+        collectionView.isHidden = false
+        UIProgressHUD.dismiss()
     }
 }
 
@@ -103,13 +104,14 @@ final class PaymentViewController: UIViewController {
 
 extension PaymentViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        currencies.count
+        presenter?.getNumberOfCurrencies() ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: PaymentCollectionViewCell = collectionView.dequeueReusableCell(indexPath: indexPath)
-        let currency = currencies[indexPath.row]
-        cell.config(from: currency)
+        if let currency = presenter?.getCurrency(at: indexPath.row) {
+            cell.config(from: currency)
+        }
         return cell
     }
 }
@@ -132,17 +134,19 @@ extension PaymentViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        CGSize(
-            width: (collectionView.frame.width - Constants.spacing) / 2,
-            height: Constants.heightOfCell
-        )
+        guard let horizontalSpacing = presenter?.spacing,
+              let height = presenter?.heightOfCell
+        else { return .zero }
+        
+        let width = (collectionView.frame.width - horizontalSpacing) / 2
+        return CGSize(width: width, height: height)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        Constants.spacing
+        presenter?.spacing ?? 0.0
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        Constants.spacing
+        presenter?.spacing ?? 0.0
     }
 }
