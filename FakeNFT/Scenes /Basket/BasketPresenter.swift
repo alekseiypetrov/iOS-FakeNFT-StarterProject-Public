@@ -67,12 +67,12 @@ final class BasketPresenter {
             nftQueue.async {
                 self.productsService.loadProduct(id: nftId) { result in
                     defer { group.leave() }
-                    print("[presenter/loadProduct]: продукт загружен")
+                    print("[BasketPresenter/loadProduct]: продукт загружен")
                     switch result {
                     case .failure(let error):
-                        print("[presenter/loadProduct]: error - \(error)")
+                        print("[BasketPresenter/loadProduct]: error - \(error)")
                     case .success(let product):
-                        print("[presenter/loadProduct]: product - \(product.name)")
+                        print("[BasketPresenter/loadProduct]: product - \(product.name)")
                         loadedProducts.append(product)
                     }
                 }
@@ -103,10 +103,10 @@ extension BasketPresenter: BasketPresenterProtocol {
         }
         orderService.loadOrder { [weak self] result in
             guard let self else { return }
-            print("[presenter/loadOrder]: заказ загружен")
+            print("[BasketPresenter/loadOrder]: заказ загружен")
             switch result {
             case .failure(let error):
-                print("[presenter/loadOrder]: error - \(error)")
+                print("[BasketPresenter/loadOrder]: error - \(error)")
             case .success(let order):
                 self.order = order
                 // TODO: - will be removed later (для просмотра на моковом примере)
@@ -122,7 +122,7 @@ extension BasketPresenter: BasketPresenterProtocol {
                     "3434c774-0e0f-476e-a314-24f4f0dfed86",
                     "cc74e9ab-2189-465f-a1a6-8405e07e9fe4"
                 ])
-                print("[presenter/loadOrder]: order - \(self.order)")
+                print("[BasketPresenter/loadOrder]: order - \(self.order)")
                 if !self.order.nfts.isEmpty {
                     self.orderDelivered()
                 }

@@ -45,6 +45,8 @@
 		9747BF132F02B47B0029F5F3 /* PaymentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9747BF122F02B47B0029F5F3 /* PaymentCollectionViewCell.swift */; };
 		9747BF152F02C5630029F5F3 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9747BF142F02C5630029F5F3 /* Currency.swift */; };
 		9747BF172F02E1C50029F5F3 /* PaymentPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9747BF162F02E1C50029F5F3 /* PaymentPresenter.swift */; };
+		9747BF192F03E7200029F5F3 /* CurrencyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9747BF182F03E7200029F5F3 /* CurrencyService.swift */; };
+		9747BF1B2F03E7AC0029F5F3 /* CurrencyRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9747BF1A2F03E7AC0029F5F3 /* CurrencyRequest.swift */; };
 		9747E8B92F014FCE00AB3C70 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 974147B02EFED02A004EC15C /* Kingfisher */; };
 		9747E8BA2F014FCE00AB3C70 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 974147B32EFED045004EC15C /* ProgressHUD */; };
 		9747E8BC2F0151AB00AB3C70 /* UIProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9747E8BB2F0151AB00AB3C70 /* UIProgressHUD.swift */; };
@@ -124,6 +126,8 @@
 		9747BF122F02B47B0029F5F3 /* PaymentCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCollectionViewCell.swift; sourceTree = "<group>"; };
 		9747BF142F02C5630029F5F3 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		9747BF162F02E1C50029F5F3 /* PaymentPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentPresenter.swift; sourceTree = "<group>"; };
+		9747BF182F03E7200029F5F3 /* CurrencyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyService.swift; sourceTree = "<group>"; };
+		9747BF1A2F03E7AC0029F5F3 /* CurrencyRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyRequest.swift; sourceTree = "<group>"; };
 		9747E8BB2F0151AB00AB3C70 /* UIProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIProgressHUD.swift; sourceTree = "<group>"; };
 		97ACA2FD2EF99B5D00450217 /* BasketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketViewController.swift; sourceTree = "<group>"; };
 		97ACA3002EFB06ED00450217 /* PaymentCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCardView.swift; sourceTree = "<group>"; };
@@ -368,6 +372,7 @@
 				3FC8C39029D2453B0081F015 /* ExamplePutRequest.swift */,
 				0C79EE602A76DCD600EE90EA /* NftByIdRequest.swift */,
 				97ACA3112EFEABE400450217 /* OrderRequest.swift */,
+				9747BF1A2F03E7AC0029F5F3 /* CurrencyRequest.swift */,
 			);
 			path = Requests;
 			sourceTree = "<group>";
@@ -425,6 +430,7 @@
 			children = (
 				97ACA3132EFEACCE00450217 /* OrderService.swift */,
 				97ACA3162EFEB7CF00450217 /* BasketProductService.swift */,
+				9747BF182F03E7200029F5F3 /* CurrencyService.swift */,
 			);
 			path = Order;
 			sourceTree = "<group>";
@@ -638,10 +644,12 @@
 				97ACA3032EFB20B200450217 /* PaymentViewController.swift in Sources */,
 				0CF2C2E12A784C7000FDC837 /* LinePageControl.swift in Sources */,
 				3F6806D329CBBE9600B4F915 /* NetworkRequest.swift in Sources */,
+				9747BF1B2F03E7AC0029F5F3 /* CurrencyRequest.swift in Sources */,
 				974147B82F013685004EC15C /* SortingParametersStorage.swift in Sources */,
 				0CFCB7492A7808900009A829 /* TestCatalogController.swift in Sources */,
 				3F6806D129CBBE6B00B4F915 /* NetworkClient.swift in Sources */,
 				97ACA3092EFD3B4600450217 /* BasketProduct.swift in Sources */,
+				9747BF192F03E7200029F5F3 /* CurrencyService.swift in Sources */,
 				0CFCB7442A7802440009A829 /* NftDetailInput.swift in Sources */,
 				97ACA30E2EFE64D700450217 /* BasketPresenter.swift in Sources */,
 				0C79EE632A76DD1900EE90EA /* RequestConstants.swift in Sources */,
