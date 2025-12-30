@@ -95,13 +95,11 @@ final class BasketViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print("[viewController/viewWillAppear]: viewWillAppear")
         presenter?.viewWillAppear()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        print("[viewController/viewDidDisappear]: viewDidDisappear")
         UIProgressHUD.dismiss()
         presenter?.viewDidDisappear()
     }

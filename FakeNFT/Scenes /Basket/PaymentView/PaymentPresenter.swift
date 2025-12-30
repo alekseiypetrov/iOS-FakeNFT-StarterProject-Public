@@ -5,7 +5,8 @@ protocol PaymentPresenterProtocol {
     var spacing: CGFloat { get }
     func getNumberOfCurrencies() -> Int
     func getCurrency(at index: Int) -> Currency
-    func viewDidLoad()
+    func viewWillAppear()
+    func viewDidDisappear()
 }
 
 final class PaymentPresenter {
@@ -19,49 +20,36 @@ final class PaymentPresenter {
     
     // MARK: - Private Properties
     
-    // TODO: - will be removed later (моковые данные)
-    private var currencies: [Currency] = [
-        Currency(
-            title: "Shiba_Inu",
-            name: "SHIB",
-            image: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Shiba_Inu_(SHIB).png"
-        ),
-        Currency(
-            title: "Cardano",
-            name: "ADA",
-            image: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Cardano_(ADA).png"
-        ),
-        Currency(title: "Tether",
-                 name: "USDT",
-                 image: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Tether_(USDT).png"
-        ),
-        Currency(title: "ApeCoin",
-                 name: "APE",
-                 image: "https://code.s3.yandex.net/Mobile/iOS/Currencies/ApeCoin_(APE).png"
-        ),
-        Currency(
-            title: "Solana",
-            name: "SOL",
-            image: "https://code.s3.yandex.net/Mobile/iOS/Currencies/Solana_(SOL).png"
-        ),
-    ]
+    private var currencies: [Currency] = []
     weak private var viewController: PaymentViewControllerProtocol?
+    private var currencyService: CurrencyService
     
     // MARK: - Initializers
     
     init(viewController: PaymentViewControllerProtocol?) {
         self.viewController = viewController
+        let networkClient = DefaultNetworkClient()
+        currencyService = CurrencyLoader(networkClient: networkClient)
     }
     
     // MARK: - Private Methods
     
-    private func currenciesDelivered() {
-        
+    private func uploadData() {
+        currencyService.loadCurrency() { [weak self] result in
+            print("[PaymentPresenter/uploadData]: валюты загружены")
+            switch result {
+            case .failure(let error):
+                print("[PaymentPresenter/uploadData]: error - \(error)")
+            case .success(let currencies):
+                print("[PaymentPresenter/uploadData]: amount of currencies - \(currencies.count)")
+                self?.currencies = currencies
+                self?.viewController?.showCollection()
+            }
+        }
     }
     
-    // TODO: - will be removed later (пока вместо сетевого запроса)
-    private func returnMockData() {
-        viewController?.showCollection()
+    private func stopUploadingData() {
+        currencyService.stopLoading()
     }
 }
 
@@ -82,10 +70,14 @@ extension PaymentPresenter: PaymentPresenterProtocol {
         currencies[index]
     }
     
-    func viewDidLoad() {
+    func viewWillAppear() {
+        DispatchQueue.global().async {
+            self.uploadData()
+        }
         viewController?.hideCollection()
-        // TODO: - will be done later (запрос в сеть)
-        returnMockData()
+    }
+    
+    func viewDidDisappear() {
+        stopUploadingData()
     }
 }
-

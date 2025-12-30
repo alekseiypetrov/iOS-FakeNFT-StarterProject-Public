@@ -39,10 +39,17 @@ final class PaymentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        DispatchQueue.main.async {
-            self.setupUI()
-        }
-        presenter?.viewDidLoad()
+        setupUI()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        presenter?.viewWillAppear()
+        super.viewWillAppear(animated)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        presenter?.viewDidDisappear()
+        super.viewDidDisappear(animated)
     }
     
     // MARK: - Actions
