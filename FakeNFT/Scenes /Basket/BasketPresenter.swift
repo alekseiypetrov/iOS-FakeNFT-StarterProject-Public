@@ -72,7 +72,7 @@ final class BasketPresenter {
                     case .failure(let error):
                         print("[BasketPresenter/loadProduct]: error - \(error)")
                     case .success(let product):
-                        print("[BasketPresenter/loadProduct]: product - \(product.name)")
+                        print("[BasketPresenter/loadProduct]: product - \(product.id)")
                         loadedProducts.append(product)
                     }
                 }
@@ -86,21 +86,8 @@ final class BasketPresenter {
         }
         productsService.clearTasks()
     }
-}
-
-// MARK: - BasketPresenter + BasketPresenterProtocol
-
-extension BasketPresenter: BasketPresenterProtocol {
-    func sortParameterChanged(to newParameter: String) {
-        SortingParametersStorage.save(parameter: newParameter, forKey: storageKey)
-        sortProducts(by: newParameter)
-        viewController?.updateCellsFromTable()
-    }
     
-    func viewWillAppear() {
-        if order.nfts.isEmpty {
-            viewController?.hideTable()
-        }
+    private func loadOrder() {
         orderService.loadOrder { [weak self] result in
             guard let self else { return }
             print("[BasketPresenter/loadOrder]: заказ загружен")
@@ -122,7 +109,7 @@ extension BasketPresenter: BasketPresenterProtocol {
                     "3434c774-0e0f-476e-a314-24f4f0dfed86",
                     "cc74e9ab-2189-465f-a1a6-8405e07e9fe4"
                 ])
-                print("[BasketPresenter/loadOrder]: order - \(self.order)")
+                print("[BasketPresenter/loadOrder]: order - \(self.order.nfts.description)")
                 if !self.order.nfts.isEmpty {
                     self.orderDelivered()
                 }
@@ -130,8 +117,51 @@ extension BasketPresenter: BasketPresenterProtocol {
         }
     }
     
+    private func saveOrder(_ nfts: [String]) {
+        orderService.saveOrder(nfts) { [weak self] result in
+            guard let self,
+                  let chosenProductIndex = self.chosenProductIndex
+            else { return }
+            defer {
+                self.chosenProductIndex = nil
+            }
+            switch result {
+            case .failure(let error):
+                print("[BasketPresenter/saveOrder]: заказ не сохранен")
+                print("[BasketPresenter/saveOrder]: error - \(error)")
+                self.viewController?.showUpdatingStatus(false)
+            case .success(let order):
+                print("[BasketPresenter/saveOrder]: заказ сохранен")
+                print("[BasketPresenter/saveOrder]: order - \(order)")
+                self.viewController?.showUpdatingStatus(true)
+                self.order = order
+                self.products.remove(at: chosenProductIndex)
+                self.viewController?.deleteCellFromTable(at: chosenProductIndex)
+            }
+        }
+    }
+}
+
+// MARK: - BasketPresenter + BasketPresenterProtocol
+
+extension BasketPresenter: BasketPresenterProtocol {
+    func sortParameterChanged(to newParameter: String) {
+        SortingParametersStorage.save(parameter: newParameter, forKey: storageKey)
+        sortProducts(by: newParameter)
+        viewController?.updateCellsFromTable()
+    }
+    
+    func viewWillAppear() {
+        print("[BasketPresenter/viewWillAppear]: запуск сетевых запросов")
+        if order.nfts.isEmpty {
+            viewController?.hideTable()
+        }
+        loadOrder()
+    }
+    
     func viewDidDisappear() {
-        orderService.stopLoading()
+        print("[BasketPresenter/viewDidDisappear]: приостановка сетевых запросов")
+        orderService.stopTasks()
         productsService.stopLoadingProducts()
     }
     
@@ -147,15 +177,9 @@ extension BasketPresenter: BasketPresenterProtocol {
         guard let chosenProductIndex,
               chosenProductIndex > -1
         else { return }
-        products.remove(at: chosenProductIndex)
         var newNftsArray = order.nfts
         newNftsArray.remove(at: chosenProductIndex)
-        order = Order(
-            nfts: newNftsArray
-        )
-        viewController?.deleteCellFromTable(at: chosenProductIndex)
-        self.chosenProductIndex = nil
-        // TODO: - wll be done later (запрос в сеть об изменении содержимого корзины)
+        saveOrder(newNftsArray)
     }
     
     func findProduct(withName name: String) -> BasketProduct? {
