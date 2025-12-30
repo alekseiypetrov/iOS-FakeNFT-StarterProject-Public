@@ -16,4 +16,12 @@ final class UIProgressHUD {
         }
         UIProgressHUD.isShowingProgress = false
     }
+    
+    static func showSuccess() {
+        ProgressHUD.showSuccess(delay: 1.0)
+    }
+    
+    static func showError() {
+        ProgressHUD.showError(delay: 1.0)
+    }
 }
