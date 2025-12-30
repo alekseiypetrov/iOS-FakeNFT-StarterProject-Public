@@ -10,6 +10,7 @@ protocol BasketViewControllerProtocol: AnyObject {
     func deleteCellFromTable(at index: Int)
     func showTable()
     func hideTable()
+    func showUpdatingStatus(_ isSuccessfull: Bool)
 }
 
 final class BasketViewController: UIViewController {
@@ -76,6 +77,7 @@ final class BasketViewController: UIViewController {
     private lazy var confirmingDeletionView: ConfirmingDeletionView = {
         ConfirmingDeletionView { [weak self] isDelete in
             if isDelete {
+                self?.showProgress()
                 self?.presenter?.deleteProduct()
             }
             self?.hideBlur()
@@ -100,7 +102,7 @@ final class BasketViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        UIProgressHUD.dismiss()
+        hideProgress()
         presenter?.viewDidDisappear()
     }
     
@@ -124,7 +126,7 @@ final class BasketViewController: UIViewController {
                     title: title,
                     style: .default,
                     handler: { [weak self] _ in
-                        UIProgressHUD.show()
+                        self?.showProgress()
                         self?.presenter?.sortParameterChanged(to: Constants.parameters[index])
                     }
                 )
@@ -174,6 +176,14 @@ final class BasketViewController: UIViewController {
             paymentCard.heightAnchor.constraint(equalToConstant: Constants.heightOfCardView)
         ])
     }
+    
+    private func showProgress() {
+        UIProgressHUD.show()
+    }
+    
+    private func hideProgress() {
+        UIProgressHUD.dismiss()
+    }
 }
 
 // MARK: - BasketViewController + BasketViewControllerProtocol
@@ -185,7 +195,7 @@ extension BasketViewController: BasketViewControllerProtocol {
     }
     
     func updateCellsFromTable() {
-        UIProgressHUD.dismiss()
+        hideProgress()
         DispatchQueue.main.async { [weak self] in
             self?.tableView.reloadData()
         }
@@ -202,7 +212,7 @@ extension BasketViewController: BasketViewControllerProtocol {
     
     func showTable() {
         emptyBasketLabel.isHidden = true
-        UIProgressHUD.show()
+        showProgress()
         [tableView, paymentCard]
             .forEach({
                 $0.isHidden = false
@@ -217,6 +227,13 @@ extension BasketViewController: BasketViewControllerProtocol {
             })
         sortingButton.isHidden = true
         emptyBasketLabel.isHidden = false
+    }
+    
+    func showUpdatingStatus(_ isSuccessfull: Bool) {
+        hideProgress()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            isSuccessfull ? UIProgressHUD.showSuccess() : UIProgressHUD.showError()
+        }
     }
 }
 
