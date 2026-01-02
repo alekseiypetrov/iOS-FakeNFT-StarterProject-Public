@@ -5,6 +5,7 @@ final class NftCollectionViewController: UIViewController {
     // MARK: - Dependencies
 
     private let presenter: NftCollectionPresenterProtocol
+    private let headerView = NftCollectionHeaderView()
 
     // MARK: - UI
 
@@ -34,9 +35,18 @@ final class NftCollectionViewController: UIViewController {
 
     private func setupUI() {
         view.backgroundColor = .systemBackground
+        
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(headerView)
 
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(activityIndicator)
+        
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+        ])
 
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
