@@ -5,7 +5,7 @@ protocol NftCollectionViewProtocol: AnyObject {
     /// Показать индикатор загрузки
     func showLoading()
     
-    /// Скрыть индикатор загрузки
+    /// Скрыть индикатор загрузки 
     func hideLoading()
     
     /// Обновить список NFT
