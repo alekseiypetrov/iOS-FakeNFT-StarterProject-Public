@@ -3,13 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		0207B3182EFE63440036ED92 /* CatalogAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0207B3172EFE63420036ED92 /* CatalogAssembly.swift */; };
 		023136592F07A1AB00BA2D65 /* SortingParametersStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023136582F07A1AB00BA2D65 /* SortingParametersStorage.swift */; };
 		0231365B2F07A7AD00BA2D65 /* CollectionDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0231365A2F07A7AB00BA2D65 /* CollectionDetails.swift */; };
+		023136672F07AF9900BA2D65 /* CollectionByIdRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 023136662F07AF9700BA2D65 /* CollectionByIdRequest.swift */; };
 		0256A88F2EFE4887009AC89B /* CatalogTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0256A88E2EFE4885009AC89B /* CatalogTableViewCell.swift */; };
 		0256A8912EFE520A009AC89B /* CatalogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0256A8902EFE5207009AC89B /* CatalogService.swift */; };
 		02A688CF2EFD56A400916487 /* NFTCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A688CE2EFD56A200916487 /* NFTCollection.swift */; };
@@ -80,6 +81,7 @@
 		0207B3172EFE63420036ED92 /* CatalogAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogAssembly.swift; sourceTree = "<group>"; };
 		023136582F07A1AB00BA2D65 /* SortingParametersStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortingParametersStorage.swift; sourceTree = "<group>"; };
 		0231365A2F07A7AB00BA2D65 /* CollectionDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionDetails.swift; sourceTree = "<group>"; };
+		023136662F07AF9700BA2D65 /* CollectionByIdRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionByIdRequest.swift; sourceTree = "<group>"; };
 		0256A88E2EFE4885009AC89B /* CatalogTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogTableViewCell.swift; sourceTree = "<group>"; };
 		0256A8902EFE5207009AC89B /* CatalogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogService.swift; sourceTree = "<group>"; };
 		02A688CE2EFD56A200916487 /* NFTCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTCollection.swift; sourceTree = "<group>"; };
@@ -132,6 +134,10 @@
 		E1CD40D92A96BE7D00BE7FE8 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		E1CD40DB2A96BECC00BE7FE8 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		0231365C2F07AD8400BA2D65 /* NftCollection */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = NftCollection; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		3F68069029CBBAF100B4F915 /* Frameworks */ = {
@@ -296,6 +302,7 @@
 		3F6806C729CBBC5B00B4F915 /* Scenes  */ = {
 			isa = PBXGroup;
 			children = (
+				0231365C2F07AD8400BA2D65 /* NftCollection */,
 				97ACA2FC2EF99B4B00450217 /* Basket */,
 				E1A1B9D82AA01C9700C3AFBC /* TabBarController */,
 				0CF2C2D92A783C1600FDC837 /* Common */,
@@ -358,6 +365,7 @@
 		3FC8C38F29D245250081F015 /* Requests */ = {
 			isa = PBXGroup;
 			children = (
+				023136662F07AF9700BA2D65 /* CollectionByIdRequest.swift */,
 				02A688D02EFD59A100916487 /* CollectionsRequest.swift */,
 				0C79EE622A76DD1900EE90EA /* RequestConstants.swift */,
 				3FC8C39029D2453B0081F015 /* ExamplePutRequest.swift */,
@@ -416,6 +424,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				0231365C2F07AD8400BA2D65 /* NftCollection */,
 			);
 			name = FakeNFT;
 			packageProductDependencies = (
@@ -560,6 +571,7 @@
 				0CFCB7402A78002A0009A829 /* ExamplePutService.swift in Sources */,
 				3F6806D529CBBEC700B4F915 /* NetworkTask.swift in Sources */,
 				0CF2C2DB2A783C1B00FDC837 /* LoadingView.swift in Sources */,
+				023136672F07AF9900BA2D65 /* CollectionByIdRequest.swift in Sources */,
 				023136592F07A1AB00BA2D65 /* SortingParametersStorage.swift in Sources */,
 				0256A88F2EFE4887009AC89B /* CatalogTableViewCell.swift in Sources */,
 				97ACA2FE2EF99B5D00450217 /* BasketViewController.swift in Sources */,
