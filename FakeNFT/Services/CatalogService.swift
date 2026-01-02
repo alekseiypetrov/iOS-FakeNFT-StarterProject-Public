@@ -17,4 +17,20 @@ final class CatalogService {
             }
         }
     }
+    
+    func loadCollection(
+        id: String,
+        completion: @escaping (Result<NFTCollection, Error>) -> Void
+    ) {
+        let request = CollectionsRequest(id: id)
+
+        networkClient.send(
+            request: request,
+            type: NFTCollection.self
+        ) { result in
+            DispatchQueue.main.async {
+                completion(result)
+            }
+        }
+    }
 }
