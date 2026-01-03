@@ -7,11 +7,15 @@ final class NftCollectionCell: UICollectionViewCell {
     // MARK: - UI
 
     private let imageView = UIImageView()
+    private let favoriteButton = UIButton(type: .system)
+
     private let titleLabel = UILabel()
     private let ratingLabel = UILabel()
     private let priceLabel = UILabel()
+    private let cartButton = UIButton(type: .system)
 
     private let infoStack = UIStackView()
+    private let bottomStack = UIStackView()
 
     // MARK: - Init
 
@@ -32,37 +36,71 @@ final class NftCollectionCell: UICollectionViewCell {
         contentView.layer.cornerRadius = 12
         contentView.clipsToBounds = true
 
-        // Image
+        setupImage()
+        setupFavoriteButton()
+        setupLabels()
+        setupCartButton()
+        setupStacks()
+        setupConstraints()
+    }
+
+    private func setupImage() {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         imageView.backgroundColor = .systemGray3
         imageView.clipsToBounds = true
 
-        // Title
+        contentView.addSubview(imageView)
+    }
+
+    private func setupFavoriteButton() {
+        favoriteButton.translatesAutoresizingMaskIntoConstraints = false
+        favoriteButton.setImage(UIImage(systemName: "heart"), for: .normal)
+        favoriteButton.tintColor = .white
+        favoriteButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
+        favoriteButton.layer.cornerRadius = 14
+
+        contentView.addSubview(favoriteButton)
+    }
+
+    private func setupLabels() {
         titleLabel.font = .systemFont(ofSize: 14, weight: .medium)
-        titleLabel.textAlignment = .left
         titleLabel.numberOfLines = 1
 
-        // Rating
         ratingLabel.font = .systemFont(ofSize: 12)
         ratingLabel.textColor = .secondaryLabel
 
-        // Price
         priceLabel.font = .systemFont(ofSize: 12, weight: .medium)
-        priceLabel.textColor = .secondaryLabel
+        priceLabel.textColor = .label
+    }
 
-        // Stack
+    private func setupCartButton() {
+        cartButton.setImage(UIImage(systemName: "cart"), for: .normal)
+        cartButton.tintColor = .label
+    }
+
+    private func setupStacks() {
         infoStack.axis = .vertical
         infoStack.spacing = 4
-        infoStack.translatesAutoresizingMaskIntoConstraints = false
+
+        bottomStack.axis = .horizontal
+        bottomStack.alignment = .center
+        bottomStack.distribution = .equalSpacing
 
         infoStack.addArrangedSubview(titleLabel)
         infoStack.addArrangedSubview(ratingLabel)
-        infoStack.addArrangedSubview(priceLabel)
 
-        contentView.addSubview(imageView)
+        bottomStack.addArrangedSubview(priceLabel)
+        bottomStack.addArrangedSubview(cartButton)
+
+        infoStack.translatesAutoresizingMaskIntoConstraints = false
+        bottomStack.translatesAutoresizingMaskIntoConstraints = false
+
         contentView.addSubview(infoStack)
+        contentView.addSubview(bottomStack)
+    }
 
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
             // Image
             imageView.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -70,11 +108,22 @@ final class NftCollectionCell: UICollectionViewCell {
             imageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
             imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
 
-            // Info
+            // Favorite button
+            favoriteButton.topAnchor.constraint(equalTo: imageView.topAnchor, constant: 8),
+            favoriteButton.trailingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: -8),
+            favoriteButton.widthAnchor.constraint(equalToConstant: 28),
+            favoriteButton.heightAnchor.constraint(equalToConstant: 28),
+
+            // Info stack
             infoStack.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             infoStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             infoStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            infoStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8)
+
+            // Bottom stack
+            bottomStack.topAnchor.constraint(equalTo: infoStack.bottomAnchor, constant: 8),
+            bottomStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
+            bottomStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
+            bottomStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8)
         ])
     }
 

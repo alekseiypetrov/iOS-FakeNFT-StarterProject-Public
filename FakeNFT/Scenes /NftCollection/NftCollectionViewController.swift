@@ -163,6 +163,6 @@ extension NftCollectionViewController: UICollectionViewDelegateFlowLayout {
         let availableWidth = collectionView.bounds.width - totalSpacing
         let width = availableWidth / 2
 
-        return CGSize(width: width, height: width + 56)
+        return CGSize(width: width, height: width + 80)
     }
 }
