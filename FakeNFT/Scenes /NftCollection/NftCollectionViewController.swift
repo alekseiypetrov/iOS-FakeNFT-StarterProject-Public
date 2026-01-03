@@ -116,7 +116,7 @@ extension NftCollectionViewController: NftCollectionViewProtocol {
             description: presenter.collectionDescription(),
             coverURL: presenter.collectionCoverURL()
         )
-        /*
+
         headerView.onAuthorTap = { [weak self] in
             guard
                 let self,
@@ -125,15 +125,6 @@ extension NftCollectionViewController: NftCollectionViewProtocol {
 
             let vc = WebViewViewController(url: url)
             self.navigationController?.pushViewController(vc, animated: true)
-        }
-         */
-        
-        headerView.onAuthorTap = { [weak self] in
-            guard let self else { return }
-
-            let url = URL(string: "https://practicum.yandex.ru")!
-            let webVC = WebViewViewController(url: url)
-            self.navigationController?.pushViewController(webVC, animated: true)
         }
 
         collectionView.reloadData()
