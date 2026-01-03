@@ -20,7 +20,7 @@ final class CatalogViewController: UIViewController {
         self.servicesAssembly = servicesAssembly
         super.init(nibName: nil, bundle: nil)
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -65,65 +65,65 @@ final class CatalogViewController: UIViewController {
     private func setupActivityIndicator() {
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(activityIndicator)
-
+        
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
-
+        
         activityIndicator.hidesWhenStopped = true
     }
     
     // MARK: - Navigation
-
+    
     private func openCollection(id: String) {
         let collectionVC = NftCollectionAssembly(
             servicesAssembly: servicesAssembly,
             collectionId: id
         ).build()
-
+        
         navigationController?.pushViewController(collectionVC, animated: true)
     }
 }
 
 
 extension CatalogViewController: UITableViewDataSource {
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let count = presenter.itemsAmount
         print("📊 numberOfRows =", count)
         return count
     }
-
+    
     func tableView(
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
-
+        
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: CatalogTableViewCell.reuseIdentifier,
             for: indexPath
         ) as? CatalogTableViewCell else {
             return UITableViewCell()
         }
-
+        
         let collection = presenter.collection(at: indexPath.row)
-
+        
         cell.configure(
             title: collection.name,
             countText: "\(collection.nfts.count) NFT"
         )
-
+        
         return cell
     }
 }
 
 extension CatalogViewController: CatalogViewProtocol {
-
+    
     func showLoading() {
         activityIndicator.startAnimating()
     }
-
+    
     func hideLoading() {
         activityIndicator.stopAnimating()
     }
@@ -135,10 +135,10 @@ extension CatalogViewController: CatalogViewProtocol {
 }
 
 extension CatalogViewController: UITableViewDelegate {
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
+        
         let collection = presenter.collection(at: indexPath.row)
         openCollection(id: collection.id)
     }
