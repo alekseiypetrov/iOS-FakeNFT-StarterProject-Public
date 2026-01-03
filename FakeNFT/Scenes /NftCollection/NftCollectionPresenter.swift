@@ -81,18 +81,14 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
 
     // MARK: - Actions
 
-    @discardableResult
-    func didTapFavorite(at index: Int) -> IndexPath? {
-        guard cellModels.indices.contains(index) else { return nil }
+    func didTapFavorite(at index: Int) {
+        guard cellModels.indices.contains(index) else { return }
         cellModels[index].isFavorite.toggle()
-        return IndexPath(item: index, section: 0)
     }
 
-    @discardableResult
-    func didTapCart(at index: Int) -> IndexPath? {
-        guard cellModels.indices.contains(index) else { return nil }
+    func didTapCart(at index: Int) {
+        guard cellModels.indices.contains(index) else { return }
         cellModels[index].isInCart.toggle()
-        return IndexPath(item: index, section: 0)
     }
 
     // MARK: - Private
