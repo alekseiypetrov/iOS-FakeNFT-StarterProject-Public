@@ -48,39 +48,25 @@ final class PaymentUnitTests: XCTestCase {
         
         XCTAssertEqual(currencyFromPresenter, currencyInFact)
     }
-}
-
-final class PaymentPresenterStub: PaymentPresenterProtocol {
-    var viewWillAppearCalled: Bool = false
-    var viewDidDisappearCalled: Bool = false
     
-    var heightOfCell: CGFloat = 0.0
-    var spacing: CGFloat = 0.0
-    var currencies: [Currency] = []
+    // MARK: - Testing Functions for PaymentViewControllerProtocol Methods
     
-    func viewWillAppear() {
-        viewWillAppearCalled = true
+    func testHidingCollection() {
+        let viewController = PaymentViewControllerStub()
+        let presenter = PaymentPresenter(viewController: viewController)
+        
+        presenter.viewWillAppear()
+        presenter.viewDidDisappear() // для остановки сетевых запросов
+        
+        XCTAssertTrue(viewController.hideCollectionCalled)
     }
     
-    func viewDidDisappear() {
-        viewDidDisappearCalled = true
-    }
-    
-    func getNumberOfCurrencies() -> Int {
-        currencies.count
-    }
-    
-    func getCurrency(at index: Int) -> Currency {
-        currencies[index]
-    }
-}
-
-extension Currency: Equatable {
-    public static func == (lhs: Currency, rhs: Currency) -> Bool {
-        guard lhs.title == rhs.title,
-              lhs.name == rhs.name,
-              lhs.image == rhs.image
-        else { return false }
-        return true
+    func testShowingCollection() {
+        let viewController = PaymentViewControllerStub()
+        let presenter = PaymentPresenterStub(viewController: viewController)
+        
+        presenter.currencies = mockCurrencies
+        
+        XCTAssertTrue(viewController.showCollectionCalled)
     }
 }
