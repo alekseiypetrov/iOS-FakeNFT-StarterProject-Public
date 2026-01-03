@@ -67,7 +67,7 @@ final class NftCollectionViewController: UIViewController {
             headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
 
-            // CollectionView под Header
+            // CollectionView
             collectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 16),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -82,9 +82,10 @@ final class NftCollectionViewController: UIViewController {
     private func setupCollectionView() {
         collectionView.dataSource = self
         collectionView.delegate = self
+
         collectionView.register(
-            UICollectionViewCell.self,
-            forCellWithReuseIdentifier: "NFTCell"
+            NftCollectionCell.self,
+            forCellWithReuseIdentifier: NftCollectionCell.reuseIdentifier
         )
     }
 }
@@ -133,14 +134,16 @@ extension NftCollectionViewController: UICollectionViewDataSource {
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
 
-        let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: "NFTCell",
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: NftCollectionCell.reuseIdentifier,
             for: indexPath
-        )
+        ) as? NftCollectionCell else {
+            return UICollectionViewCell()
+        }
 
-        //cell.backgroundColor = .systemGray5
-        cell.backgroundColor = .systemRed
-        cell.layer.cornerRadius = 12
+        let nft = presenter.nft(at: indexPath.item)
+        cell.configure(with: nft)
+
         return cell
     }
 }
@@ -156,9 +159,10 @@ extension NftCollectionViewController: UICollectionViewDelegateFlowLayout {
     ) -> CGSize {
 
         let spacing: CGFloat = 12
-        let availableWidth = collectionView.bounds.width - spacing
+        let totalSpacing = spacing
+        let availableWidth = collectionView.bounds.width - totalSpacing
         let width = availableWidth / 2
 
-        return CGSize(width: width, height: width + 40)
+        return CGSize(width: width, height: width + 56)
     }
 }
