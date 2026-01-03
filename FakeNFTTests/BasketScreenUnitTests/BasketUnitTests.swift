@@ -66,8 +66,56 @@ final class BasketUnitTests: XCTestCase {
         XCTAssertNil(product)
     }
     
-    func testSuccessDeletingProductInPresenter() {
-        let presenter = BasketPresenterStub()
+    // MARK: - Testing Functions For BasketViewControllerProtocol Methods
+    
+    func testUpdatingInfoInPaymentCard() {
+        let viewController = BasketViewControllerStub()
+        let presenter = BasketPresenter(viewController: viewController)
+        
+        presenter.countNewInfoForPaymentCard()
+        
+        XCTAssertTrue(viewController.updateInfoInPaymentCardCalled)
+    }
+    
+    func testHidingTable() {
+        let viewController = BasketViewControllerStub()
+        let presenter = BasketPresenter(viewController: viewController)
+        
+        presenter.viewWillAppear()
+        presenter.viewDidDisappear() // для остановки сетевых запросов
+        
+        XCTAssertTrue(viewController.hideTableCalled)
+    }
+    
+    func testShowingAndUpdatingTableWhenOrderLoaded() {
+        let viewController = BasketViewControllerStub()
+        let presenter = BasketPresenterStub(viewController: viewController)
+        viewController.configure(presenter)
+        
+        presenter.products = mockProducts
+        
+        XCTAssertTrue(viewController.showTableCalled)
+        XCTAssertTrue(viewController.updateCellsFromTableCalled)
+        XCTAssertTrue(viewController.updateInfoInPaymentCardCalled)
+    }
+    
+    func testUpdatingTableWhenSortingParameterChanged() {
+        let viewController = BasketViewControllerStub()
+        let presenter = BasketPresenterStub(viewController: viewController)
+        viewController.configure(presenter)
+        
+        presenter.products = mockProducts
+        
+        XCTAssertTrue(viewController.updateCellsFromTableCalled)
+        XCTAssertTrue(viewController.updateInfoInPaymentCardCalled)
+    }
+    
+    // MARK: - Testing Functions For Both Protocols
+    
+    func testSuccessDeletingProduct() {
+        let viewController = BasketViewControllerStub()
+        let presenter = BasketPresenterStub(viewController: viewController)
+        viewController.configure(presenter)
         presenter.products = mockProducts
         presenter.chosenIndex = 1
         
@@ -77,10 +125,16 @@ final class BasketUnitTests: XCTestCase {
         
         XCTAssertTrue(presenter.deleteProductCalledSuccessfull)
         XCTAssertNotEqual(countGettingFromProperty, countInFact)
+        XCTAssertTrue(viewController.deleteCellFromTableCalled)
+        XCTAssertTrue(viewController.showUpdatingStatusCalled)
+        XCTAssertEqual(presenter.deleteProductCalledSuccessfull, viewController.updatingStatus)
+        XCTAssertEqual(presenter.chosenIndex, viewController.deletingIndex)
     }
     
-    func testFailureDeletingProductInPresenter() {
-        let presenter = BasketPresenterStub()
+    func testFailureDeletingProduct() {
+        let viewController = BasketViewControllerStub()
+        let presenter = BasketPresenterStub(viewController: viewController)
+        viewController.configure(presenter)
         presenter.products = mockProducts
         presenter.chosenIndex = nil
         
@@ -90,70 +144,10 @@ final class BasketUnitTests: XCTestCase {
         
         XCTAssertFalse(presenter.deleteProductCalledSuccessfull)
         XCTAssertEqual(countGettingFromProperty, countInFact)
-    }
-}
-
-final class BasketPresenterStub: BasketPresenterProtocol {
-    var viewWillAppearCalled: Bool = false
-    var viewDidDisappearCalled: Bool = false
-    var deleteProductCalledSuccessfull: Bool = false
-    var chosenIndex: Int?
-    var products: [BasketProduct] = []
-    var viewController: BasketViewControllerProtocol?
-    
-    init() {
-        viewController = nil
+        XCTAssertFalse(viewController.deleteCellFromTableCalled)
+        XCTAssertTrue(viewController.showUpdatingStatusCalled)
+        XCTAssertEqual(presenter.deleteProductCalledSuccessfull, viewController.updatingStatus)
+        XCTAssertNotEqual(presenter.chosenIndex, viewController.deletingIndex)
     }
     
-    init(viewController: BasketViewControllerProtocol) {
-        self.viewController = viewController
-    }
-    
-    func viewWillAppear() {
-        viewWillAppearCalled = true
-    }
-    
-    func viewDidDisappear() {
-        viewDidDisappearCalled = true
-    }
-    
-    func getCountOfProducts() -> Int {
-        products.count
-    }
-    
-    func getCurrentProduct(at index: Int) -> BasketProduct {
-        products[index]
-    }
-    
-    func deleteProduct() {
-        guard let chosenIndex,
-              chosenIndex > -1
-        else {
-            print("[BasketPresenterStub/deleteProduct]. Тест провален.\nПричина: не присвоили значение chosenIndex для удаления определенного элемента.")
-            return
-        }
-        products.remove(at: chosenIndex)
-        deleteProductCalledSuccessfull = true
-    }
-    
-    func findProduct(withName name: String) -> BasketProduct? {
-        guard let index = products.firstIndex(where: { $0.name == name })
-        else { return nil }
-        return getCurrentProduct(at: index)
-    }
-    
-    func countNewInfoForPaymentCard() { }
-    func sortParameterChanged(to newParameter: String) { }
-}
-
-extension BasketProduct: Equatable {
-    public static func == (lhs: BasketProduct, rhs: BasketProduct) -> Bool {
-        guard lhs.id == rhs.id,
-              lhs.name == rhs.name,
-              lhs.price == rhs.price,
-              lhs.rating == rhs.rating,
-              lhs.images == rhs.images
-        else { return false }
-        return true
-    }
 }
