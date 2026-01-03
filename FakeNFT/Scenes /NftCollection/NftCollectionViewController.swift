@@ -102,6 +102,13 @@ extension NftCollectionViewController: NftCollectionViewProtocol {
     }
 
     func reloadData() {
+        headerView.configure(
+            title: presenter.collectionName(),
+            author: presenter.collectionAuthorName(),
+            description: presenter.collectionDescription(),
+            coverURL: presenter.collectionCoverURL()
+        )
+
         collectionView.reloadData()
     }
 

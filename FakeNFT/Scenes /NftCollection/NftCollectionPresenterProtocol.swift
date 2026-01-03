@@ -1,12 +1,17 @@
 import Foundation
 
-protocol NftCollectionPresenterProtocol {
-    
+protocol NftCollectionPresenterProtocol: AnyObject {
+
+    // Lifecycle
     func viewDidLoad()
-    
-    /// Количество NFT в коллекции
+
+    // Collection
     func numberOfItems() -> Int
-    
-    /// NFT по индексу для отображения в ячейке
     func nft(at index: Int) -> Nft
+
+    // Header
+    func collectionName() -> String
+    func collectionAuthorName() -> String
+    func collectionDescription() -> String
+    func collectionCoverURL() -> URL?
 }

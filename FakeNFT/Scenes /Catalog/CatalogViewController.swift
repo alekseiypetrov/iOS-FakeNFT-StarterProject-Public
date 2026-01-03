@@ -3,6 +3,7 @@ import UIKit
 final class CatalogViewController: UIViewController {
     
     private let presenter: CatalogPresenterProtocol
+    private let servicesAssembly: ServicesAssembly
     
     // MARK: - UI
     
@@ -11,11 +12,15 @@ final class CatalogViewController: UIViewController {
     
     // MARK: - Init
     
-    init(presenter: CatalogPresenterProtocol) {
+    init(
+        presenter: CatalogPresenterProtocol,
+        servicesAssembly: ServicesAssembly
+    ) {
         self.presenter = presenter
+        self.servicesAssembly = servicesAssembly
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -34,6 +39,7 @@ final class CatalogViewController: UIViewController {
     
     private func setupUI() {
         view.backgroundColor = .systemBackground
+        title = "Каталог"
     }
     
     private func setupTableView() {
@@ -53,6 +59,7 @@ final class CatalogViewController: UIViewController {
         ])
         
         tableView.dataSource = self
+        tableView.delegate = self
     }
     
     private func setupActivityIndicator() {
@@ -67,13 +74,25 @@ final class CatalogViewController: UIViewController {
         activityIndicator.hidesWhenStopped = true
     }
     
+    // MARK: - Navigation
+
+    private func openCollection(id: String) {
+        let collectionVC = NftCollectionAssembly(
+            servicesAssembly: servicesAssembly,
+            collectionId: id
+        ).build()
+
+        navigationController?.pushViewController(collectionVC, animated: true)
+    }
 }
 
 
 extension CatalogViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter.itemsAmount
+        let count = presenter.itemsAmount
+        print("📊 numberOfRows =", count)
+        return count
     }
 
     func tableView(
@@ -110,6 +129,17 @@ extension CatalogViewController: CatalogViewProtocol {
     }
     
     func reloadData() {
+        print("🔄 CatalogViewController reloadData")
         tableView.reloadData()
+    }
+}
+
+extension CatalogViewController: UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        let collection = presenter.collection(at: indexPath.row)
+        openCollection(id: collection.id)
     }
 }

@@ -10,7 +10,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     private let catalogService: CatalogService
     private let nftService: NftService
 
-    private var collection: NFTCollection?
+    private var collection: NFTCollectionDetails?
     private var nfts: [Nft] = []
 
     // MARK: - Init
@@ -25,7 +25,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
         self.nftService = nftService
     }
 
-    // MARK: - NftCollectionPresenterProtocol
+    // MARK: - Lifecycle
 
     func viewDidLoad() {
         view?.showLoading()
@@ -45,6 +45,8 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
         }
     }
 
+    // MARK: - CollectionView
+
     func numberOfItems() -> Int {
         nfts.count
     }
@@ -53,7 +55,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
         nfts[index]
     }
 
-    // MARK: - Header
+    // MARK: - HeaderView
 
     func collectionName() -> String {
         collection?.name ?? ""
@@ -69,6 +71,10 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
 
     func collectionCoverURL() -> URL? {
         collection?.cover
+    }
+    
+    func collectionAuthorWebsite() -> URL? {
+        collection?.website
     }
 
     // MARK: - Private

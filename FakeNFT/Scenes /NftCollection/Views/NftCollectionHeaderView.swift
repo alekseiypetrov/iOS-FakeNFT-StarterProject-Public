@@ -52,13 +52,15 @@ final class NftCollectionHeaderView: UIView {
 
     // MARK: - Public
 
-    func configure(with collection: NFTCollection) {
-        titleLabel.text = collection.name
-        authorLabel.text = "Автор коллекции: \(collection.author)"
-        descriptionLabel.text = collection.description
-
-        // Пока без Kingfisher, подключу позже
-        loadImage(from: collection.cover)
+    func configure(
+        title: String,
+        author: String,
+        description: String,
+        coverURL: URL?
+    ) {
+        titleLabel.text = title
+        authorLabel.text = "Автор коллекции: \(author)"
+        descriptionLabel.text = description
     }
 
     // MARK: - Layout
