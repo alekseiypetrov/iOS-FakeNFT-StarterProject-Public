@@ -88,6 +88,13 @@ final class NftCollectionViewController: UIViewController {
             forCellWithReuseIdentifier: NftCollectionCell.reuseIdentifier
         )
     }
+    
+    private func openAuthorWebsite() {
+        guard let url = presenter.collectionAuthorWebsite() else { return }
+
+        let webViewController = WebViewViewController(url: url)
+        navigationController?.pushViewController(webViewController, animated: true)
+    }
 }
 
 // MARK: - NftCollectionViewProtocol
@@ -109,6 +116,25 @@ extension NftCollectionViewController: NftCollectionViewProtocol {
             description: presenter.collectionDescription(),
             coverURL: presenter.collectionCoverURL()
         )
+        /*
+        headerView.onAuthorTap = { [weak self] in
+            guard
+                let self,
+                let url = self.presenter.collectionAuthorWebsite()
+            else { return }
+
+            let vc = WebViewViewController(url: url)
+            self.navigationController?.pushViewController(vc, animated: true)
+        }
+         */
+        
+        headerView.onAuthorTap = { [weak self] in
+            guard let self else { return }
+
+            let url = URL(string: "https://practicum.yandex.ru")!
+            let webVC = WebViewViewController(url: url)
+            self.navigationController?.pushViewController(webVC, animated: true)
+        }
 
         collectionView.reloadData()
     }

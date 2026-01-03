@@ -74,6 +74,10 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     func collectionCoverURL() -> URL? {
         collection?.cover
     }
+    
+    func collectionAuthorWebsite() -> URL? {
+        collection?.website
+    }
 
     // MARK: - Actions
 

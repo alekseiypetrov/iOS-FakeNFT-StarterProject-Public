@@ -37,6 +37,10 @@ final class NftCollectionHeaderView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    // MARK: - Callbacks
+
+    var onAuthorTap: (() -> Void)?
 
     // MARK: - Init
 
@@ -70,6 +74,10 @@ final class NftCollectionHeaderView: UIView {
         addSubview(titleLabel)
         addSubview(authorLabel)
         addSubview(descriptionLabel)
+        
+        authorLabel.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(authorTapped))
+        authorLabel.addGestureRecognizer(tap)
 
         NSLayoutConstraint.activate([
             coverImageView.topAnchor.constraint(equalTo: topAnchor),
@@ -106,5 +114,9 @@ final class NftCollectionHeaderView: UIView {
                 self.coverImageView.image = image
             }
         }.resume()
+    }
+    
+    @objc private func authorTapped() {
+        onAuthorTap?()
     }
 }
