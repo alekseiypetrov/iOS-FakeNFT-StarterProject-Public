@@ -16,6 +16,9 @@ final class NftCollectionCell: UICollectionViewCell {
 
     private let infoStack = UIStackView()
     private let bottomStack = UIStackView()
+    
+    private var onFavoriteTap: (() -> Void)?
+    private var onCartTap: (() -> Void)?
 
     // MARK: - Init
 
@@ -27,6 +30,14 @@ final class NftCollectionCell: UICollectionViewCell {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) is not supported")
+    }
+    
+    @objc private func favoriteTapped() {
+        onFavoriteTap?()
+    }
+
+    @objc private func cartTapped() {
+        onCartTap?()
     }
 
     // MARK: - Setup
@@ -42,6 +53,9 @@ final class NftCollectionCell: UICollectionViewCell {
         setupCartButton()
         setupStacks()
         setupConstraints()
+        
+        favoriteButton.addTarget(self, action: #selector(favoriteTapped), for: .touchUpInside)
+        cartButton.addTarget(self, action: #selector(cartTapped), for: .touchUpInside)
     }
 
     private func setupImage() {
@@ -129,9 +143,30 @@ final class NftCollectionCell: UICollectionViewCell {
 
     // MARK: - Configuration
 
-    func configure(with nft: Nft) {
-        titleLabel.text = nft.name
-        ratingLabel.text = "⭐️ \(nft.rating)"
-        priceLabel.text = "\(nft.price) ETH"
+    func configure(
+        with model: NftCellModel,
+        onFavoriteTap: @escaping () -> Void,
+        onCartTap: @escaping () -> Void
+    ) {
+        titleLabel.text = model.name
+        ratingLabel.text = "⭐️ \(model.rating)"
+        priceLabel.text = "\(model.price) ETH"
+
+        let favoriteImage = model.isFavorite ? "heart.fill" : "heart"
+        favoriteButton.setImage(
+            UIImage(systemName: favoriteImage),
+            for: .normal
+        )
+        favoriteButton.tintColor = model.isFavorite ? .systemRed : .secondaryLabel
+
+        let cartImage = model.isInCart ? "cart.fill" : "cart"
+        cartButton.setImage(
+            UIImage(systemName: cartImage),
+            for: .normal
+        )
+        cartButton.tintColor = model.isInCart ? .systemBlue : .secondaryLabel
+
+        self.onFavoriteTap = onFavoriteTap
+        self.onCartTap = onCartTap
     }
 }

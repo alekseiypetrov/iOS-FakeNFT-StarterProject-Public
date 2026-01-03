@@ -2,7 +2,7 @@ import Foundation
 
 final class NftCollectionPresenter: NftCollectionPresenterProtocol {
 
-    // MARK: - Properties
+    // MARK: - Dependencies
 
     weak var view: NftCollectionViewProtocol?
 
@@ -10,8 +10,10 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     private let catalogService: CatalogService
     private let nftService: NftService
 
+    // MARK: - Data
+
     private var collection: NFTCollectionDetails?
-    private var nfts: [Nft] = []
+    private var cellModels: [NftCellModel] = []
 
     // MARK: - Init
 
@@ -45,36 +47,48 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
         }
     }
 
-    // MARK: - CollectionView
+    // MARK: - Collection
 
     func numberOfItems() -> Int {
-        nfts.count
+        cellModels.count
     }
 
-    func nft(at index: Int) -> Nft {
-        nfts[index]
+    func cellModel(at index: Int) -> NftCellModel {
+        cellModels[index]
     }
 
-    // MARK: - HeaderView
+    // MARK: - Header
 
     func collectionName() -> String {
         collection?.name ?? ""
-    }
-
-    func collectionDescription() -> String {
-        collection?.description ?? ""
     }
 
     func collectionAuthorName() -> String {
         collection?.author ?? ""
     }
 
+    func collectionDescription() -> String {
+        collection?.description ?? ""
+    }
+
     func collectionCoverURL() -> URL? {
         collection?.cover
     }
-    
-    func collectionAuthorWebsite() -> URL? {
-        collection?.website
+
+    // MARK: - Actions
+
+    @discardableResult
+    func didTapFavorite(at index: Int) -> IndexPath? {
+        guard cellModels.indices.contains(index) else { return nil }
+        cellModels[index].isFavorite.toggle()
+        return IndexPath(item: index, section: 0)
+    }
+
+    @discardableResult
+    func didTapCart(at index: Int) -> IndexPath? {
+        guard cellModels.indices.contains(index) else { return nil }
+        cellModels[index].isInCart.toggle()
+        return IndexPath(item: index, section: 0)
     }
 
     // MARK: - Private
@@ -87,7 +101,17 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
 
             switch result {
             case .success(let nfts):
-                self.nfts = nfts
+                self.cellModels = nfts.map { nft in
+                    NftCellModel(
+                        id: nft.id,
+                        name: nft.name,
+                        imageURL: nft.images.first.flatMap(URL.init(string:)),
+                        rating: nft.rating,
+                        price: nft.price,
+                        isFavorite: false,
+                        isInCart: false
+                    )
+                }
                 self.view?.reloadData()
 
             case .failure(let error):

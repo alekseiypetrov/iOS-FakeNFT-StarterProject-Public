@@ -2,16 +2,20 @@ import Foundation
 
 protocol NftCollectionPresenterProtocol: AnyObject {
 
-    // Lifecycle
+    // MARK: - Lifecycle
     func viewDidLoad()
 
-    // Collection
+    // MARK: - Collection
     func numberOfItems() -> Int
-    func nft(at index: Int) -> Nft
+    func cellModel(at index: Int) -> NftCellModel
 
-    // Header
+    // MARK: - Header
     func collectionName() -> String
     func collectionAuthorName() -> String
     func collectionDescription() -> String
     func collectionCoverURL() -> URL?
+
+    // MARK: - Actions
+    func didTapFavorite(at index: Int) -> IndexPath?
+    func didTapCart(at index: Int) -> IndexPath?
 }

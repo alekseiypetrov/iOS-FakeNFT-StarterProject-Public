@@ -141,8 +141,22 @@ extension NftCollectionViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
 
-        let nft = presenter.nft(at: indexPath.item)
-        cell.configure(with: nft)
+        let index = indexPath.item
+        let model = presenter.cellModel(at: index)
+
+        cell.configure(
+            with: model,
+            onFavoriteTap: { [weak self] in
+                guard let self else { return }
+                self.presenter.didTapFavorite(at: index)
+                self.collectionView.reloadItems(at: [indexPath])
+            },
+            onCartTap: { [weak self] in
+                guard let self else { return }
+                self.presenter.didTapCart(at: index)
+                self.collectionView.reloadItems(at: [indexPath])
+            }
+        )
 
         return cell
     }
