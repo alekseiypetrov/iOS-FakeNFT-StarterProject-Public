@@ -51,6 +51,15 @@ final class PaymentCollectionViewCell: UICollectionViewCell, ReuseIdentifying {
         setupUI()
     }
     
+    // MARK: - Lifecycle
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        currencyFullNameLabel.text = ""
+        currencyShortNameLabel.text = ""
+        currencyImageView.image = nil
+    }
+    
     // MARK: - Public Methods
     
     func config(from currency: Currency) {
