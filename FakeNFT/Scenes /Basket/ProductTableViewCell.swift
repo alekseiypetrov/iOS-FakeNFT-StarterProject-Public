@@ -84,6 +84,17 @@ final class ProductTableViewCell: UITableViewCell, ReuseIdentifying {
     
     required init?(coder: NSCoder) { nil }
     
+    // MARK: - Lifecycle
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        delegate = nil
+        productTitle.text = ""
+        productRating.image = getRating(from: 0)
+        priceLabel.text = "0.0 ETH"
+        productImage.image = nil
+    }
+    
     // MARK: - Actions
     
     @objc
