@@ -131,7 +131,7 @@ extension NftCollectionViewController: NftCollectionViewProtocol {
     }
 
     func showError(_ error: Error) {
-        print("NftCollectionViewController error:", error)
+        print("[NftCollectionViewController/showError]: \(error)")
     }
 }
 
