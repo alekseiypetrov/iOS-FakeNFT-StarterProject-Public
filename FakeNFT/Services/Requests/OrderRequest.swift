@@ -12,13 +12,7 @@ struct OrderRequest: NetworkRequest {
 struct OrderDto: Dto {
     let nfts: [String]
     
-    enum CodingKeys: String, CodingKey {
-        case nfts = "nfts"
-    }
-    
     func asDictionary() -> [String : String] {
-        [
-            CodingKeys.nfts.rawValue: nfts.joined(separator: ",")
-        ]
+        ["nfts": nfts.joined(separator: ",")]
     }
 }

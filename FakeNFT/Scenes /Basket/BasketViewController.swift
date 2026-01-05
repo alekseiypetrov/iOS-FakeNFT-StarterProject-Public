@@ -10,7 +10,7 @@ protocol BasketViewControllerProtocol: AnyObject {
     func deleteCellFromTable(at index: Int)
     func showTable()
     func hideTable()
-    func showUpdatingStatus(_ isSuccessfull: Bool)
+    func showUpdatingStatus(_ isSuccessful: Bool)
 }
 
 final class BasketViewController: UIViewController {
@@ -196,8 +196,8 @@ extension BasketViewController: BasketViewControllerProtocol {
     
     func updateCellsFromTable() {
         hideProgress()
-        DispatchQueue.main.async { [weak self] in
-            self?.tableView.reloadData()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
         }
     }
     
@@ -229,19 +229,19 @@ extension BasketViewController: BasketViewControllerProtocol {
         emptyBasketLabel.isHidden = false
     }
     
-    func showUpdatingStatus(_ isSuccessfull: Bool) {
+    func showUpdatingStatus(_ isSuccessful: Bool) {
         hideProgress()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            isSuccessfull ? UIProgressHUD.showSuccess() : UIProgressHUD.showError()
+            isSuccessful ? UIProgressHUD.showSuccess() : UIProgressHUD.showError()
         }
     }
 }
 
-// MARK: - BasketViewController + UITabelViewDataSource
+// MARK: - BasketViewController + UITableViewDataSource
 
 extension BasketViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        presenter?.getCountOfProducts() ?? 0
+        presenter?.productsAmount ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

@@ -99,8 +99,8 @@ extension PaymentViewController: PaymentViewControllerProtocol {
     }
     
     func showCollection() {
-        DispatchQueue.main.async { [weak self] in
-            self?.collectionView.reloadData()
+        DispatchQueue.main.async {
+            self.collectionView.reloadData()
         }
         collectionView.isHidden = false
         UIProgressHUD.dismiss()
@@ -111,7 +111,7 @@ extension PaymentViewController: PaymentViewControllerProtocol {
 
 extension PaymentViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        presenter?.getNumberOfCurrencies() ?? 0
+        presenter?.currenciesAmount ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
