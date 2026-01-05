@@ -16,7 +16,7 @@ final class CurrencyLoader: CurrencyService {
     }
     
     func loadCurrency(completion: @escaping CurrencyCompletion) {
-        if task != nil { return }
+        guard task != nil else { return }
         
         let request = CurrencyRequest()
         task = networkClient.send(request: request, type: [Currency].self) { result in

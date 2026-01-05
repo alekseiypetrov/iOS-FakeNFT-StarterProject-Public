@@ -1,9 +1,9 @@
 import Foundation
 
 protocol BasketPresenterProtocol {
+    var productsAmount: Int { get }
     func viewWillAppear()
     func viewDidDisappear()
-    func getCountOfProducts() -> Int
     func getCurrentProduct(at index: Int) -> BasketProduct
     func deleteProduct()
     func findProduct(withName name: String) -> BasketProduct?
@@ -145,6 +145,10 @@ final class BasketPresenter {
 // MARK: - BasketPresenter + BasketPresenterProtocol
 
 extension BasketPresenter: BasketPresenterProtocol {
+    var productsAmount: Int {
+        products.count
+    }
+    
     func sortParameterChanged(to newParameter: String) {
         SortingParametersStorage.save(parameter: newParameter, forKey: storageKey)
         sortProducts(by: newParameter)
@@ -163,10 +167,6 @@ extension BasketPresenter: BasketPresenterProtocol {
         print("[BasketPresenter/viewDidDisappear]: приостановка сетевых запросов")
         orderService.stopTasks()
         productsService.stopLoadingProducts()
-    }
-    
-    func getCountOfProducts() -> Int {
-        products.count
     }
     
     func getCurrentProduct(at index: Int) -> BasketProduct {
@@ -190,8 +190,7 @@ extension BasketPresenter: BasketPresenterProtocol {
     }
     
     func countNewInfoForPaymentCard() {
-        let count = getCountOfProducts()
         let cost = products.reduce(0.0, { $0 + $1.price })
-        viewController?.updateInfoInPaymentCard(newCount: count, newCost: cost)
+        viewController?.updateInfoInPaymentCard(newCount: productsAmount, newCost: cost)
     }
 }

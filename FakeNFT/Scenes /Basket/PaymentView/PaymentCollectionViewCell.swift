@@ -67,7 +67,7 @@ final class PaymentCollectionViewCell: UICollectionViewCell, ReuseIdentifying {
         currencyFullNameLabel.text = currency.title
         currencyShortNameLabel.text = currency.name
         currencyImageView.kf.indicatorType = .activity
-        currencyImageView.kf.setImage(with: URL(string: currency.image))
+        currencyImageView.kf.setImage(with: URL(string: currency.imageName))
     }
     
     func changeBorder() {

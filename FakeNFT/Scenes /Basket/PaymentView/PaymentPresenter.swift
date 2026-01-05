@@ -3,7 +3,7 @@ import Foundation
 protocol PaymentPresenterProtocol {
     var heightOfCell: CGFloat { get }
     var spacing: CGFloat { get }
-    func getNumberOfCurrencies() -> Int
+    var currenciesAmount: Int { get }
     func getCurrency(at index: Int) -> Currency
     func viewWillAppear()
     func viewDidDisappear()
@@ -62,7 +62,7 @@ extension PaymentPresenter: PaymentPresenterProtocol {
         Constants.spacing
     }
     
-    func getNumberOfCurrencies() -> Int {
+    var currenciesAmount: Int {
         currencies.count
     }
     
