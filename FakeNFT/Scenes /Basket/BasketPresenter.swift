@@ -4,11 +4,11 @@ protocol BasketPresenterProtocol {
     var productsAmount: Int { get }
     func viewWillAppear()
     func viewDidDisappear()
-    func getCurrentProduct(at index: Int) -> BasketProduct
+    func getCurrentProduct(at index: Int) -> Nft
     func deleteProduct()
-    func findProduct(withName name: String) -> BasketProduct?
+    func findProduct(withName name: String) -> Nft?
     func countNewInfoForPaymentCard()
-    func sortParameterChanged(to newParameter: String)
+    func sortParameterChanged(to newParameter: SortOption)
 }
 
 final class BasketPresenter {
@@ -17,7 +17,7 @@ final class BasketPresenter {
     
     private let storageKey = "basket.sortParameter"
     private var order: Order = Order(nfts: [])
-    private var products: [BasketProduct] = []
+    private var products: [Nft] = []
     private var chosenProductIndex: Int?
     private var nftQueue = DispatchQueue(label: "nft-loading-queue-async", attributes: .concurrent)
     private var orderService: OrderService
@@ -32,24 +32,25 @@ final class BasketPresenter {
         orderService = OrderLoader(networkClient: networkClient)
         productsService = BasketProductLoader(
             networkClient: networkClient,
-            storage: NftStorageInBasket()
+            storage: NftStorageImpl()
         )
     }
     
     // MARK: - Private Methods
     
     private func getParameterAndSort() {
-        guard let sortParameter = SortingParametersStorage.getParameter(fromKey: storageKey)
+        guard let stringParameter = SortingParametersStorage.getParameter(fromKey: storageKey),
+              let sortParameter = SortOption(rawValue: stringParameter)
         else { return }
         sortProducts(by: sortParameter)
     }
     
-    private func sortProducts(by parameter: String) {
-        var predicate: (BasketProduct, BasketProduct) -> Bool
+    private func sortProducts(by parameter: SortOption) {
+        var predicate: (Nft, Nft) -> Bool
         switch parameter {
-        case "price":
+        case .byPrice:
             predicate = { $0.price > $1.price }
-        case "rating":
+        case .byRating:
             predicate = { $0.rating > $1.rating }
         default:
             predicate = { $0.name < $1.name }
@@ -61,7 +62,7 @@ final class BasketPresenter {
     private func orderDelivered() {
         viewController?.showTable()
         let group = DispatchGroup()
-        var loadedProducts: [BasketProduct] = []
+        var loadedProducts: [Nft] = []
         for nftId in order.nfts {
             group.enter()
             nftQueue.async {
@@ -149,8 +150,8 @@ extension BasketPresenter: BasketPresenterProtocol {
         products.count
     }
     
-    func sortParameterChanged(to newParameter: String) {
-        SortingParametersStorage.save(parameter: newParameter, forKey: storageKey)
+    func sortParameterChanged(to newParameter: SortOption) {
+        SortingParametersStorage.save(parameter: newParameter.rawValue, forKey: storageKey)
         sortProducts(by: newParameter)
         viewController?.updateCellsFromTable()
     }
@@ -169,7 +170,7 @@ extension BasketPresenter: BasketPresenterProtocol {
         productsService.stopLoadingProducts()
     }
     
-    func getCurrentProduct(at index: Int) -> BasketProduct {
+    func getCurrentProduct(at index: Int) -> Nft {
         products[index]
     }
     
@@ -182,7 +183,7 @@ extension BasketPresenter: BasketPresenterProtocol {
         saveOrder(newNftsArray)
     }
     
-    func findProduct(withName name: String) -> BasketProduct? {
+    func findProduct(withName name: String) -> Nft? {
         guard let index = products.firstIndex(where: { $0.name == name })
         else { return nil }
         chosenProductIndex = index

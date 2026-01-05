@@ -23,22 +23,3 @@ final class NftStorageImpl: NftStorage {
         }
     }
 }
-
-final class NftStorageInBasket {
-
-    private var storage: [String: BasketProduct] = [:]
-
-    private let syncQueue = DispatchQueue(label: "sync-nft-basket-queue")
-
-    func saveNft(_ nft: BasketProduct) {
-        syncQueue.async { [weak self] in
-            self?.storage[nft.id] = nft
-        }
-    }
-
-    func getNft(with id: String) -> BasketProduct? {
-        syncQueue.sync {
-            storage[id]
-        }
-    }
-}

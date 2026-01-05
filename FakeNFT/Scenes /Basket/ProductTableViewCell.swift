@@ -105,7 +105,7 @@ final class ProductTableViewCell: UITableViewCell, ReuseIdentifying {
     
     // MARK: - Public Methods
     
-    func configure(by model: BasketProduct, withDelegate delegate: ProductTableViewCellDelegate) {
+    func configure(by model: Nft, withDelegate delegate: ProductTableViewCellDelegate) {
         self.delegate = delegate
         productImage.kf.indicatorType = .activity
         productTitle.text = model.name

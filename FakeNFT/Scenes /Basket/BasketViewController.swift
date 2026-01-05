@@ -20,7 +20,11 @@ final class BasketViewController: UIViewController {
     private enum Constants {
         static let heightOfCardView: CGFloat = 76.0
         static let heightOfCellInTable: CGFloat = 140.0
-        static let parameters = ["price", "rating", "name"]
+        static let parameters: [String: SortOption] = [
+            NSLocalizedString("Basket.alertController.sortByPrice", comment: ""): .byPrice,
+            NSLocalizedString("Basket.alertController.sortByRating", comment: ""): .byRating,
+            NSLocalizedString("Basket.alertController.sortByName", comment: ""): .byName
+        ]
     }
     
     // MARK: - UI-elements
@@ -115,19 +119,14 @@ final class BasketViewController: UIViewController {
             message: nil,
             preferredStyle: .actionSheet
         )
-        let parameterTitles = [
-            NSLocalizedString("Basket.alertController.sortByPrice", comment: ""),
-            NSLocalizedString("Basket.alertController.sortByRating", comment: ""),
-            NSLocalizedString("Basket.alertController.sortByName", comment: ""),
-        ]
-        for (index, title) in parameterTitles.enumerated() {
+        for (title, parameter) in Constants.parameters {
             alert.addAction(
                 UIAlertAction(
                     title: title,
                     style: .default,
                     handler: { [weak self] _ in
                         self?.showProgress()
-                        self?.presenter?.sortParameterChanged(to: Constants.parameters[index])
+                        self?.presenter?.sortParameterChanged(to: parameter)
                     }
                 )
             )
