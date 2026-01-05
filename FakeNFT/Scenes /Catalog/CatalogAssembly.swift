@@ -18,7 +18,7 @@ final class CatalogAssembly {
             servicesAssembly: servicesAssembly
         )
 
-        presenter.view = viewController
+        presenter.configure(viewController)
         return viewController
     }
 }

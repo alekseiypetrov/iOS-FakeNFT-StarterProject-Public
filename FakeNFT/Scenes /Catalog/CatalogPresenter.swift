@@ -2,19 +2,28 @@ import Foundation
 
 final class CatalogPresenter: CatalogPresenterProtocol {
 
-    // MARK: - Properties
+    // MARK: - Private properties
 
-    weak var view: CatalogViewProtocol?
-    
+    private weak var view: CatalogViewProtocol?
     private let catalogService: CatalogService
     private var collections: [NFTCollection] = []
-    
-    var itemsAmount: Int { collections.count }
-    
+
+    // MARK: - Public properties
+
+    var itemsAmount: Int {
+        collections.count
+    }
+
     // MARK: - Init
 
     init(catalogService: CatalogService) {
         self.catalogService = catalogService
+    }
+
+    // MARK: - Configuration
+
+    func configure(_ view: CatalogViewProtocol) {
+        self.view = view
     }
 
     // MARK: - CatalogPresenterProtocol
@@ -25,22 +34,16 @@ final class CatalogPresenter: CatalogPresenterProtocol {
 
         catalogService.loadCollections { [weak self] result in
             guard let self else { return }
-            
-            print("📦 CatalogPresenter got result:", result)
 
             self.view?.hideLoading()
 
             switch result {
             case .success(let collections):
-                
-                print("✅ collections.count =", collections.count)
-                
                 self.collections = collections
                 self.view?.reloadData()
 
             case .failure(let error):
-                
-                print("❌ error =", error)
+                print("❌ CatalogPresenter error:", error)
             }
         }
     }
