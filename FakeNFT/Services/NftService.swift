@@ -14,14 +14,16 @@ final class NftServiceImpl: NftService {
     private let networkClient: NetworkClient
     private let storage: NftStorage
 
+    // MARK: - Init
     init(networkClient: NetworkClient, storage: NftStorage) {
         self.storage = storage
         self.networkClient = networkClient
     }
 
+    // MARK: - NftService
     func loadNft(id: String, completion: @escaping NftCompletion) {
         if let nft = storage.getNft(with: id) {
-            print("📦 NFT from cache:", nft.name)
+            print("📦 [NftServiceImpl/loadNft]: cache hit for id = \(id)")
             completion(.success(nft))
             return
         }
@@ -29,10 +31,10 @@ final class NftServiceImpl: NftService {
 
         let request = NFTRequest(id: id)
         networkClient.send(request: request, type: Nft.self) { [weak storage] result in
-            print("🧩 NFT load result for id =", id)
+            print("🧩 [NftServiceImpl/loadNft]: loading NFT from API, id = \(id)")
             switch result {
             case .success(let nft):
-                print("🧩 Loaded NFT from API:", nft.name)
+                print("🧩 [NftServiceImpl/loadNft]: successfully loaded NFT, id = \(id)")
                 storage?.saveNft(nft)
                 completion(.success(nft))
             case .failure(let error):
