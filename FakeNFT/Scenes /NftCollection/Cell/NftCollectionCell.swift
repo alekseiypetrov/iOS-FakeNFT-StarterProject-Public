@@ -5,7 +5,6 @@ final class NftCollectionCell: UICollectionViewCell {
     static let reuseIdentifier = "NftCollectionCell"
     
     // MARK: - UI
-    
     private let imageView = UIImageView()
     private let favoriteButton = UIButton(type: .system)
     
