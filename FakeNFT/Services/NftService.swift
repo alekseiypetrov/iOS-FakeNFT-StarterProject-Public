@@ -30,14 +30,17 @@ final class NftServiceImpl: NftService {
         
 
         let request = NFTRequest(id: id)
+        print("🧩 [NftService/loadNft]: start loading from API, id = \(id)")
+        
         networkClient.send(request: request, type: Nft.self) { [weak storage] result in
-            print("🧩 [NftServiceImpl/loadNft]: loading NFT from API, id = \(id)")
             switch result {
             case .success(let nft):
-                print("🧩 [NftServiceImpl/loadNft]: successfully loaded NFT, id = \(id)")
+                print("✅ [NftService/loadNft]: loaded successfully, id = \(id)")
                 storage?.saveNft(nft)
                 completion(.success(nft))
+                
             case .failure(let error):
+                print("❌ [NftService/loadNft]: failed, id = \(id), error = \(error)")
                 completion(.failure(error))
             }
         }
@@ -49,6 +52,7 @@ final class NftServiceImpl: NftService {
 
         func loadNext() {
             if currentIndex >= ids.count {
+                print("✅ [NftService/loadNfts]: finished loading \(loadedNfts.count) NFTs")
                 completion(.success(loadedNfts))
                 return
             }
@@ -57,16 +61,18 @@ final class NftServiceImpl: NftService {
             loadNft(id: id, completion: { result in
                 switch result {
                 case .success(let nft):
-                    print("✅ Added NFT to collection:", nft.name)
+                    print("📦 [NftService/loadNfts]: appended NFT, id = \(nft.id)")
                     loadedNfts.append(nft)
                     currentIndex += 1
                     loadNext()
                 case .failure(let error):
+                    print("❌ [NftService/loadNfts]: failed on id = \(id), error = \(error)")
                     completion(.failure(error))
                 }
             })
         }
 
+        print("🧩 [NftService/loadNfts]: start loading \(ids.count) NFTs")
         loadNext()
     }
 }
