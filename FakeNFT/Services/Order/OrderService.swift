@@ -17,8 +17,9 @@ final class OrderLoader: OrderService {
     }
     
     func loadOrder(completion: @escaping OrderCompletion) {
-        if let task = tasks[.get],
-           task != nil { return }
+        guard let task = tasks[.get],
+              task == nil
+        else { return }
         
         let request = OrderRequest(httpMethod: .get)
         tasks[.get] = networkClient.send(request: request, type: Order.self) { result in
@@ -35,8 +36,9 @@ final class OrderLoader: OrderService {
     }
     
     func saveOrder(_ nfts: [String], completion: @escaping OrderCompletion) {
-        if let task = tasks[.put],
-           task != nil { return }
+        guard let task = tasks[.put],
+              task == nil 
+        else { return }
         let dto = OrderDto(nfts: nfts)
         let request = OrderRequest(dto: dto, httpMethod: .put)
         tasks[.put] = networkClient.send(request: request, type: Order.self) { result in

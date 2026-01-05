@@ -71,6 +71,7 @@ extension PaymentPresenter: PaymentPresenterProtocol {
     }
     
     func viewWillAppear() {
+        print("[PaymentPresenter/viewWillAppear]: запуск сетевых запросов")
         DispatchQueue.global().async {
             self.uploadData()
         }
@@ -78,6 +79,7 @@ extension PaymentPresenter: PaymentPresenterProtocol {
     }
     
     func viewDidDisappear() {
+        print("[PaymentPresenter/viewDidDisappear]: приостановка сетевых запросов")
         stopUploadingData()
     }
 }
