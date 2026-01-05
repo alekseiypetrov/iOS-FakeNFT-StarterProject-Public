@@ -91,7 +91,7 @@ extension CatalogViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let count = presenter.itemsAmount
-        print("📊 numberOfRows =", count)
+        print("📊 [CatalogViewController/numberOfRows]: \(count)")
         return count
     }
     
@@ -129,7 +129,7 @@ extension CatalogViewController: CatalogViewProtocol {
     }
     
     func reloadData() {
-        print("🔄 CatalogViewController reloadData")
+        print("🔄 [CatalogViewController/reloadData]")
         tableView.reloadData()
     }
 }
