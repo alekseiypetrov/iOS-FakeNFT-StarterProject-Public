@@ -29,7 +29,7 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     // MARK: - CatalogPresenterProtocol
 
     func viewDidLoad() {
-        print("🚀 CatalogPresenter viewDidLoad")
+        print("🚀 [CatalogPresenter/viewDidLoad]: view loaded")
         view?.showLoading()
 
         catalogService.loadCollections { [weak self] result in
@@ -43,7 +43,7 @@ final class CatalogPresenter: CatalogPresenterProtocol {
                 self.view?.reloadData()
 
             case .failure(let error):
-                print("❌ CatalogPresenter error:", error)
+                print("❌ [CatalogPresenter/loadCollections]: failure — \(error)")
             }
         }
     }
