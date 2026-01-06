@@ -183,6 +183,11 @@ final class BasketViewController: UIViewController {
     private func hideProgress() {
         UIProgressHUD.dismiss()
     }
+    
+    private func requestToReloadPaymentCard() {
+        paymentCard.changeButtonState(toEnable: false)
+        presenter?.countNewInfoForPaymentCard()
+    }
 }
 
 // MARK: - BasketViewController + BasketViewControllerProtocol
@@ -191,6 +196,7 @@ extension BasketViewController: BasketViewControllerProtocol {
     func updateInfoInPaymentCard(newCount: Int, newCost: Double) {
         paymentCard.updateAmountNfts(newCount)
         paymentCard.updateTotalCost(newCost)
+        paymentCard.changeButtonState(toEnable: true)
     }
     
     func updateCellsFromTable() {
@@ -198,6 +204,7 @@ extension BasketViewController: BasketViewControllerProtocol {
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
+        requestToReloadPaymentCard()
     }
     
     func deleteCellFromTable(at index: Int) {
@@ -205,12 +212,13 @@ extension BasketViewController: BasketViewControllerProtocol {
             let indexPath = IndexPath(row: index, section: 0)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }, completion: { [weak self] _ in
-            self?.presenter?.countNewInfoForPaymentCard()
+            self?.requestToReloadPaymentCard()
         })
     }
     
     func showTable() {
         emptyBasketLabel.isHidden = true
+        paymentCard.changeButtonState(toEnable: false)
         showProgress()
         [tableView, paymentCard]
             .forEach({

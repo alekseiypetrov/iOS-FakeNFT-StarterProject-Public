@@ -78,6 +78,10 @@ final class PaymentCardView: UIView {
         totalCostLabel.text = "\(roundedCost) ETH"
     }
     
+    func changeButtonState(toEnable isEnabled: Bool) {
+        paymentButton.isEnabled = isEnabled
+    }
+    
     // MARK: - Lifecycle
     
     override func layoutSubviews() {

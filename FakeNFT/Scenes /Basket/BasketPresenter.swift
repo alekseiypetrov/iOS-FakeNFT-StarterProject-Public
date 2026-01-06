@@ -83,7 +83,6 @@ final class BasketPresenter {
         group.notify(queue: .main) { [weak self] in
             self?.products = loadedProducts
             self?.getParameterAndSort()
-            self?.countNewInfoForPaymentCard()
             self?.viewController?.updateCellsFromTable()
         }
         productsService.clearTasks()
