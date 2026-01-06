@@ -17,3 +17,6 @@
 "ConfirmingDeletion.deleteButton" = "Удалить";
 "ConfirmingDeletion.cancelButton" = "Вернуться";
 "Payment.navigationTitle" = "Выберите способ оплаты";
+"Payment.titleLabel" = "Совершая покупку, вы соглашаетесь с условиями";
+"Payment.linkButton" = "Пользовательского соглашения";
+"Payment.paymentButton" = "Оплатить";

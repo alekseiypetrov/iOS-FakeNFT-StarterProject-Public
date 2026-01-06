@@ -7,6 +7,12 @@ protocol PaymentViewControllerProtocol: AnyObject {
 
 final class PaymentViewController: UIViewController {
     
+    // MARK: - Constants
+    
+    private enum Constants {
+        static let heightOfPurchaseCard: CGFloat = 186.0
+    }
+    
     // MARK: - UI-elements
     
     private lazy var backButton: UIBarButtonItem = {
@@ -30,6 +36,8 @@ final class PaymentViewController: UIViewController {
         collection.register(PaymentCollectionViewCell.self)
         return collection
     }()
+    
+    private lazy var purchaseCard = ConfirmingPurchaseView { }
     
     // MARK: - Private Properties
     
@@ -72,7 +80,7 @@ final class PaymentViewController: UIViewController {
         navigationItem.leftBarButtonItem = backButton
         navigationItem.title = NSLocalizedString("Payment.navigationTitle", comment: "")
         
-        [collectionView]
+        [collectionView, purchaseCard]
             .forEach{
                 view.addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
@@ -84,8 +92,14 @@ final class PaymentViewController: UIViewController {
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20.0),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16.0),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16.0),
-            // TODO: - will be fixed later (поменять на topAnchor "карточки" для подтверждения и выполнения оплаты при выполнении 3/3 эпика)
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: purchaseCard.topAnchor),
+            
+            // purchaseCard Constraints
+            
+            purchaseCard.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            purchaseCard.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            purchaseCard.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            purchaseCard.heightAnchor.constraint(equalToConstant: Constants.heightOfPurchaseCard),
         ])
     }
 }

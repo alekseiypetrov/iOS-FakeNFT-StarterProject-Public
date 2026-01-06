@@ -49,6 +49,7 @@
 		971343A02F0930CD00C7CD7B /* Currency+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9713439F2F0930CD00C7CD7B /* Currency+Equatable.swift */; };
 		971343A22F0930FE00C7CD7B /* PaymentPresenterStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 971343A12F0930FE00C7CD7B /* PaymentPresenterStub.swift */; };
 		971343A42F09311000C7CD7B /* PaymentViewControllerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 971343A32F09311000C7CD7B /* PaymentViewControllerStub.swift */; };
+		97139DAF2F0D45C7008EAFA8 /* ConfirmingPurchaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97139DAE2F0D45C7008EAFA8 /* ConfirmingPurchaseView.swift */; };
 		974147B82F013685004EC15C /* SortingParametersStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 974147B72F013685004EC15C /* SortingParametersStorage.swift */; };
 		9747BF132F02B47B0029F5F3 /* PaymentCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9747BF122F02B47B0029F5F3 /* PaymentCollectionViewCell.swift */; };
 		9747BF152F02C5630029F5F3 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9747BF142F02C5630029F5F3 /* Currency.swift */; };
@@ -137,6 +138,7 @@
 		9713439F2F0930CD00C7CD7B /* Currency+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Currency+Equatable.swift"; sourceTree = "<group>"; };
 		971343A12F0930FE00C7CD7B /* PaymentPresenterStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentPresenterStub.swift; sourceTree = "<group>"; };
 		971343A32F09311000C7CD7B /* PaymentViewControllerStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentViewControllerStub.swift; sourceTree = "<group>"; };
+		97139DAE2F0D45C7008EAFA8 /* ConfirmingPurchaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmingPurchaseView.swift; sourceTree = "<group>"; };
 		974147B72F013685004EC15C /* SortingParametersStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortingParametersStorage.swift; sourceTree = "<group>"; };
 		9747BF122F02B47B0029F5F3 /* PaymentCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCollectionViewCell.swift; sourceTree = "<group>"; };
 		9747BF142F02C5630029F5F3 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
@@ -415,6 +417,14 @@
 			path = PaymentScreenUnitTests;
 			sourceTree = "<group>";
 		};
+		97139DAD2F0D45AF008EAFA8 /* ConfirmingPurchase */ = {
+			isa = PBXGroup;
+			children = (
+				97139DAE2F0D45C7008EAFA8 /* ConfirmingPurchaseView.swift */,
+			);
+			path = ConfirmingPurchase;
+			sourceTree = "<group>";
+		};
 		97ACA2FC2EF99B4B00450217 /* Basket */ = {
 			isa = PBXGroup;
 			children = (
@@ -439,6 +449,7 @@
 		97ACA3042EFB20CA00450217 /* PaymentView */ = {
 			isa = PBXGroup;
 			children = (
+				97139DAD2F0D45AF008EAFA8 /* ConfirmingPurchase */,
 				97ACA3022EFB20B200450217 /* PaymentViewController.swift */,
 				9747BF122F02B47B0029F5F3 /* PaymentCollectionViewCell.swift */,
 				9747BF162F02E1C50029F5F3 /* PaymentPresenter.swift */,
@@ -656,6 +667,7 @@
 				0CF2C2DD2A783CE600FDC837 /* ErrorView.swift in Sources */,
 				9747BF132F02B47B0029F5F3 /* PaymentCollectionViewCell.swift in Sources */,
 				97ACA3012EFB06ED00450217 /* PaymentCardView.swift in Sources */,
+				97139DAF2F0D45C7008EAFA8 /* ConfirmingPurchaseView.swift in Sources */,
 				9747BF152F02C5630029F5F3 /* Currency.swift in Sources */,
 				0C79EE682A76DE0900EE90EA /* NftDetailPresenter.swift in Sources */,
 				3F68069B29CBBAF100B4F915 /* ProductDetailsTableViewController.swift in Sources */,
