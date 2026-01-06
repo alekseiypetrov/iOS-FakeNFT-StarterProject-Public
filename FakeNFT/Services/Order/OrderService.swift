@@ -17,15 +17,10 @@ final class OrderLoader: OrderService {
     }
     
     func loadOrder(completion: @escaping OrderCompletion) {
-        guard let task = tasks[.get],
-              task == nil
-        else { return }
-        
+        tasks[.get]??.cancel()
         let request = OrderRequest(httpMethod: .get)
-        tasks[.get] = networkClient.send(request: request, type: Order.self) { result in
-            defer {
-                self.tasks[.get] = nil
-            }
+        tasks[.get] = networkClient.send(request: request, type: Order.self) { [weak self] result in
+            defer { self?.tasks[.get] = nil }
             switch result {
             case .failure(let error):
                 completion(.failure(error))
@@ -36,15 +31,11 @@ final class OrderLoader: OrderService {
     }
     
     func saveOrder(_ nfts: [String], completion: @escaping OrderCompletion) {
-        guard let task = tasks[.put],
-              task == nil 
-        else { return }
+        tasks[.put]??.cancel()
         let dto = OrderDto(nfts: nfts)
         let request = OrderRequest(dto: dto, httpMethod: .put)
-        tasks[.put] = networkClient.send(request: request, type: Order.self) { result in
-            defer {
-                self.tasks[.put] = nil
-            }
+        tasks[.put] = networkClient.send(request: request, type: Order.self) { [weak self] result in
+            defer { self?.tasks[.put] = nil }
             switch result {
             case .failure(let error):
                 completion(.failure(error))

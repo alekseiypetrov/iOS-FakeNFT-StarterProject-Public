@@ -66,8 +66,9 @@ final class BasketPresenter {
         for nftId in order.nfts {
             group.enter()
             nftQueue.async {
-                self.productsService.loadProduct(id: nftId) { result in
+                self.productsService.loadProduct(id: nftId) { [weak self] result in
                     defer { group.leave() }
+                    guard let self else { return }
                     print("[BasketPresenter/loadProduct]: продукт загружен")
                     switch result {
                     case .failure(let error):
@@ -137,6 +138,9 @@ final class BasketPresenter {
                 self.viewController?.showUpdatingStatus(true)
                 self.order = order
                 self.products.remove(at: chosenProductIndex)
+                if self.products.isEmpty {
+                    self.viewController?.hideTable()
+                }
                 self.viewController?.deleteCellFromTable(at: chosenProductIndex)
             }
         }
