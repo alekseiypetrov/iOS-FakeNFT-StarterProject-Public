@@ -10,16 +10,16 @@ protocol NftService {
 }
 
 final class NftServiceImpl: NftService {
-
+    
     private let networkClient: NetworkClient
     private let storage: NftStorage
-
+    
     // MARK: - Init
     init(networkClient: NetworkClient, storage: NftStorage) {
         self.storage = storage
         self.networkClient = networkClient
     }
-
+    
     // MARK: - NftService
     func loadNft(id: String, completion: @escaping NftCompletion) {
         if let nft = storage.getNft(with: id) {
@@ -28,7 +28,7 @@ final class NftServiceImpl: NftService {
             return
         }
         
-
+        
         let request = NFTRequest(id: id)
         print("🧩 [NftService/loadNft]: start loading from API, id = \(id)")
         
@@ -45,34 +45,36 @@ final class NftServiceImpl: NftService {
             }
         }
     }
-
+    
     func loadNfts(ids: [String], completion: @escaping NftsCompletion) {
         var loadedNfts: [Nft] = []
         var currentIndex = 0
-
+        
+        print("🧩 [NftService/loadNfts]: start loading \(ids.count) NFTs")
+        
         func loadNext() {
-            if currentIndex >= ids.count {
+            guard currentIndex < ids.count else {
                 print("✅ [NftService/loadNfts]: finished loading \(loadedNfts.count) NFTs")
                 completion(.success(loadedNfts))
                 return
             }
-
+            
             let id = ids[currentIndex]
-            loadNft(id: id, completion: { result in
+            loadNft(id: id) { result in
                 switch result {
                 case .success(let nft):
                     print("📦 [NftService/loadNfts]: appended NFT, id = \(nft.id)")
                     loadedNfts.append(nft)
                     currentIndex += 1
                     loadNext()
+                    
                 case .failure(let error):
                     print("❌ [NftService/loadNfts]: failed on id = \(id), error = \(error)")
                     completion(.failure(error))
                 }
-            })
+            }
         }
-
-        print("🧩 [NftService/loadNfts]: start loading \(ids.count) NFTs")
+        
         loadNext()
     }
 }
