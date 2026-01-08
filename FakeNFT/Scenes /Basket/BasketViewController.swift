@@ -5,6 +5,7 @@ protocol ProductTableViewCellDelegate: AnyObject {
 }
 
 protocol BasketViewControllerProtocol: AnyObject {
+    func configure(_ presenter: BasketPresenterProtocol)
     func updateInfoInPaymentCard(newCount: Int, newCost: Double)
     func updateCellsFromTable()
     func deleteCellFromTable(at index: Int)
@@ -18,6 +19,7 @@ final class BasketViewController: UIViewController {
     // MARK: - Constants
     
     private enum Constants {
+        static let sizeOfSortingButton = CGSize(width: 42.0, height: 42.0)
         static let heightOfCardView: CGFloat = 76.0
         static let heightOfCellInTable: CGFloat = 140.0
         static let parameters: [String: SortOption] = [
@@ -37,13 +39,10 @@ final class BasketViewController: UIViewController {
         return label
     }()
     
-    private lazy var sortingButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(
-            image: UIImage(resource: .nbSort),
-            style: .plain,
-            target: self,
-            action: #selector(sortingButtonPressed)
-        )
+    private lazy var sortingButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(resource: .nbSort), for: .normal)
+        button.addTarget(self, action: #selector(sortingButtonPressed), for: .touchUpInside)
         button.tintColor = UIColor(resource: .ypBlack)
         return button
     }()
@@ -64,7 +63,6 @@ final class BasketViewController: UIViewController {
         PaymentCardView { [weak self] in
             let paymentController = PaymentViewController()
             let paymentPresenter = PaymentPresenter(viewController: paymentController)
-            paymentController.configure(paymentPresenter)
             let navigationController = UINavigationController(rootViewController: paymentController)
             navigationController.modalPresentationStyle = .fullScreen
             self?.present(navigationController, animated: true)
@@ -140,19 +138,12 @@ final class BasketViewController: UIViewController {
         present(alert, animated: true)
     }
     
-    // MARK: - Public Methods
-    
-    func configure(_ presenter: BasketPresenterProtocol) {
-        self.presenter = presenter
-    }
-    
     // MARK: - Private Methods
     
     private func setupUI() {
         view.backgroundColor = UIColor(resource: .ypWhite)
-        navigationItem.rightBarButtonItem = sortingButton
         
-        [emptyBasketLabel, tableView, paymentCard]
+        [emptyBasketLabel, sortingButton, tableView, paymentCard]
             .forEach({
                 view.addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
@@ -160,9 +151,16 @@ final class BasketViewController: UIViewController {
         emptyBasketLabel.constraintCenters(to: view)
         NSLayoutConstraint.activate([
             
+            // sortingButton Constraints
+            
+            sortingButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 2.0),
+            sortingButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -9.0),
+            sortingButton.widthAnchor.constraint(equalToConstant: Constants.sizeOfSortingButton.width),
+            sortingButton.heightAnchor.constraint(equalToConstant: Constants.sizeOfSortingButton.height),
+            
             // tableView Constraints
             
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.topAnchor.constraint(equalTo: sortingButton.bottomAnchor, constant: 20.0),
             tableView.bottomAnchor.constraint(equalTo: paymentCard.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -185,6 +183,7 @@ final class BasketViewController: UIViewController {
     }
     
     private func requestToReloadPaymentCard() {
+        sortingButton.isEnabled = false
         paymentCard.changeButtonState(toEnable: false)
         presenter?.countNewInfoForPaymentCard()
     }
@@ -193,9 +192,14 @@ final class BasketViewController: UIViewController {
 // MARK: - BasketViewController + BasketViewControllerProtocol
 
 extension BasketViewController: BasketViewControllerProtocol {
+    func configure(_ presenter: BasketPresenterProtocol) {
+        self.presenter = presenter
+    }
+    
     func updateInfoInPaymentCard(newCount: Int, newCost: Double) {
         paymentCard.updateAmountNfts(newCount)
         paymentCard.updateTotalCost(newCost)
+        sortingButton.isEnabled = true
         paymentCard.changeButtonState(toEnable: true)
     }
     
@@ -218,21 +222,20 @@ extension BasketViewController: BasketViewControllerProtocol {
     
     func showTable() {
         emptyBasketLabel.isHidden = true
+        sortingButton.isEnabled = false
         paymentCard.changeButtonState(toEnable: false)
         showProgress()
-        [tableView, paymentCard]
+        [sortingButton, tableView, paymentCard]
             .forEach({
                 $0.isHidden = false
             })
-        sortingButton.isHidden = false
     }
     
     func hideTable() {
-        [tableView, paymentCard]
+        [sortingButton, tableView, paymentCard]
             .forEach({
                 $0.isHidden = true
             })
-        sortingButton.isHidden = true
         emptyBasketLabel.isHidden = false
     }
     

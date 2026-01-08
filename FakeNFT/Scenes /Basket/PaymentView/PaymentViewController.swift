@@ -1,6 +1,7 @@
 import UIKit
 
 protocol PaymentViewControllerProtocol: AnyObject {
+    func configure(_ presenter: PaymentPresenterProtocol)
     func hideCollection()
     func showCollection()
 }
@@ -73,12 +74,6 @@ final class PaymentViewController: UIViewController {
         dismiss(animated: true)
     }
     
-    // MARK: - Public Methods
-    
-    func configure(_ presenter: PaymentPresenterProtocol) {
-        self.presenter = presenter
-    }
-    
     // MARK: - Private Methods
     
     private func setupUI() {
@@ -113,6 +108,10 @@ final class PaymentViewController: UIViewController {
 // MARK: - PaymentViewController + PaymentViewControllerProtocol
 
 extension PaymentViewController: PaymentViewControllerProtocol {
+    func configure(_ presenter: PaymentPresenterProtocol) {
+        self.presenter = presenter
+    }
+    
     func hideCollection() {
         UIProgressHUD.show()
         collectionView.isHidden = true

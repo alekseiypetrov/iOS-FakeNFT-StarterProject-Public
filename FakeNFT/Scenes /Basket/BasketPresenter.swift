@@ -34,6 +34,7 @@ final class BasketPresenter {
             networkClient: networkClient,
             storage: NftStorageImpl()
         )
+        self.viewController?.configure(self)
     }
     
     // MARK: - Private Methods

@@ -24,13 +24,11 @@ final class TabBarController: UITabBarController {
         catalogController.tabBarItem = catalogTabBarItem
         
         let basketController = BasketViewController()
-        let navigationBasketController = UINavigationController(rootViewController: basketController)
         basketController.tabBarItem = basketTabBarItem
         let basketPresenter = BasketPresenter(viewController: basketController)
-        basketController.configure(basketPresenter)
 
         tabBar.unselectedItemTintColor = UIColor(resource: .ypBlack)
-        viewControllers = [catalogController, navigationBasketController]
+        viewControllers = [catalogController, basketController]
 
         view.backgroundColor = UIColor(resource: .ypWhite)
     }

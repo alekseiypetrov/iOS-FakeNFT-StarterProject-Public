@@ -30,6 +30,7 @@ final class PaymentPresenter {
         self.viewController = viewController
         let networkClient = DefaultNetworkClient()
         currencyService = CurrencyLoader(networkClient: networkClient)
+        self.viewController?.configure(self)
     }
     
     // MARK: - Private Methods
