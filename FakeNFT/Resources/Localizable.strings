@@ -20,3 +20,5 @@
 "Payment.titleLabel" = "Совершая покупку, вы соглашаетесь с условиями";
 "Payment.linkButton" = "Пользовательского соглашения";
 "Payment.paymentButton" = "Оплатить";
+"WebView.invalidRequest" = "Неверный запрос";
+"WebView.loadingTitle" = "Загрузка";

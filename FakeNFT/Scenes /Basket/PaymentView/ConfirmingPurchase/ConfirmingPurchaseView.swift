@@ -58,13 +58,15 @@ final class ConfirmingPurchaseView: UIView {
     
     // MARK: - Private Properties
     
-    private var buttonAction: (() -> ())?
+    private var paymentButtonAction: (() -> ())?
+    private var linkButtonAction: (() -> ())?
     
     // MARK: - Initializers
     
-    init(_ buttonAction: (() -> ())?) {
+    init(linkButtonAction: (() -> ())?, paymentButtonAction: (() -> ())?) {
         super.init(frame: .zero)
-        self.buttonAction = buttonAction
+        self.linkButtonAction = linkButtonAction
+        self.paymentButtonAction = paymentButtonAction
         setupView()
     }
     
@@ -83,11 +85,13 @@ final class ConfirmingPurchaseView: UIView {
     // MARK: - Actions
     
     @objc
-    private func showUserAgreement() { }
+    private func showUserAgreement() { 
+        linkButtonAction?()
+    }
     
     @objc
     private func paymentButtonTouched() {
-        buttonAction?()
+        paymentButtonAction?()
     }
     
     // MARK: - Private Methods

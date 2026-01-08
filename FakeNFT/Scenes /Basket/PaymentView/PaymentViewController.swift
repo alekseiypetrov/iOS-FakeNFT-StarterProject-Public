@@ -37,7 +37,13 @@ final class PaymentViewController: UIViewController {
         return collection
     }()
     
-    private lazy var purchaseCard = ConfirmingPurchaseView { }
+    private lazy var purchaseCard = ConfirmingPurchaseView(
+        linkButtonAction: { [weak self] in
+            let viewController = UserAgreementWebView()
+            let presenter = UserAgreementPresenter(viewController)
+            self?.navigationController?.pushViewController(viewController, animated: true)
+        },
+        paymentButtonAction: {})
     
     // MARK: - Private Properties
     
