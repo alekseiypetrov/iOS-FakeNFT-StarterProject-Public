@@ -7,6 +7,13 @@ protocol PaymentPresenterProtocol {
     func getCurrency(at index: Int) -> Currency
     func viewWillAppear()
     func viewDidDisappear()
+    func cellDidSelected(withIndex index: Int)
+    func executePayment()
+}
+
+enum AlertReason {
+    case notSelectedCurrency
+    case networkError
 }
 
 final class PaymentPresenter {
@@ -23,6 +30,7 @@ final class PaymentPresenter {
     private var currencies: [Currency] = []
     weak private var viewController: PaymentViewControllerProtocol?
     private var currencyService: CurrencyService
+    private var chosenCurrency: Int? = nil
     
     // MARK: - Initializers
     
@@ -45,6 +53,7 @@ final class PaymentPresenter {
                 print("[PaymentPresenter/uploadData]: amount of currencies - \(currencies.count)")
                 self?.currencies = currencies
                 self?.viewController?.showCollection()
+                self?.chosenCurrency = nil
             }
         }
     }
@@ -82,5 +91,18 @@ extension PaymentPresenter: PaymentPresenterProtocol {
     func viewDidDisappear() {
         print("[PaymentPresenter/viewDidDisappear]: приостановка сетевых запросов")
         stopUploadingData()
+    }
+    
+    func cellDidSelected(withIndex index: Int) {
+        chosenCurrency = index
+    }
+    
+    func executePayment() {
+        guard let chosenCurrency
+        else {
+            viewController?.showAlert(forReason: .notSelectedCurrency)
+            return
+        }
+        viewController?.showAlert(forReason: .networkError)
     }
 }

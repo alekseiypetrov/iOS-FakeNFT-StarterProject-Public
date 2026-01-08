@@ -102,7 +102,9 @@ extension UserAgreementWebView: UserAgreementWebViewProtocol {
     }
     
     func stopLoadingPage() {
-        webView.stopLoading()
+        if webView.isLoading {
+            webView.stopLoading()
+        }
     }
     
     func setNewProgressValue(_ newValue: CGFloat) {

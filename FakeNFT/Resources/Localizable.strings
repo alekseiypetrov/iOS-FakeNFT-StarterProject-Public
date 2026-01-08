@@ -20,5 +20,9 @@
 "Payment.titleLabel" = "Совершая покупку, вы соглашаетесь с условиями";
 "Payment.linkButton" = "Пользовательского соглашения";
 "Payment.paymentButton" = "Оплатить";
+"Payment.Alert.Message.notSelectedCurrency" = "Перед оплатой выберите валюту";
+"Payment.Alert.Message.networkError" = "Не удалось произвести оплату";
+"Payment.Alert.Buttons.cancel" = "Отмена";
+"Payment.Alert.Buttons.repeat" = "Повторить";
 "WebView.invalidRequest" = "Неверный запрос";
 "WebView.loadingTitle" = "Загрузка";

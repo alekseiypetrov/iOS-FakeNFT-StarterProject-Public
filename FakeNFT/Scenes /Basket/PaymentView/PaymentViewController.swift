@@ -4,6 +4,7 @@ protocol PaymentViewControllerProtocol: AnyObject {
     func configure(_ presenter: PaymentPresenterProtocol)
     func hideCollection()
     func showCollection()
+    func showAlert(forReason reason: AlertReason)
 }
 
 final class PaymentViewController: UIViewController {
@@ -44,7 +45,9 @@ final class PaymentViewController: UIViewController {
             let presenter = UserAgreementPresenter(viewController)
             self?.navigationController?.pushViewController(viewController, animated: true)
         },
-        paymentButtonAction: {})
+        paymentButtonAction: { [weak self] in
+            self?.startOfPaymentExecution()
+        })
     
     // MARK: - Private Properties
     
@@ -72,6 +75,11 @@ final class PaymentViewController: UIViewController {
     @objc
     private func backButtonPressed() {
         dismiss(animated: true)
+    }
+    
+    private func startOfPaymentExecution() {
+        UIProgressHUD.show()
+        presenter?.executePayment()
     }
     
     // MARK: - Private Methods
@@ -124,6 +132,39 @@ extension PaymentViewController: PaymentViewControllerProtocol {
         collectionView.isHidden = false
         UIProgressHUD.dismiss()
     }
+    
+    func showAlert(forReason reason: AlertReason) {
+        UIProgressHUD.dismiss()
+        var actions: [UIAlertAction] = [
+            UIAlertAction(
+                title: NSLocalizedString("Payment.Alert.Buttons.cancel", comment: ""),
+                style: .cancel
+            )
+        ]
+        var message: String
+        switch reason {
+        case .notSelectedCurrency:
+            message = NSLocalizedString("Payment.Alert.Message.notSelectedCurrency", comment: "")
+        case .networkError:
+            message = NSLocalizedString("Payment.Alert.Message.networkError", comment: "")
+            let repeatAction = UIAlertAction(
+                title: NSLocalizedString("Payment.Alert.Buttons.repeat", comment: ""),
+                style: .default) { [weak self] _ in
+                    self?.startOfPaymentExecution()
+                }
+            actions.append(repeatAction)
+        }
+        let alert = UIAlertController(
+            title: nil,
+            message: message,
+            preferredStyle: .alert
+        )
+        actions
+            .forEach{
+                alert.addAction($0)
+            }
+        present(alert, animated: true)
+    }
 }
 
 // MARK: - PaymentViewController + UICollectionViewDataSource
@@ -151,7 +192,10 @@ extension PaymentViewController: UICollectionViewDelegateFlowLayout {
         cell.changeBorder()
     }
     
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) { 
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        DispatchQueue.global().async {
+            self.presenter?.cellDidSelected(withIndex: indexPath.row)
+        }
         changeStateOfCell(collectionView, atIndexPath: indexPath)
     }
     
