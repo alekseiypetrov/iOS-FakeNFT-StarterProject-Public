@@ -1,8 +1,6 @@
 import UIKit
 
-final class NftCollectionCell: UICollectionViewCell {
-    
-    static let reuseIdentifier = "NftCollectionCell"
+final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
     
     // MARK: - UI
     private let imageView = UIImageView()
@@ -16,6 +14,7 @@ final class NftCollectionCell: UICollectionViewCell {
     private let infoStack = UIStackView()
     private let bottomStack = UIStackView()
     
+    // MARK: - Actions
     private var onFavoriteTap: (() -> Void)?
     private var onCartTap: (() -> Void)?
     
@@ -29,9 +28,10 @@ final class NftCollectionCell: UICollectionViewCell {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         assertionFailure("init(coder:) is not supported")
-        return nil
+        super.init(coder: coder)
     }
     
+    // MARK: - Actions
     @objc private func favoriteTapped() {
         onFavoriteTap?()
     }
