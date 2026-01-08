@@ -26,3 +26,5 @@
 "Payment.Alert.Buttons.repeat" = "Повторить";
 "WebView.invalidRequest" = "Неверный запрос";
 "WebView.loadingTitle" = "Загрузка";
+"SuccessfulPayment.label" = "Успех! Оплата прошла, поздравляем с покупкой!";
+"SuccessfulPayment.button" = "Вернуться в корзину";

@@ -5,6 +5,7 @@ protocol PaymentViewControllerProtocol: AnyObject {
     func hideCollection()
     func showCollection()
     func showAlert(forReason reason: AlertReason)
+    func showSuccessfulPaymentScreen()
 }
 
 final class PaymentViewController: UIViewController {
@@ -164,6 +165,12 @@ extension PaymentViewController: PaymentViewControllerProtocol {
                 alert.addAction($0)
             }
         present(alert, animated: true)
+    }
+    
+    func showSuccessfulPaymentScreen() {
+        UIProgressHUD.dismiss()
+        let viewController = SuccessfulPaymentViewController()
+        navigationController?.pushViewController(viewController, animated: true)
     }
 }
 

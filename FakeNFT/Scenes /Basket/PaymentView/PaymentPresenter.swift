@@ -103,6 +103,8 @@ extension PaymentPresenter: PaymentPresenterProtocol {
             viewController?.showAlert(forReason: .notSelectedCurrency)
             return
         }
-        viewController?.showAlert(forReason: .networkError)
+        // TODO: - Will be done later (запрос в сеть)
+//        viewController?.showSuccessfulPaymentScreen()
+//        viewController?.showAlert(forReason: .networkError)
     }
 }

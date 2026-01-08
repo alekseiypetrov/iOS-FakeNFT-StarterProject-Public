@@ -62,6 +62,7 @@
 		9747E8B92F014FCE00AB3C70 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 974147B02EFED02A004EC15C /* Kingfisher */; };
 		9747E8BA2F014FCE00AB3C70 /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 974147B32EFED045004EC15C /* ProgressHUD */; };
 		9747E8BC2F0151AB00AB3C70 /* UIProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9747E8BB2F0151AB00AB3C70 /* UIProgressHUD.swift */; };
+		978D7A7D2F10689600B72A61 /* SuccessfulPaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978D7A7C2F10689600B72A61 /* SuccessfulPaymentViewController.swift */; };
 		97ACA2FE2EF99B5D00450217 /* BasketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA2FD2EF99B5D00450217 /* BasketViewController.swift */; };
 		97ACA3012EFB06ED00450217 /* PaymentCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA3002EFB06ED00450217 /* PaymentCardView.swift */; };
 		97ACA3032EFB20B200450217 /* PaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA3022EFB20B200450217 /* PaymentViewController.swift */; };
@@ -152,6 +153,7 @@
 		9747BF182F03E7200029F5F3 /* CurrencyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyService.swift; sourceTree = "<group>"; };
 		9747BF1A2F03E7AC0029F5F3 /* CurrencyRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyRequest.swift; sourceTree = "<group>"; };
 		9747E8BB2F0151AB00AB3C70 /* UIProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIProgressHUD.swift; sourceTree = "<group>"; };
+		978D7A7C2F10689600B72A61 /* SuccessfulPaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessfulPaymentViewController.swift; sourceTree = "<group>"; };
 		97ACA2FD2EF99B5D00450217 /* BasketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketViewController.swift; sourceTree = "<group>"; };
 		97ACA3002EFB06ED00450217 /* PaymentCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCardView.swift; sourceTree = "<group>"; };
 		97ACA3022EFB20B200450217 /* PaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentViewController.swift; sourceTree = "<group>"; };
@@ -441,6 +443,14 @@
 			path = UserAgreement;
 			sourceTree = "<group>";
 		};
+		978D7A7B2F10687D00B72A61 /* SuccessfulPayment */ = {
+			isa = PBXGroup;
+			children = (
+				978D7A7C2F10689600B72A61 /* SuccessfulPaymentViewController.swift */,
+			);
+			path = SuccessfulPayment;
+			sourceTree = "<group>";
+		};
 		97ACA2FC2EF99B4B00450217 /* Basket */ = {
 			isa = PBXGroup;
 			children = (
@@ -465,6 +475,7 @@
 		97ACA3042EFB20CA00450217 /* PaymentView */ = {
 			isa = PBXGroup;
 			children = (
+				978D7A7B2F10687D00B72A61 /* SuccessfulPayment */,
 				97139DB02F0FE095008EAFA8 /* UserAgreement */,
 				97139DAD2F0D45AF008EAFA8 /* ConfirmingPurchase */,
 				97ACA3022EFB20B200450217 /* PaymentViewController.swift */,
@@ -715,6 +726,7 @@
 				3F6806D329CBBE9600B4F915 /* NetworkRequest.swift in Sources */,
 				9747BF1B2F03E7AC0029F5F3 /* CurrencyRequest.swift in Sources */,
 				974147B82F013685004EC15C /* SortingParametersStorage.swift in Sources */,
+				978D7A7D2F10689600B72A61 /* SuccessfulPaymentViewController.swift in Sources */,
 				0CFCB7492A7808900009A829 /* TestCatalogController.swift in Sources */,
 				3F6806D129CBBE6B00B4F915 /* NetworkClient.swift in Sources */,
 				9747BF192F03E7200029F5F3 /* CurrencyService.swift in Sources */,
