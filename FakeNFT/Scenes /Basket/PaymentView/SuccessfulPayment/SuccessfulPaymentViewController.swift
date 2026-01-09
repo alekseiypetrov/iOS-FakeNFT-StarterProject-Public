@@ -1,5 +1,11 @@
 import UIKit
 
+protocol SuccessfulPaymentViewControllerProtocol: AnyObject {
+    func configure(_ presenter: SuccessfulPaymentPresenterProtocol)
+    func showError()
+    func returnToBasket()
+}
+
 final class SuccessfulPaymentViewController: UIViewController {
     
     // MARK: - Constants
@@ -49,6 +55,10 @@ final class SuccessfulPaymentViewController: UIViewController {
         return button
     }()
     
+    // MARK: - Private Properties
+    
+    private var presenter: SuccessfulPaymentPresenterProtocol?
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -60,7 +70,8 @@ final class SuccessfulPaymentViewController: UIViewController {
     
     @objc
     private func backToBasket() {
-        dismiss(animated: true)
+        UIProgressHUD.show()
+        presenter?.cleanOrder()
     }
     
     // MARK: - Private Methods
@@ -96,5 +107,24 @@ final class SuccessfulPaymentViewController: UIViewController {
             button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16.0),
             button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16.0),
         ])
+    }
+}
+
+// MARK: - SuccessfulPaymentViewController + SuccessfulPaymentViewControllerProtocol
+
+extension SuccessfulPaymentViewController: SuccessfulPaymentViewControllerProtocol {
+    func configure(_ presenter: SuccessfulPaymentPresenterProtocol) {
+        self.presenter = presenter
+    }
+    
+    func showError() {
+        UIProgressHUD.dismiss()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            UIProgressHUD.showError()
+        }
+    }
+    
+    func returnToBasket() {
+        dismiss(animated: true)
     }
 }

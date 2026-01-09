@@ -66,6 +66,7 @@
 		978D7A7F2F11000400B72A61 /* PaymentRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978D7A7E2F11000400B72A61 /* PaymentRequest.swift */; };
 		978D7A812F11007F00B72A61 /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978D7A802F11007F00B72A61 /* PaymentService.swift */; };
 		978D7A832F1100B900B72A61 /* PaymentResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978D7A822F1100B900B72A61 /* PaymentResponse.swift */; };
+		978D7A852F1111DD00B72A61 /* SuccessfulPaymentPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978D7A842F1111DD00B72A61 /* SuccessfulPaymentPresenter.swift */; };
 		97ACA2FE2EF99B5D00450217 /* BasketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA2FD2EF99B5D00450217 /* BasketViewController.swift */; };
 		97ACA3012EFB06ED00450217 /* PaymentCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA3002EFB06ED00450217 /* PaymentCardView.swift */; };
 		97ACA3032EFB20B200450217 /* PaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA3022EFB20B200450217 /* PaymentViewController.swift */; };
@@ -160,6 +161,7 @@
 		978D7A7E2F11000400B72A61 /* PaymentRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentRequest.swift; sourceTree = "<group>"; };
 		978D7A802F11007F00B72A61 /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
 		978D7A822F1100B900B72A61 /* PaymentResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentResponse.swift; sourceTree = "<group>"; };
+		978D7A842F1111DD00B72A61 /* SuccessfulPaymentPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessfulPaymentPresenter.swift; sourceTree = "<group>"; };
 		97ACA2FD2EF99B5D00450217 /* BasketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketViewController.swift; sourceTree = "<group>"; };
 		97ACA3002EFB06ED00450217 /* PaymentCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCardView.swift; sourceTree = "<group>"; };
 		97ACA3022EFB20B200450217 /* PaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentViewController.swift; sourceTree = "<group>"; };
@@ -454,6 +456,7 @@
 			isa = PBXGroup;
 			children = (
 				978D7A7C2F10689600B72A61 /* SuccessfulPaymentViewController.swift */,
+				978D7A842F1111DD00B72A61 /* SuccessfulPaymentPresenter.swift */,
 			);
 			path = SuccessfulPayment;
 			sourceTree = "<group>";
@@ -730,6 +733,7 @@
 				97ACA3142EFEACCE00450217 /* OrderService.swift in Sources */,
 				0CFCB7462A78064B0009A829 /* NftDetailCellModel.swift in Sources */,
 				0CFCB74B2A780EA80009A829 /* UIView+Constraints.swift in Sources */,
+				978D7A852F1111DD00B72A61 /* SuccessfulPaymentPresenter.swift in Sources */,
 				3F6806D729CBC50A00B4F915 /* CellsReusingUtils.swift in Sources */,
 				0C79EE612A76DCD600EE90EA /* NftByIdRequest.swift in Sources */,
 				E19CD5AB2A98B56600CA39A5 /* NftImageCollectionViewCell.swift in Sources */,

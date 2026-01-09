@@ -90,7 +90,7 @@ final class BasketPresenter {
     }
     
     private func loadOrder() {
-        orderService.loadOrder { [weak self] result in
+        orderService.makeOrderRequest(ofType: .get, withNfts: nil) { [weak self] result in
             guard let self else { return }
             print("[BasketPresenter/loadOrder]: заказ загружен")
             switch result {
@@ -120,7 +120,7 @@ final class BasketPresenter {
     }
     
     private func saveOrder(_ nfts: [String]) {
-        orderService.saveOrder(nfts) { [weak self] result in
+        orderService.makeOrderRequest(ofType: .put, withNfts: nfts) { [weak self] result in 
             guard let self,
                   let chosenProductIndex = self.chosenProductIndex
             else { return }
@@ -162,9 +162,7 @@ extension BasketPresenter: BasketPresenterProtocol {
     
     func viewWillAppear() {
         print("[BasketPresenter/viewWillAppear]: запуск сетевых запросов")
-        if order.nfts.isEmpty {
-            viewController?.hideTable()
-        }
+        viewController?.hideTable()
         loadOrder()
     }
     

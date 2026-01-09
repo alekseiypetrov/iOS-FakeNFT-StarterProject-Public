@@ -66,6 +66,8 @@ final class PaymentPresenter {
     }
 }
 
+// MARK: - PaymentPresenter + PaymentPresenterProtocol
+
 extension PaymentPresenter: PaymentPresenterProtocol {
     var heightOfCell: CGFloat {
         Constants.heightOfCell
