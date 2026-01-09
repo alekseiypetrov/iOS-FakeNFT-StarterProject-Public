@@ -20,13 +20,15 @@ final class BasketViewController: UIViewController {
     
     private enum Constants {
         static let sizeOfSortingButton = CGSize(width: 42.0, height: 42.0)
-        static let heightOfCardView: CGFloat = 76.0
-        static let heightOfCellInTable: CGFloat = 140.0
         static let parameters: [String: SortOption] = [
             NSLocalizedString("Basket.alertController.sortByPrice", comment: ""): .byPrice,
             NSLocalizedString("Basket.alertController.sortByRating", comment: ""): .byRating,
             NSLocalizedString("Basket.alertController.sortByName", comment: ""): .byName
         ]
+        enum Heights {
+            static let ofCardView: CGFloat = 76.0
+            static let ofCellInTable: CGFloat = 140.0
+        }
     }
     
     // MARK: - UI-elements
@@ -45,12 +47,14 @@ final class BasketViewController: UIViewController {
         button.setImage(UIImage(resource: .nbSort), for: .normal)
         button.addTarget(self, action: #selector(sortingButtonPressed), for: .touchUpInside)
         button.tintColor = UIColor(resource: .ypBlack)
+        button.widthAnchor.constraint(equalToConstant: Constants.sizeOfSortingButton.width).isActive = true
+        button.heightAnchor.constraint(equalToConstant: Constants.sizeOfSortingButton.height).isActive = true
         return button
     }()
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero)
-        tableView.rowHeight = Constants.heightOfCellInTable
+        tableView.rowHeight = Constants.Heights.ofCellInTable
         tableView.backgroundColor = UIColor(resource: .ypWhite)
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
@@ -156,8 +160,6 @@ final class BasketViewController: UIViewController {
             
             sortingButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 2.0),
             sortingButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -9.0),
-            sortingButton.widthAnchor.constraint(equalToConstant: Constants.sizeOfSortingButton.width),
-            sortingButton.heightAnchor.constraint(equalToConstant: Constants.sizeOfSortingButton.height),
             
             // tableView Constraints
             
@@ -171,7 +173,7 @@ final class BasketViewController: UIViewController {
             paymentCard.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             paymentCard.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             paymentCard.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            paymentCard.heightAnchor.constraint(equalToConstant: Constants.heightOfCardView)
+            paymentCard.heightAnchor.constraint(equalToConstant: Constants.Heights.ofCardView)
         ])
     }
     

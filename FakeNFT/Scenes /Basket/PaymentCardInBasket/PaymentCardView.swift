@@ -6,16 +6,16 @@ final class PaymentCardView: UIView {
     
     private enum Constants {
         enum Widths {
-            static let minimumWidthForButton: CGFloat = 100.0
-            static let maximumWidthForButton: CGFloat = 240.0
+            static let minimumForButton: CGFloat = 100.0
+            static let maximumForButton: CGFloat = 240.0
         }
         enum CornerRadiuses {
-            static let cornerRadiusOfView: CGFloat = 12.0
-            static let cornerRadiusOfButton: CGFloat = 16.0
+            static let ofView: CGFloat = 12.0
+            static let ofButton: CGFloat = 16.0
         }
         enum Sizes {
-            static let sizeOfAmountNftsLabel = CGSize(width: 42, height: 20)
-            static let sizeOfTotalCostLabel = CGSize(width: 79, height: 22)
+            static let ofAmountNftsLabel = CGSize(width: 42, height: 20)
+            static let ofTotalCostLabel = CGSize(width: 79, height: 22)
         }
         static let attributedStringForButton = NSAttributedString(
             string: NSLocalizedString("Basket.paymentButton", comment: ""),
@@ -30,6 +30,7 @@ final class PaymentCardView: UIView {
         let label = UILabel()
         label.font = .caption1
         label.textColor = UIColor(resource: .ypBlack)
+        label.heightAnchor.constraint(equalToConstant: Constants.Sizes.ofAmountNftsLabel.height).isActive = true
         return label
     }()
     
@@ -37,6 +38,7 @@ final class PaymentCardView: UIView {
         let label = UILabel()
         label.font = .bodyBold
         label.textColor = UIColor(resource: .ypGreen)
+        label.heightAnchor.constraint(equalToConstant: Constants.Sizes.ofTotalCostLabel.height).isActive = true
         return label
     }()
     
@@ -45,8 +47,10 @@ final class PaymentCardView: UIView {
         button.setAttributedTitle(Constants.attributedStringForButton, for: .normal)
         button.backgroundColor = UIColor(resource: .ypBlack)
         button.layer.masksToBounds = true
-        button.layer.cornerRadius = Constants.CornerRadiuses.cornerRadiusOfButton
+        button.layer.cornerRadius = Constants.CornerRadiuses.ofButton
         button.addTarget(self, action: #selector(paymentButtonTouched), for: .touchUpInside)
+        button.widthAnchor.constraint(greaterThanOrEqualToConstant: Constants.Widths.minimumForButton).isActive = true
+        button.widthAnchor.constraint(lessThanOrEqualToConstant: Constants.Widths.maximumForButton).isActive = true
         button.accessibilityIdentifier = "navigateToPay"
         return button
     }()
@@ -103,7 +107,7 @@ final class PaymentCardView: UIView {
         let maskPath = UIBezierPath(
             roundedRect: bounds,
             byRoundingCorners: [.topLeft, .topRight],
-            cornerRadii: CGSize(width: Constants.CornerRadiuses.cornerRadiusOfView, height: Constants.CornerRadiuses.cornerRadiusOfView)
+            cornerRadii: CGSize(width: Constants.CornerRadiuses.ofView, height: Constants.CornerRadiuses.ofView)
         )
         let maskLayer = CAShapeLayer()
         maskLayer.path = maskPath.cgPath
@@ -124,13 +128,11 @@ final class PaymentCardView: UIView {
             
             // amountNftsLabel Constraints
             
-            amountNftsLabel.heightAnchor.constraint(equalToConstant: Constants.Sizes.sizeOfAmountNftsLabel.height),
             amountNftsLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16.0),
             amountNftsLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16.0),
             
             // totalCostLabel Constraints
             
-            totalCostLabel.heightAnchor.constraint(equalToConstant: Constants.Sizes.sizeOfTotalCostLabel.height),
             totalCostLabel.topAnchor.constraint(equalTo: amountNftsLabel.bottomAnchor, constant: 2.0),
             totalCostLabel.leadingAnchor.constraint(equalTo: amountNftsLabel.leadingAnchor),
             
@@ -140,8 +142,6 @@ final class PaymentCardView: UIView {
             paymentButton.bottomAnchor.constraint(equalTo: totalCostLabel.bottomAnchor),
             paymentButton.leadingAnchor.constraint(equalTo: totalCostLabel.trailingAnchor, constant: 24.0),
             paymentButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16.0),
-            paymentButton.widthAnchor.constraint(lessThanOrEqualToConstant: Constants.Widths.maximumWidthForButton),
-            paymentButton.widthAnchor.constraint(greaterThanOrEqualToConstant: Constants.Widths.minimumWidthForButton),
         ])
         
         updateAmountNfts(0)

@@ -8,8 +8,11 @@ final class PaymentCollectionViewCell: UICollectionViewCell, ReuseIdentifying {
     private enum Constants {
         static let sizeOfImage = CGSize(width: 36.0, height: 36.0)
         static let borderWidth: CGFloat = 1.0
-        static let cornerRadiusOfImage: CGFloat = 6.0
-        static let cornerRadiusOfCell: CGFloat = 12.0
+        
+        enum CornerRadiuses {
+            static let ofImage: CGFloat = 6.0
+            static let ofCell: CGFloat = 12.0
+        }
     }
     
     // MARK: - UI-elements
@@ -18,8 +21,10 @@ final class PaymentCollectionViewCell: UICollectionViewCell, ReuseIdentifying {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = UIColor(resource: .ypBlackUniversal)
-        imageView.layer.cornerRadius = Constants.cornerRadiusOfImage
+        imageView.layer.cornerRadius = Constants.CornerRadiuses.ofImage
         imageView.clipsToBounds = true
+        imageView.widthAnchor.constraint(equalToConstant: Constants.sizeOfImage.width).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: Constants.sizeOfImage.height).isActive = true
         return imageView
     }()
     
@@ -79,7 +84,7 @@ final class PaymentCollectionViewCell: UICollectionViewCell, ReuseIdentifying {
     // MARK: - Private Methods
     
     private func setupContentView() {
-        contentView.layer.cornerRadius = Constants.cornerRadiusOfCell
+        contentView.layer.cornerRadius = Constants.CornerRadiuses.ofCell
         contentView.clipsToBounds = true
         contentView.layer.borderWidth = Constants.borderWidth
         contentView.backgroundColor = UIColor(resource: .ypLightGrey)
@@ -99,8 +104,6 @@ final class PaymentCollectionViewCell: UICollectionViewCell, ReuseIdentifying {
             
             // currencyImageView Constraints
             
-            currencyImageView.widthAnchor.constraint(equalToConstant: Constants.sizeOfImage.width),
-            currencyImageView.heightAnchor.constraint(equalToConstant: Constants.sizeOfImage.height),
             currencyImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 5.0),
             currencyImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 12.0),
             

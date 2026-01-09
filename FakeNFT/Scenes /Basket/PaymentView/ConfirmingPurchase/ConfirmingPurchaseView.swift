@@ -34,6 +34,7 @@ final class ConfirmingPurchaseView: UIView {
         label.font = .caption2
         label.textColor = UIColor(resource: .ypBlack)
         label.text = NSLocalizedString("Payment.titleLabel", comment: "")
+        label.heightAnchor.constraint(equalToConstant: Constants.Heights.ofTitleLabel).isActive = true
         return label
     }()
     
@@ -43,6 +44,7 @@ final class ConfirmingPurchaseView: UIView {
         button.contentHorizontalAlignment = .left
         button.backgroundColor = .clear
         button.addTarget(self, action: #selector(showUserAgreement), for: .touchUpInside)
+        button.heightAnchor.constraint(equalToConstant: Constants.Heights.ofLinkButton).isActive = true
         return button
     }()
     
@@ -125,14 +127,12 @@ final class ConfirmingPurchaseView: UIView {
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16.0),
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16.0),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16.0),
-            titleLabel.heightAnchor.constraint(equalToConstant: Constants.Heights.ofTitleLabel),
             
             // linkButton Constraints
             
             linkButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
             linkButton.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             linkButton.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
-            linkButton.heightAnchor.constraint(equalToConstant: Constants.Heights.ofLinkButton),
             
             // paymentButton Constraints
             
