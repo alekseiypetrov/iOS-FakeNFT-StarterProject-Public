@@ -11,8 +11,9 @@ protocol PaymentPresenterProtocol {
     func executePayment()
 }
 
-enum AlertReason {
+enum AlertReason: String {
     case notSelectedCurrency
+    case notSuccessfulPayment
     case networkError
 }
 
@@ -27,10 +28,11 @@ final class PaymentPresenter {
     
     // MARK: - Private Properties
     
-    private var currencies: [Currency] = []
     weak private var viewController: PaymentViewControllerProtocol?
+    private var currencies: [Currency] = []
     private var currencyService: CurrencyService
     private var chosenCurrency: Int? = nil
+    private var paymentService: PaymentService
     
     // MARK: - Initializers
     
@@ -38,6 +40,7 @@ final class PaymentPresenter {
         self.viewController = viewController
         let networkClient = DefaultNetworkClient()
         currencyService = CurrencyLoader(networkClient: networkClient)
+        paymentService = PaymentSender(networkClient: networkClient)
         self.viewController?.configure(self)
     }
     
@@ -103,8 +106,16 @@ extension PaymentPresenter: PaymentPresenterProtocol {
             viewController?.showAlert(forReason: .notSelectedCurrency)
             return
         }
-        // TODO: - Will be done later (запрос в сеть)
-//        viewController?.showSuccessfulPaymentScreen()
-//        viewController?.showAlert(forReason: .networkError)
+        let id = currencies[chosenCurrency].id
+        paymentService.payForOrder(byCurrencyWithId: id) { [weak self] result in
+            switch result {
+            case .failure:
+                self?.viewController?.showAlert(forReason: .networkError)
+            case .success(let response) where !response.success:
+                self?.viewController?.showAlert(forReason: .notSuccessfulPayment)
+            default:
+                self?.viewController?.showSuccessfulPaymentScreen()
+            }
+        }
     }
 }

@@ -21,6 +21,7 @@
 "Payment.linkButton" = "Пользовательского соглашения";
 "Payment.paymentButton" = "Оплатить";
 "Payment.Alert.Message.notSelectedCurrency" = "Перед оплатой выберите валюту";
+"Payment.Alert.Message.notSuccessfulPayment" = "Оплата не прошла, попробуйте еще раз";
 "Payment.Alert.Message.networkError" = "Не удалось произвести оплату";
 "Payment.Alert.Buttons.cancel" = "Отмена";
 "Payment.Alert.Buttons.repeat" = "Повторить";

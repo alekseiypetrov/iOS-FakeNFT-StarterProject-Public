@@ -136,24 +136,22 @@ extension PaymentViewController: PaymentViewControllerProtocol {
     
     func showAlert(forReason reason: AlertReason) {
         UIProgressHUD.dismiss()
+        let message = NSLocalizedString("Payment.Alert.Message.\(reason.rawValue)", comment: "")
         var actions: [UIAlertAction] = [
             UIAlertAction(
                 title: NSLocalizedString("Payment.Alert.Buttons.cancel", comment: ""),
                 style: .cancel
             )
         ]
-        var message: String
         switch reason {
-        case .notSelectedCurrency:
-            message = NSLocalizedString("Payment.Alert.Message.notSelectedCurrency", comment: "")
-        case .networkError:
-            message = NSLocalizedString("Payment.Alert.Message.networkError", comment: "")
+        case .networkError, .notSuccessfulPayment:
             let repeatAction = UIAlertAction(
                 title: NSLocalizedString("Payment.Alert.Buttons.repeat", comment: ""),
                 style: .default) { [weak self] _ in
                     self?.startOfPaymentExecution()
                 }
             actions.append(repeatAction)
+        default: break
         }
         let alert = UIAlertController(
             title: nil,
