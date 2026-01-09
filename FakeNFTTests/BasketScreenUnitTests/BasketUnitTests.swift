@@ -6,9 +6,9 @@ final class BasketUnitTests: XCTestCase {
     // MARK: - Private Properties
     
     private let mockProducts = [
-        BasketProduct(id: "", name: "product1", rating: 0, price: 0.0, images: []),
-        BasketProduct(id: "", name: "product2", rating: 0, price: 0.0, images: []),
-        BasketProduct(id: "", name: "product3", rating: 0, price: 0.0, images: []),
+        Nft(id: "", name: "product1", images: [], rating: 0, price: 0.0),
+        Nft(id: "", name: "product2", images: [], rating: 0, price: 0.0),
+        Nft(id: "", name: "product3", images: [], rating: 0, price: 0.0),
     ]
     
     // MARK: - Testing Functions for BasketPresenterProtocol Methods
@@ -29,7 +29,7 @@ final class BasketUnitTests: XCTestCase {
         let presenter = BasketPresenterStub()
         presenter.products = mockProducts
         
-        let countGettingFromMethod = presenter.getCountOfProducts()
+        let countGettingFromMethod = presenter.productsAmount
         let countGettingFromProperty = presenter.products.count
         let countInFact = mockProducts.count
         
@@ -64,6 +64,14 @@ final class BasketUnitTests: XCTestCase {
         let product = presenter.findProduct(withName: "banana")
         
         XCTAssertNil(product)
+    }
+    
+    func testChangingSortParameter() {
+        let presenter = BasketPresenterStub()
+        
+        presenter.sortParameterChanged(to: .byName)
+        
+        XCTAssertNotNil(presenter.changedParameter)
     }
     
     // MARK: - Testing Functions For BasketViewControllerProtocol Methods

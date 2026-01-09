@@ -4,8 +4,9 @@ final class BasketPresenterStub: BasketPresenterProtocol {
     var viewWillAppearCalled: Bool = false
     var viewDidDisappearCalled: Bool = false
     var deleteProductCalledSuccessfull: Bool = false
+    var changedParameter: SortOption?
     var chosenIndex: Int?
-    var products: [BasketProduct] = [] {
+    var products: [Nft] = [] {
         didSet {
             viewController?.updateCellsFromTable()
             viewController?.showTable()
@@ -21,6 +22,10 @@ final class BasketPresenterStub: BasketPresenterProtocol {
         self.viewController = viewController
     }
     
+    func sortParameterChanged(to newParameter: FakeNFT.SortOption) { 
+        changedParameter = newParameter
+    }
+    
     func viewWillAppear() {
         viewWillAppearCalled = true
     }
@@ -29,11 +34,11 @@ final class BasketPresenterStub: BasketPresenterProtocol {
         viewDidDisappearCalled = true
     }
     
-    func getCountOfProducts() -> Int {
+    var productsAmount: Int {
         products.count
     }
     
-    func getCurrentProduct(at index: Int) -> BasketProduct {
+    func getCurrentProduct(at index: Int) -> Nft {
         products[index]
     }
     
@@ -51,7 +56,7 @@ final class BasketPresenterStub: BasketPresenterProtocol {
         viewController?.deleteCellFromTable(at: chosenIndex)
     }
     
-    func findProduct(withName name: String) -> BasketProduct? {
+    func findProduct(withName name: String) -> Nft? {
         guard let index = products.firstIndex(where: { $0.name == name })
         else { return nil }
         return getCurrentProduct(at: index)
@@ -64,4 +69,7 @@ final class BasketPresenterStub: BasketPresenterProtocol {
     func sortParameterChanged(to newParameter: String) {
         viewController?.updateCellsFromTable()
     }
+    
+    // Временно
+    func viewDidLoad() { }
 }
