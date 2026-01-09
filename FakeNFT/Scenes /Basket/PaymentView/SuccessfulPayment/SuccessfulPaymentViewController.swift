@@ -125,6 +125,7 @@ extension SuccessfulPaymentViewController: SuccessfulPaymentViewControllerProtoc
     }
     
     func returnToBasket() {
+        UIProgressHUD.dismiss()
         dismiss(animated: true)
     }
 }

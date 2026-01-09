@@ -168,7 +168,7 @@ extension PaymentViewController: PaymentViewControllerProtocol {
     func showSuccessfulPaymentScreen() {
         UIProgressHUD.dismiss()
         let successViewController = SuccessfulPaymentViewController()
-        let successPresenter = SuccessfulPaymentPresenter(viewController: successViewController)
+        _ = SuccessfulPaymentPresenter(viewController: successViewController)
         navigationController?.pushViewController(successViewController, animated: true)
     }
 }

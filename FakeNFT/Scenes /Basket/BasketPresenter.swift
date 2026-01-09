@@ -69,7 +69,7 @@ final class BasketPresenter {
             nftQueue.async {
                 self.productsService.loadProduct(id: nftId) { [weak self] result in
                     defer { group.leave() }
-                    guard let self else { return }
+                    guard self != nil else { return }
                     print("[BasketPresenter/loadProduct]: продукт загружен")
                     switch result {
                     case .failure(let error):
