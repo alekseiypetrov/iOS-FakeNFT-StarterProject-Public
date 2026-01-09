@@ -1,6 +1,7 @@
 import Foundation
 
 protocol BasketPresenterProtocol {
+    func viewDidLoad()
     var productsAmount: Int { get }
     func viewWillAppear()
     func viewDidDisappear()
@@ -98,25 +99,28 @@ final class BasketPresenter {
                 print("[BasketPresenter/loadOrder]: error - \(error)")
             case .success(let order):
                 self.order = order
-                // TODO: - will be removed later (для просмотра на моковом примере)
-                self.order = Order(nfts: [
-                    "ca34d35a-4507-47d9-9312-5ea7053994c0",
-                    "7773e33c-ec15-4230-a102-92426a3a6d5a",
-                    "739e293c-1067-43e5-8f1d-4377e744ddde",
-                    "1e649115-1d4f-4026-ad56-9551a16763ee",
-                    "28829968-8639-4e08-8853-2f30fcf09783",
-                    "5093c01d-e79e-4281-96f1-76db5880ba70",
-                    "594aaf01-5962-4ab7-a6b5-470ea37beb93",
-                    "1fda6f0c-a615-4a1a-aa9c-a1cbd7cc76ae",
-                    "3434c774-0e0f-476e-a314-24f4f0dfed86",
-                    "cc74e9ab-2189-465f-a1a6-8405e07e9fe4"
-                ])
                 print("[BasketPresenter/loadOrder]: order - \(self.order.nfts.description)")
                 if !self.order.nfts.isEmpty {
                     self.orderDelivered()
                 }
             }
         }
+    }
+    
+    func viewDidLoad() {
+        // TODO: - will be removed later (для демонстрации работы)
+        saveOrder([
+            "ca34d35a-4507-47d9-9312-5ea7053994c0",
+            "7773e33c-ec15-4230-a102-92426a3a6d5a",
+            "739e293c-1067-43e5-8f1d-4377e744ddde",
+            "1e649115-1d4f-4026-ad56-9551a16763ee",
+            "28829968-8639-4e08-8853-2f30fcf09783",
+            "5093c01d-e79e-4281-96f1-76db5880ba70",
+            "594aaf01-5962-4ab7-a6b5-470ea37beb93",
+            "1fda6f0c-a615-4a1a-aa9c-a1cbd7cc76ae",
+            "3434c774-0e0f-476e-a314-24f4f0dfed86",
+            "cc74e9ab-2189-465f-a1a6-8405e07e9fe4"
+        ])
     }
     
     private func saveOrder(_ nfts: [String]) {
