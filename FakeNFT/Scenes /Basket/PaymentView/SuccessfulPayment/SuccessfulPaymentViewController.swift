@@ -29,6 +29,7 @@ final class SuccessfulPaymentViewController: UIViewController {
         let imageView = UIImageView(image: UIImage(resource: .copSuccessfulPayment))
         imageView.widthAnchor.constraint(equalToConstant: Constants.imageSize.width).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: Constants.imageSize.height).isActive = true
+        imageView.accessibilityIdentifier = "imageOfSuccessfulPayment"
         return imageView
     }()
     
@@ -40,6 +41,7 @@ final class SuccessfulPaymentViewController: UIViewController {
         label.lineBreakMode = .byWordWrapping
         label.numberOfLines = 0
         label.text = NSLocalizedString("SuccessfulPayment.label", comment: "")
+        label.accessibilityIdentifier = "titleOfSuccessfulPayment"
         return label
     }()
     
@@ -52,6 +54,7 @@ final class SuccessfulPaymentViewController: UIViewController {
         button.backgroundColor = UIColor(resource: .ypBlack)
         button.addTarget(self, action: #selector(backToBasket), for: .touchUpInside)
         button.heightAnchor.constraint(equalToConstant: Constants.buttonHeight).isActive = true
+        button.accessibilityIdentifier = "backToBasketButton"
         return button
     }()
     

@@ -53,6 +53,7 @@ final class ConfirmingPurchaseView: UIView {
         button.layer.masksToBounds = true
         button.layer.cornerRadius = Constants.CornerRadiuses.ofButton
         button.addTarget(self, action: #selector(paymentButtonTouched), for: .touchUpInside)
+        button.accessibilityIdentifier = "confirmAndExecutePayment"
         return button
     }()
     

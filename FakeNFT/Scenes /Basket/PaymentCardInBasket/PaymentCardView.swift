@@ -47,6 +47,7 @@ final class PaymentCardView: UIView {
         button.layer.masksToBounds = true
         button.layer.cornerRadius = Constants.CornerRadiuses.cornerRadiusOfButton
         button.addTarget(self, action: #selector(paymentButtonTouched), for: .touchUpInside)
+        button.accessibilityIdentifier = "navigateToPay"
         return button
     }()
     

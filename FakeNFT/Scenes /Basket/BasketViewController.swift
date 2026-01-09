@@ -36,6 +36,7 @@ final class BasketViewController: UIViewController {
         label.textAlignment = .center
         label.text = NSLocalizedString("Basket.emptyBasketTitle", comment: "")
         label.font = .bodyBold
+        label.accessibilityIdentifier = "titleOfEmptyBasket"
         return label
     }()
     
