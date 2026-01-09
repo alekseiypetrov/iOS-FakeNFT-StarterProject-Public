@@ -4,10 +4,12 @@ import Foundation
 final class PaymentPresenterStub: PaymentPresenterProtocol {
     var viewWillAppearCalled: Bool = false
     var viewDidDisappearCalled: Bool = false
+    var executePaymentCalled: Bool = false
+    var cellWasSelected: Int? = nil
     
     var heightOfCell: CGFloat = 0.0
     var spacing: CGFloat = 0.0
-    var viewController: PaymentViewControllerProtocol?
+    weak var viewController: PaymentViewControllerProtocol?
     var currencies: [Currency] = [] {
         didSet {
             viewController?.showCollection()
@@ -31,11 +33,24 @@ final class PaymentPresenterStub: PaymentPresenterProtocol {
         viewDidDisappearCalled = true
     }
     
-    func getNumberOfCurrencies() -> Int {
+    var currenciesAmount: Int {
         currencies.count
     }
     
     func getCurrency(at index: Int) -> Currency {
         currencies[index]
+    }
+    
+    func cellDidSelected(withIndex index: Int) { 
+        cellWasSelected = index
+    }
+    
+    func executePayment() { 
+        executePaymentCalled = true
+        if cellWasSelected != nil {
+            viewController?.showSuccessfulPaymentScreen()
+        } else {
+            viewController?.showAlert(forReason: .notSelectedCurrency)
+        }
     }
 }

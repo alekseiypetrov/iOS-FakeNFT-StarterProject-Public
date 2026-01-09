@@ -6,10 +6,10 @@ final class PaymentUnitTests: XCTestCase {
     // MARK: - Private Properties
     
     private let mockCurrencies: [Currency] = [
-        Currency(title: "", name: "Bitcoin", image: ""),
-        Currency(title: "", name: "Ethereum", image: ""),
-        Currency(title: "", name: "TON", image: ""),
-        Currency(title: "", name: "BNB", image: ""),
+        Currency(id: "", title: "", name: "Bitcoin", imageName: ""),
+        Currency(id: "", title: "", name: "Ethereum", imageName: ""),
+        Currency(id: "", title: "", name: "TON", imageName: ""),
+        Currency(id: "", title: "", name: "BNB", imageName: ""),
     ]
     
     // MARK: - Testing Functions for PaymentPresenterProtocol Methods
@@ -30,7 +30,7 @@ final class PaymentUnitTests: XCTestCase {
         let presenter = PaymentPresenterStub()
         presenter.currencies = mockCurrencies
         
-        let countGettingFromMethod = presenter.getNumberOfCurrencies()
+        let countGettingFromMethod = presenter.currenciesAmount
         let countGettingFromProperty = presenter.currencies.count
         let countInFact = mockCurrencies.count
         
@@ -68,5 +68,39 @@ final class PaymentUnitTests: XCTestCase {
         presenter.currencies = mockCurrencies
         
         XCTAssertTrue(viewController.showCollectionCalled)
+    }
+    
+    // MARK: - Testing Functions For Both Protocols
+    
+    func testSuccessPayment() {
+        let presenter = PaymentPresenterStub()
+        let viewController = PaymentViewControllerStub()
+        presenter.viewController = viewController
+        viewController.configure(presenter)
+        presenter.currencies = mockCurrencies
+        
+        presenter.cellDidSelected(withIndex: 0)
+        presenter.executePayment()
+        
+        XCTAssertNotNil(presenter.cellWasSelected)
+        XCTAssertTrue(presenter.executePaymentCalled)
+        XCTAssertTrue(viewController.showSuccessfulPaymentScreenCalled)
+        XCTAssertFalse(viewController.showAlertCalled)
+    }
+    
+    func testFailurePayment() {
+        let presenter = PaymentPresenterStub()
+        let viewController = PaymentViewControllerStub()
+        presenter.viewController = viewController
+        viewController.configure(presenter)
+        presenter.currencies = mockCurrencies
+        
+        presenter.executePayment()
+        
+        XCTAssertNil(presenter.cellWasSelected)
+        XCTAssertTrue(presenter.executePaymentCalled)
+        XCTAssertFalse(viewController.showSuccessfulPaymentScreenCalled)
+        XCTAssertTrue(viewController.showAlertCalled)
+        
     }
 }
