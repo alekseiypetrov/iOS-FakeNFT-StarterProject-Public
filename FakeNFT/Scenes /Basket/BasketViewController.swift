@@ -93,7 +93,6 @@ final class BasketViewController: UIViewController {
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
-        self.presenter?.viewDidLoad()
         super.viewDidLoad()
         setupUI()
     }
