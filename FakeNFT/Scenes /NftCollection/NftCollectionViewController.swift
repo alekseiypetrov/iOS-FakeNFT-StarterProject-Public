@@ -36,7 +36,7 @@ final class NftCollectionViewController: UIViewController {
     
     @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) is not supported")
+        return nil
     }
     
     // MARK: - Lifecycle
