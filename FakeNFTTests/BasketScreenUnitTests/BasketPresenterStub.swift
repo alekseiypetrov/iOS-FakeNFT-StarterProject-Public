@@ -69,7 +69,4 @@ final class BasketPresenterStub: BasketPresenterProtocol {
     func sortParameterChanged(to newParameter: String) {
         viewController?.updateCellsFromTable()
     }
-    
-    // Временно
-    func viewDidLoad() { }
 }

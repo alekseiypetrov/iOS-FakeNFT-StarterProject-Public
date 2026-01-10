@@ -25,11 +25,11 @@ final class FakeNFTUITests: XCTestCase {
         
         let cellToDelete = tablesQuery.children(matching: .cell).element(boundBy: 1)
         let deleteButton = cellToDelete.descendants(matching: .any)
-            .matching(NSPredicate(format: "label == 'delete'"))
+            .matching(NSPredicate(format: "label == %@", AccessibilityIdentifier.BasketView.deleteButtonInCell))
             .firstMatch
         deleteButton.tap()
         
-        let confirmingDeleteButton = app.buttons["confirmingDeleteButton"]
+        let confirmingDeleteButton = app.buttons[AccessibilityIdentifier.BasketView.confirmingDeleteButton]
         XCTAssertTrue(confirmingDeleteButton.waitForExistence(timeout: 5))
         confirmingDeleteButton.tap()
         sleep(5)
@@ -38,7 +38,7 @@ final class FakeNFTUITests: XCTestCase {
     func testPaymentProcess() { 
         app.tabBars.buttons.element(boundBy: 1).tap()
         
-        let buttonInBasket = app.buttons["navigateToPay"]
+        let buttonInBasket = app.buttons[AccessibilityIdentifier.BasketView.paymentButton]
         XCTAssertTrue(buttonInBasket.waitForExistence(timeout: 15))
         buttonInBasket.tap()
         
@@ -47,16 +47,16 @@ final class FakeNFTUITests: XCTestCase {
         XCTAssertTrue(cell.waitForExistence(timeout: 10))
         cell.tap()
         
-        app.buttons["confirmAndExecutePayment"].tap()
+        app.buttons[AccessibilityIdentifier.PaymentView.paymentButton].tap()
         
-        let image = app.images["imageOfSuccessfulPayment"]
-        let label = app.staticTexts["titleOfSuccessfulPayment"]
+        let image = app.images[AccessibilityIdentifier.SuccessfulPaymentView.imageView]
+        let label = app.staticTexts[AccessibilityIdentifier.SuccessfulPaymentView.label]
         XCTAssertTrue(image.waitForExistence(timeout: 5))
         XCTAssertTrue(label.waitForExistence(timeout: 5))
         
-        app.buttons["backToBasketButton"].tap()
+        app.buttons[AccessibilityIdentifier.SuccessfulPaymentView.button].tap()
         
-        let emptyBasketLabel = app.staticTexts["titleOfEmptyBasket"]
+        let emptyBasketLabel = app.staticTexts[AccessibilityIdentifier.BasketView.titleOfEmptyList]
         XCTAssertTrue(emptyBasketLabel.waitForExistence(timeout: 10))
     }
 }

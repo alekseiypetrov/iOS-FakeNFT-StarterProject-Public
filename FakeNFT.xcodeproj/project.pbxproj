@@ -81,6 +81,7 @@
 		97ACA3122EFEABE400450217 /* OrderRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA3112EFEABE400450217 /* OrderRequest.swift */; };
 		97ACA3142EFEACCE00450217 /* OrderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA3132EFEACCE00450217 /* OrderService.swift */; };
 		97ACA3172EFEB7CF00450217 /* BasketProductService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA3162EFEB7CF00450217 /* BasketProductService.swift */; };
+		97E267032F126BF400A16ADA /* AccessibilityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978D7A8D2F125EDA00B72A61 /* AccessibilityIdentifier.swift */; };
 		E19CD5AB2A98B56600CA39A5 /* NftImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19CD5AA2A98B56600CA39A5 /* NftImageCollectionViewCell.swift */; };
 		E1A1B9DA2AA01CE400C3AFBC /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A1B9D92AA01CE400C3AFBC /* TabBarController.swift */; };
 		E1CD40DC2A96BECC00BE7FE8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E1CD40DB2A96BECC00BE7FE8 /* Localizable.strings */; };
@@ -797,6 +798,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3F6806B829CBBAF200B4F915 /* FakeNFTUITests.swift in Sources */,
+				97E267032F126BF400A16ADA /* AccessibilityIdentifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
