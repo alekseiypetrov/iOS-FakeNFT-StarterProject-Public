@@ -75,7 +75,7 @@ final class ProductTableViewCell: UITableViewCell, ReuseIdentifying {
         button.addTarget(self, action: #selector(deleteProductFromBasket), for: .touchUpInside)
         button.widthAnchor.constraint(equalToConstant: Constants.Sizes.ofDeleteButton.width).isActive = true
         button.heightAnchor.constraint(equalToConstant: Constants.Sizes.ofDeleteButton.height).isActive = true
-        button.accessibilityLabel = "delete"
+        button.accessibilityLabel = AccessibilityIdentifier.BasketView.deleteButtonInCell
         return button
     }()
     

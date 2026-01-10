@@ -62,7 +62,7 @@ final class ConfirmingDeletionView: UIView {
         button.layer.cornerRadius = Constants.cornerRadius
         button.addTarget(self, action: #selector(deleteButtonTouched), for: .touchUpInside)
         button.heightAnchor.constraint(equalToConstant: Constants.heightOfButtons).isActive = true
-        button.accessibilityIdentifier = "confirmingDeleteButton"
+        button.accessibilityIdentifier = AccessibilityIdentifier.BasketView.confirmingDeleteButton
         return button
     }()
     

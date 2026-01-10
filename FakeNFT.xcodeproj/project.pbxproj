@@ -70,6 +70,7 @@
 		978D7A882F1148C800B72A61 /* UserAgreementUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978D7A872F1148C800B72A61 /* UserAgreementUnitTests.swift */; };
 		978D7A8A2F11493700B72A61 /* UserAgreementPresenterStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978D7A892F11493700B72A61 /* UserAgreementPresenterStub.swift */; };
 		978D7A8C2F11494300B72A61 /* UserAgreementWebViewStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978D7A8B2F11494300B72A61 /* UserAgreementWebViewStub.swift */; };
+		978D7A8E2F125EDA00B72A61 /* AccessibilityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978D7A8D2F125EDA00B72A61 /* AccessibilityIdentifier.swift */; };
 		97ACA2FE2EF99B5D00450217 /* BasketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA2FD2EF99B5D00450217 /* BasketViewController.swift */; };
 		97ACA3012EFB06ED00450217 /* PaymentCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA3002EFB06ED00450217 /* PaymentCardView.swift */; };
 		97ACA3032EFB20B200450217 /* PaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA3022EFB20B200450217 /* PaymentViewController.swift */; };
@@ -168,6 +169,7 @@
 		978D7A872F1148C800B72A61 /* UserAgreementUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAgreementUnitTests.swift; sourceTree = "<group>"; };
 		978D7A892F11493700B72A61 /* UserAgreementPresenterStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAgreementPresenterStub.swift; sourceTree = "<group>"; };
 		978D7A8B2F11494300B72A61 /* UserAgreementWebViewStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAgreementWebViewStub.swift; sourceTree = "<group>"; };
+		978D7A8D2F125EDA00B72A61 /* AccessibilityIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityIdentifier.swift; sourceTree = "<group>"; };
 		97ACA2FD2EF99B5D00450217 /* BasketViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketViewController.swift; sourceTree = "<group>"; };
 		97ACA3002EFB06ED00450217 /* PaymentCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCardView.swift; sourceTree = "<group>"; };
 		97ACA3022EFB20B200450217 /* PaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentViewController.swift; sourceTree = "<group>"; };
@@ -383,6 +385,7 @@
 				3FC8C39229D246BA0081F015 /* DateFormatters+Presets.swift */,
 				0CFCB74A2A780EA80009A829 /* UIView+Constraints.swift */,
 				9747E8BB2F0151AB00AB3C70 /* UIProgressHUD.swift */,
+				978D7A8D2F125EDA00B72A61 /* AccessibilityIdentifier.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -742,6 +745,7 @@
 				3F68069729CBBAF100B4F915 /* AppDelegate.swift in Sources */,
 				978D7A7F2F11000400B72A61 /* PaymentRequest.swift in Sources */,
 				3F68069929CBBAF100B4F915 /* SceneDelegate.swift in Sources */,
+				978D7A8E2F125EDA00B72A61 /* AccessibilityIdentifier.swift in Sources */,
 				97ACA3172EFEB7CF00450217 /* BasketProductService.swift in Sources */,
 				0C79EE6C2A76DE2E00EE90EA /* ServicesAssemly.swift in Sources */,
 				0CFCB74E2A7817DC0009A829 /* NftStorage.swift in Sources */,

@@ -51,7 +51,7 @@ final class PaymentCardView: UIView {
         button.addTarget(self, action: #selector(paymentButtonTouched), for: .touchUpInside)
         button.widthAnchor.constraint(greaterThanOrEqualToConstant: Constants.Widths.minimumForButton).isActive = true
         button.widthAnchor.constraint(lessThanOrEqualToConstant: Constants.Widths.maximumForButton).isActive = true
-        button.accessibilityIdentifier = "navigateToPay"
+        button.accessibilityIdentifier = AccessibilityIdentifier.BasketView.paymentButton
         return button
     }()
     
