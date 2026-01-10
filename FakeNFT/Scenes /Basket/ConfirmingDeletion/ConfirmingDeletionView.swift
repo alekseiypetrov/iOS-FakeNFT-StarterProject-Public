@@ -7,12 +7,9 @@ final class ConfirmingDeletionView: UIView {
     
     private enum Constants {
         static let cornerRadius: CGFloat = 12.0
-        static let heightOfQuestionLabel: CGFloat = 40.0
+        static let sizeOfImageView = CGSize(width: 108, height: 108)
+        static let heightOfButtons: CGFloat = 44.0
         
-        enum Sizes {
-            static let sizeOfImageView = CGSize(width: 108, height: 108)
-            static let sizeOfButtons = CGSize(width: 127, height: 44)
-        }
         enum AttributedTitles {
             static let forQuestion = NSAttributedString(
                 string: NSLocalizedString("ConfirmingDeletion.question", comment: ""),
@@ -43,6 +40,8 @@ final class ConfirmingDeletionView: UIView {
         )
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = Constants.cornerRadius
+        imageView.widthAnchor.constraint(equalToConstant: Constants.sizeOfImageView.width).isActive = true
+        imageView.heightAnchor.constraint(equalToConstant: Constants.sizeOfImageView.height).isActive = true
         return imageView
     }()
     
@@ -62,6 +61,8 @@ final class ConfirmingDeletionView: UIView {
         button.layer.masksToBounds = true
         button.layer.cornerRadius = Constants.cornerRadius
         button.addTarget(self, action: #selector(deleteButtonTouched), for: .touchUpInside)
+        button.heightAnchor.constraint(equalToConstant: Constants.heightOfButtons).isActive = true
+        button.accessibilityIdentifier = AccessibilityIdentifier.BasketView.confirmingDeleteButton
         return button
     }()
     
@@ -130,8 +131,6 @@ final class ConfirmingDeletionView: UIView {
             
             imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             imageView.bottomAnchor.constraint(equalTo: questionLabel.topAnchor, constant: -12.0),
-            imageView.widthAnchor.constraint(equalToConstant: Constants.Sizes.sizeOfImageView.width),
-            imageView.heightAnchor.constraint(equalToConstant: Constants.Sizes.sizeOfImageView.height),
             
             // questionLabel Constraints
             
@@ -142,7 +141,6 @@ final class ConfirmingDeletionView: UIView {
             
             // deleteButton Constraints
             
-            deleteButton.heightAnchor.constraint(equalToConstant: Constants.Sizes.sizeOfButtons.height),
             deleteButton.topAnchor.constraint(equalTo: questionLabel.bottomAnchor, constant: 20.0),
             deleteButton.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor, constant: -8.0),
             deleteButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 56.0),

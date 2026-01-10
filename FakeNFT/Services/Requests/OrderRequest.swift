@@ -13,6 +13,6 @@ struct OrderDto: Dto {
     let nfts: [String]
     
     func asDictionary() -> [String : String] {
-        ["nfts": nfts.joined(separator: ",")]
+        nfts.isEmpty ? [:] : ["nfts": nfts.joined(separator: ",")]
     }
 }

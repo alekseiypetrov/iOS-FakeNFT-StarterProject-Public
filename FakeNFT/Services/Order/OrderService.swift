@@ -3,48 +3,30 @@ import Foundation
 typealias OrderCompletion = (Result<Order, Error>) -> Void
 
 protocol OrderService {
-    func loadOrder(completion: @escaping OrderCompletion)
-    func saveOrder(_ nfts: [String], completion: @escaping OrderCompletion)
+    func makeOrderRequest(ofType httpMethod: HttpMethod, withNfts nfts: [String]?, completion: @escaping OrderCompletion)
     func stopTasks()
 }
 
 final class OrderLoader: OrderService {
+    private let logger = StatusLogger.shared
     private let networkClient: NetworkClient
-    private var tasks: [HttpMethod: NetworkTask?] = [.get: nil, .put: nil]
+    private var tasks: [HttpMethod: NetworkTask?] = [.get: nil, .put: nil, .post: nil]
 
     init(networkClient: NetworkClient) {
         self.networkClient = networkClient
     }
     
-    func loadOrder(completion: @escaping OrderCompletion) {
-        guard let task = tasks[.get],
-              task == nil
-        else { return }
-        
-        let request = OrderRequest(httpMethod: .get)
-        tasks[.get] = networkClient.send(request: request, type: Order.self) { result in
-            defer {
-                self.tasks[.get] = nil
-            }
-            switch result {
-            case .failure(let error):
-                completion(.failure(error))
-            case .success(let order):
-                completion(.success(order))
-            }
+    func makeOrderRequest(ofType httpMethod: HttpMethod, withNfts nfts: [String]?, completion: @escaping OrderCompletion) {
+        tasks[httpMethod]??.cancel()
+        var dto: Dto?
+        if let nfts,
+           httpMethod == .put || httpMethod == .post {
+            dto = OrderDto(nfts: nfts)
         }
-    }
-    
-    func saveOrder(_ nfts: [String], completion: @escaping OrderCompletion) {
-        guard let task = tasks[.put],
-              task == nil 
-        else { return }
-        let dto = OrderDto(nfts: nfts)
-        let request = OrderRequest(dto: dto, httpMethod: .put)
-        tasks[.put] = networkClient.send(request: request, type: Order.self) { result in
-            defer {
-                self.tasks[.put] = nil
-            }
+        let request = OrderRequest(dto: dto, httpMethod: httpMethod)
+        logger.sendCommonMessage(withText: "[OrderLoader/makeOrderRequest (\(httpMethod.rawValue)-request)]: \(request)")
+        tasks[httpMethod] = networkClient.send(request: request, type: Order.self) { [weak self] result in
+            defer { self?.tasks[httpMethod] = nil }
             switch result {
             case .failure(let error):
                 completion(.failure(error))
@@ -55,10 +37,9 @@ final class OrderLoader: OrderService {
     }
     
     func stopTasks() {
-        tasks
-            .forEach {
-                $0.value?.cancel()
-            }
-        tasks = [.get: nil, .put: nil]
+        for (key, value) in tasks {
+            value?.cancel()
+            tasks[key] = nil
+        }
     }
 }

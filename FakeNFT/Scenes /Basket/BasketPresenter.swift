@@ -16,6 +16,7 @@ final class BasketPresenter {
     // MARK: - Private Properties
     
     private let storageKey = "basket.sortParameter"
+    private let logger = StatusLogger.shared
     private var order: Order = Order(nfts: [])
     private var products: [Nft] = []
     private var chosenProductIndex: Int?
@@ -34,9 +35,21 @@ final class BasketPresenter {
             networkClient: networkClient,
             storage: NftStorageImpl()
         )
+//        putMockOrder() // для демонстрации работы без каталога
+        self.viewController?.configure(self)
     }
     
     // MARK: - Private Methods
+    
+    private func putMockOrder() {
+        saveOrder([
+            "ca34d35a-4507-47d9-9312-5ea7053994c0",
+            "7773e33c-ec15-4230-a102-92426a3a6d5a",
+            "739e293c-1067-43e5-8f1d-4377e744ddde",
+            "1e649115-1d4f-4026-ad56-9551a16763ee",
+            "28829968-8639-4e08-8853-2f30fcf09783",
+        ])
+    }
     
     private func getParameterAndSort() {
         guard let stringParameter = SortingParametersStorage.getParameter(fromKey: storageKey),
@@ -66,14 +79,15 @@ final class BasketPresenter {
         for nftId in order.nfts {
             group.enter()
             nftQueue.async {
-                self.productsService.loadProduct(id: nftId) { result in
+                self.productsService.loadProduct(id: nftId) { [weak self] result in
                     defer { group.leave() }
-                    print("[BasketPresenter/loadProduct]: продукт загружен")
+                    guard self != nil else { return }
+                    self?.logger.sendCommonMessage(withText: "[BasketPresenter/loadProduct]: продукт загружен")
                     switch result {
                     case .failure(let error):
-                        print("[BasketPresenter/loadProduct]: error - \(error)")
+                        self?.logger.sendErrorMessage(withText: "[BasketPresenter/loadProduct]: error", andError: error)
                     case .success(let product):
-                        print("[BasketPresenter/loadProduct]: product - \(product.id)")
+                        self?.logger.sendCommonMessage(withText: "[BasketPresenter/loadProduct]: product - \(product.id)")
                         loadedProducts.append(product)
                     }
                 }
@@ -82,35 +96,21 @@ final class BasketPresenter {
         group.notify(queue: .main) { [weak self] in
             self?.products = loadedProducts
             self?.getParameterAndSort()
-            self?.countNewInfoForPaymentCard()
             self?.viewController?.updateCellsFromTable()
         }
         productsService.clearTasks()
     }
     
     private func loadOrder() {
-        orderService.loadOrder { [weak self] result in
+        orderService.makeOrderRequest(ofType: .get, withNfts: nil) { [weak self] result in
             guard let self else { return }
-            print("[BasketPresenter/loadOrder]: заказ загружен")
+            self.logger.sendCommonMessage(withText: "[BasketPresenter/loadOrder]: заказ загружен")
             switch result {
             case .failure(let error):
-                print("[BasketPresenter/loadOrder]: error - \(error)")
+                self.logger.sendErrorMessage(withText: "[BasketPresenter/loadOrder]: error", andError: error)
             case .success(let order):
                 self.order = order
-                // TODO: - will be removed later (для просмотра на моковом примере)
-                self.order = Order(nfts: [
-                    "ca34d35a-4507-47d9-9312-5ea7053994c0",
-                    "7773e33c-ec15-4230-a102-92426a3a6d5a",
-                    "739e293c-1067-43e5-8f1d-4377e744ddde",
-                    "1e649115-1d4f-4026-ad56-9551a16763ee",
-                    "28829968-8639-4e08-8853-2f30fcf09783",
-                    "5093c01d-e79e-4281-96f1-76db5880ba70",
-                    "594aaf01-5962-4ab7-a6b5-470ea37beb93",
-                    "1fda6f0c-a615-4a1a-aa9c-a1cbd7cc76ae",
-                    "3434c774-0e0f-476e-a314-24f4f0dfed86",
-                    "cc74e9ab-2189-465f-a1a6-8405e07e9fe4"
-                ])
-                print("[BasketPresenter/loadOrder]: order - \(self.order.nfts.description)")
+                self.logger.sendCommonMessage(withText: "[BasketPresenter/loadOrder]: order - \(self.order.nfts.description)")
                 if !self.order.nfts.isEmpty {
                     self.orderDelivered()
                 }
@@ -119,7 +119,7 @@ final class BasketPresenter {
     }
     
     private func saveOrder(_ nfts: [String]) {
-        orderService.saveOrder(nfts) { [weak self] result in
+        orderService.makeOrderRequest(ofType: .put, withNfts: nfts) { [weak self] result in 
             guard let self,
                   let chosenProductIndex = self.chosenProductIndex
             else { return }
@@ -128,15 +128,16 @@ final class BasketPresenter {
             }
             switch result {
             case .failure(let error):
-                print("[BasketPresenter/saveOrder]: заказ не сохранен")
-                print("[BasketPresenter/saveOrder]: error - \(error)")
+                self.logger.sendErrorMessage(withText: "[BasketPresenter/saveOrder]: заказ не сохранен", andError: error)
                 self.viewController?.showUpdatingStatus(false)
             case .success(let order):
-                print("[BasketPresenter/saveOrder]: заказ сохранен")
-                print("[BasketPresenter/saveOrder]: order - \(order)")
+                self.logger.sendCommonMessage(withText: "[BasketPresenter/saveOrder]: заказ сохранен\norder - \(order)")
                 self.viewController?.showUpdatingStatus(true)
                 self.order = order
                 self.products.remove(at: chosenProductIndex)
+                if self.products.isEmpty {
+                    self.viewController?.hideTable()
+                }
                 self.viewController?.deleteCellFromTable(at: chosenProductIndex)
             }
         }
@@ -157,15 +158,13 @@ extension BasketPresenter: BasketPresenterProtocol {
     }
     
     func viewWillAppear() {
-        print("[BasketPresenter/viewWillAppear]: запуск сетевых запросов")
-        if order.nfts.isEmpty {
-            viewController?.hideTable()
-        }
+        logger.sendCommonMessage(withText: "[BasketPresenter/viewWillAppear]: запуск сетевых запросов")
+        viewController?.hideTable()
         loadOrder()
     }
     
     func viewDidDisappear() {
-        print("[BasketPresenter/viewDidDisappear]: приостановка сетевых запросов")
+        logger.sendCommonMessage(withText: "[BasketPresenter/viewDidDisappear]: приостановка сетевых запросов")
         orderService.stopTasks()
         productsService.stopLoadingProducts()
     }

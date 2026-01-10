@@ -5,6 +5,7 @@ protocol ProductTableViewCellDelegate: AnyObject {
 }
 
 protocol BasketViewControllerProtocol: AnyObject {
+    func configure(_ presenter: BasketPresenterProtocol)
     func updateInfoInPaymentCard(newCount: Int, newCost: Double)
     func updateCellsFromTable()
     func deleteCellFromTable(at index: Int)
@@ -18,13 +19,16 @@ final class BasketViewController: UIViewController {
     // MARK: - Constants
     
     private enum Constants {
-        static let heightOfCardView: CGFloat = 76.0
-        static let heightOfCellInTable: CGFloat = 140.0
+        static let sizeOfSortingButton = CGSize(width: 42.0, height: 42.0)
         static let parameters: [String: SortOption] = [
             NSLocalizedString("Basket.alertController.sortByPrice", comment: ""): .byPrice,
             NSLocalizedString("Basket.alertController.sortByRating", comment: ""): .byRating,
             NSLocalizedString("Basket.alertController.sortByName", comment: ""): .byName
         ]
+        enum Heights {
+            static let ofCardView: CGFloat = 76.0
+            static let ofCellInTable: CGFloat = 140.0
+        }
     }
     
     // MARK: - UI-elements
@@ -34,23 +38,23 @@ final class BasketViewController: UIViewController {
         label.textAlignment = .center
         label.text = NSLocalizedString("Basket.emptyBasketTitle", comment: "")
         label.font = .bodyBold
+        label.accessibilityIdentifier = AccessibilityIdentifier.BasketView.titleOfEmptyList
         return label
     }()
     
-    private lazy var sortingButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(
-            image: UIImage(resource: .nbSort),
-            style: .plain,
-            target: self,
-            action: #selector(sortingButtonPressed)
-        )
+    private lazy var sortingButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(resource: .nbSort), for: .normal)
+        button.addTarget(self, action: #selector(sortingButtonPressed), for: .touchUpInside)
         button.tintColor = UIColor(resource: .ypBlack)
+        button.widthAnchor.constraint(equalToConstant: Constants.sizeOfSortingButton.width).isActive = true
+        button.heightAnchor.constraint(equalToConstant: Constants.sizeOfSortingButton.height).isActive = true
         return button
     }()
     
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero)
-        tableView.rowHeight = Constants.heightOfCellInTable
+        tableView.rowHeight = Constants.Heights.ofCellInTable
         tableView.backgroundColor = UIColor(resource: .ypWhite)
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
@@ -64,7 +68,6 @@ final class BasketViewController: UIViewController {
         PaymentCardView { [weak self] in
             let paymentController = PaymentViewController()
             let paymentPresenter = PaymentPresenter(viewController: paymentController)
-            paymentController.configure(paymentPresenter)
             let navigationController = UINavigationController(rootViewController: paymentController)
             navigationController.modalPresentationStyle = .fullScreen
             self?.present(navigationController, animated: true)
@@ -140,19 +143,12 @@ final class BasketViewController: UIViewController {
         present(alert, animated: true)
     }
     
-    // MARK: - Public Methods
-    
-    func configure(_ presenter: BasketPresenterProtocol) {
-        self.presenter = presenter
-    }
-    
     // MARK: - Private Methods
     
     private func setupUI() {
         view.backgroundColor = UIColor(resource: .ypWhite)
-        navigationItem.rightBarButtonItem = sortingButton
         
-        [emptyBasketLabel, tableView, paymentCard]
+        [emptyBasketLabel, sortingButton, tableView, paymentCard]
             .forEach({
                 view.addSubview($0)
                 $0.translatesAutoresizingMaskIntoConstraints = false
@@ -160,9 +156,14 @@ final class BasketViewController: UIViewController {
         emptyBasketLabel.constraintCenters(to: view)
         NSLayoutConstraint.activate([
             
+            // sortingButton Constraints
+            
+            sortingButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 2.0),
+            sortingButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -9.0),
+            
             // tableView Constraints
             
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.topAnchor.constraint(equalTo: sortingButton.bottomAnchor, constant: 20.0),
             tableView.bottomAnchor.constraint(equalTo: paymentCard.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -172,7 +173,7 @@ final class BasketViewController: UIViewController {
             paymentCard.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             paymentCard.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             paymentCard.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            paymentCard.heightAnchor.constraint(equalToConstant: Constants.heightOfCardView)
+            paymentCard.heightAnchor.constraint(equalToConstant: Constants.Heights.ofCardView)
         ])
     }
     
@@ -183,14 +184,26 @@ final class BasketViewController: UIViewController {
     private func hideProgress() {
         UIProgressHUD.dismiss()
     }
+    
+    private func requestToReloadPaymentCard() {
+        sortingButton.isEnabled = false
+        paymentCard.changeButtonState(toEnable: false)
+        presenter?.countNewInfoForPaymentCard()
+    }
 }
 
 // MARK: - BasketViewController + BasketViewControllerProtocol
 
 extension BasketViewController: BasketViewControllerProtocol {
+    func configure(_ presenter: BasketPresenterProtocol) {
+        self.presenter = presenter
+    }
+    
     func updateInfoInPaymentCard(newCount: Int, newCost: Double) {
         paymentCard.updateAmountNfts(newCount)
         paymentCard.updateTotalCost(newCost)
+        sortingButton.isEnabled = true
+        paymentCard.changeButtonState(toEnable: true)
     }
     
     func updateCellsFromTable() {
@@ -198,6 +211,7 @@ extension BasketViewController: BasketViewControllerProtocol {
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
+        requestToReloadPaymentCard()
     }
     
     func deleteCellFromTable(at index: Int) {
@@ -205,26 +219,26 @@ extension BasketViewController: BasketViewControllerProtocol {
             let indexPath = IndexPath(row: index, section: 0)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }, completion: { [weak self] _ in
-            self?.presenter?.countNewInfoForPaymentCard()
+            self?.requestToReloadPaymentCard()
         })
     }
     
     func showTable() {
         emptyBasketLabel.isHidden = true
+        sortingButton.isEnabled = false
+        paymentCard.changeButtonState(toEnable: false)
         showProgress()
-        [tableView, paymentCard]
+        [sortingButton, tableView, paymentCard]
             .forEach({
                 $0.isHidden = false
             })
-        sortingButton.isHidden = false
     }
     
     func hideTable() {
-        [tableView, paymentCard]
+        [sortingButton, tableView, paymentCard]
             .forEach({
                 $0.isHidden = true
             })
-        sortingButton.isHidden = true
         emptyBasketLabel.isHidden = false
     }
     

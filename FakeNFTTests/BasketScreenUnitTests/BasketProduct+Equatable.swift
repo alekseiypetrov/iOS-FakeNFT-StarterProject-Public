@@ -1,7 +1,7 @@
 @testable import FakeNFT
 
-extension BasketProduct: Equatable {
-    public static func == (lhs: BasketProduct, rhs: BasketProduct) -> Bool {
+extension Nft: Equatable {
+    public static func == (lhs: Nft, rhs: Nft) -> Bool {
         guard lhs.id == rhs.id,
               lhs.name == rhs.name,
               lhs.price == rhs.price,

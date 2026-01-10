@@ -7,6 +7,14 @@ protocol PaymentPresenterProtocol {
     func getCurrency(at index: Int) -> Currency
     func viewWillAppear()
     func viewDidDisappear()
+    func cellDidSelected(withIndex index: Int)
+    func executePayment()
+}
+
+enum AlertReason: String {
+    case notSelectedCurrency
+    case notSuccessfulPayment
+    case networkError
 }
 
 final class PaymentPresenter {
@@ -20,9 +28,12 @@ final class PaymentPresenter {
     
     // MARK: - Private Properties
     
-    private var currencies: [Currency] = []
     weak private var viewController: PaymentViewControllerProtocol?
+    private var currencies: [Currency] = []
     private var currencyService: CurrencyService
+    private var chosenCurrency: Int?
+    private var paymentService: PaymentService
+    private let logger = StatusLogger.shared
     
     // MARK: - Initializers
     
@@ -30,20 +41,26 @@ final class PaymentPresenter {
         self.viewController = viewController
         let networkClient = DefaultNetworkClient()
         currencyService = CurrencyLoader(networkClient: networkClient)
+        paymentService = PaymentSender(networkClient: networkClient)
+        self.viewController?.configure(self)
     }
     
     // MARK: - Private Methods
     
     private func uploadData() {
         currencyService.loadCurrency() { [weak self] result in
-            print("[PaymentPresenter/uploadData]: валюты загружены")
+            self?.logger.sendCommonMessage(withText: "[PaymentPresenter/uploadData]: валюты загружены")
             switch result {
             case .failure(let error):
-                print("[PaymentPresenter/uploadData]: error - \(error)")
+                self?.logger.sendErrorMessage(
+                    withText: "[PaymentPresenter/uploadData]: error",
+                    andError: error
+                )
             case .success(let currencies):
-                print("[PaymentPresenter/uploadData]: amount of currencies - \(currencies.count)")
+                self?.logger.sendCommonMessage(withText: "[PaymentPresenter/uploadData]: amount of currencies - \(currencies.count)")
                 self?.currencies = currencies
                 self?.viewController?.showCollection()
+                self?.chosenCurrency = nil
             }
         }
     }
@@ -52,6 +69,8 @@ final class PaymentPresenter {
         currencyService.stopLoading()
     }
 }
+
+// MARK: - PaymentPresenter + PaymentPresenterProtocol
 
 extension PaymentPresenter: PaymentPresenterProtocol {
     var heightOfCell: CGFloat {
@@ -71,7 +90,7 @@ extension PaymentPresenter: PaymentPresenterProtocol {
     }
     
     func viewWillAppear() {
-        print("[PaymentPresenter/viewWillAppear]: запуск сетевых запросов")
+        logger.sendCommonMessage(withText: "[PaymentPresenter/viewWillAppear]: запуск сетевых запросов")
         DispatchQueue.global().async {
             self.uploadData()
         }
@@ -79,7 +98,30 @@ extension PaymentPresenter: PaymentPresenterProtocol {
     }
     
     func viewDidDisappear() {
-        print("[PaymentPresenter/viewDidDisappear]: приостановка сетевых запросов")
+        logger.sendCommonMessage(withText: "[PaymentPresenter/viewDidDisappear]: приостановка сетевых запросов")
         stopUploadingData()
+    }
+    
+    func cellDidSelected(withIndex index: Int) {
+        chosenCurrency = index
+    }
+    
+    func executePayment() {
+        guard let chosenCurrency
+        else {
+            viewController?.showAlert(forReason: .notSelectedCurrency)
+            return
+        }
+        let id = currencies[chosenCurrency].id
+        paymentService.payForOrder(byCurrencyWithId: id) { [weak self] result in
+            switch result {
+            case .failure:
+                self?.viewController?.showAlert(forReason: .networkError)
+            case .success(let response) where !response.success:
+                self?.viewController?.showAlert(forReason: .notSuccessfulPayment)
+            default:
+                self?.viewController?.showSuccessfulPaymentScreen()
+            }
+        }
     }
 }

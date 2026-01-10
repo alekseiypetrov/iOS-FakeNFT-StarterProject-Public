@@ -17,3 +17,15 @@
 "ConfirmingDeletion.deleteButton" = "Удалить";
 "ConfirmingDeletion.cancelButton" = "Вернуться";
 "Payment.navigationTitle" = "Выберите способ оплаты";
+"Payment.titleLabel" = "Совершая покупку, вы соглашаетесь с условиями";
+"Payment.linkButton" = "Пользовательского соглашения";
+"Payment.paymentButton" = "Оплатить";
+"Payment.Alert.Message.notSelectedCurrency" = "Перед оплатой выберите валюту";
+"Payment.Alert.Message.notSuccessfulPayment" = "Оплата не прошла, попробуйте еще раз";
+"Payment.Alert.Message.networkError" = "Не удалось произвести оплату";
+"Payment.Alert.Buttons.cancel" = "Отмена";
+"Payment.Alert.Buttons.repeat" = "Повторить";
+"WebView.invalidRequest" = "Неверный запрос";
+"WebView.loadingTitle" = "Загрузка";
+"SuccessfulPayment.label" = "Успех! Оплата прошла, поздравляем с покупкой!";
+"SuccessfulPayment.button" = "Вернуться в корзину";
