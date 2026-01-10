@@ -33,6 +33,7 @@ final class PaymentPresenter {
     private var currencyService: CurrencyService
     private var chosenCurrency: Int?
     private var paymentService: PaymentService
+    private let logger = StatusLogger.shared
     
     // MARK: - Initializers
     
@@ -48,12 +49,15 @@ final class PaymentPresenter {
     
     private func uploadData() {
         currencyService.loadCurrency() { [weak self] result in
-            print("[PaymentPresenter/uploadData]: валюты загружены")
+            self?.logger.sendCommonMessage(withText: "[PaymentPresenter/uploadData]: валюты загружены")
             switch result {
             case .failure(let error):
-                print("[PaymentPresenter/uploadData]: error - \(error)")
+                self?.logger.sendErrorMessage(
+                    withText: "[PaymentPresenter/uploadData]: error",
+                    andError: error
+                )
             case .success(let currencies):
-                print("[PaymentPresenter/uploadData]: amount of currencies - \(currencies.count)")
+                self?.logger.sendCommonMessage(withText: "[PaymentPresenter/uploadData]: amount of currencies - \(currencies.count)")
                 self?.currencies = currencies
                 self?.viewController?.showCollection()
                 self?.chosenCurrency = nil
@@ -86,7 +90,7 @@ extension PaymentPresenter: PaymentPresenterProtocol {
     }
     
     func viewWillAppear() {
-        print("[PaymentPresenter/viewWillAppear]: запуск сетевых запросов")
+        logger.sendCommonMessage(withText: "[PaymentPresenter/viewWillAppear]: запуск сетевых запросов")
         DispatchQueue.global().async {
             self.uploadData()
         }
@@ -94,7 +98,7 @@ extension PaymentPresenter: PaymentPresenterProtocol {
     }
     
     func viewDidDisappear() {
-        print("[PaymentPresenter/viewDidDisappear]: приостановка сетевых запросов")
+        logger.sendCommonMessage(withText: "[PaymentPresenter/viewDidDisappear]: приостановка сетевых запросов")
         stopUploadingData()
     }
     

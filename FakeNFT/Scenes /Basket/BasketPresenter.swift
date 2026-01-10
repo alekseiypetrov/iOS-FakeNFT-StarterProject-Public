@@ -16,6 +16,7 @@ final class BasketPresenter {
     // MARK: - Private Properties
     
     private let storageKey = "basket.sortParameter"
+    private let logger = StatusLogger.shared
     private var order: Order = Order(nfts: [])
     private var products: [Nft] = []
     private var chosenProductIndex: Int?
@@ -34,8 +35,7 @@ final class BasketPresenter {
             networkClient: networkClient,
             storage: NftStorageImpl()
         )
-        // TODO: - Will be removed later (для демонстрации работы)
-        putMockOrder()
+//        putMockOrder() // для демонстрации работы без каталога
         self.viewController?.configure(self)
     }
     
@@ -82,12 +82,12 @@ final class BasketPresenter {
                 self.productsService.loadProduct(id: nftId) { [weak self] result in
                     defer { group.leave() }
                     guard self != nil else { return }
-                    print("[BasketPresenter/loadProduct]: продукт загружен")
+                    self?.logger.sendCommonMessage(withText: "[BasketPresenter/loadProduct]: продукт загружен")
                     switch result {
                     case .failure(let error):
-                        print("[BasketPresenter/loadProduct]: error - \(error)")
+                        self?.logger.sendErrorMessage(withText: "[BasketPresenter/loadProduct]: error", andError: error)
                     case .success(let product):
-                        print("[BasketPresenter/loadProduct]: product - \(product.id)")
+                        self?.logger.sendCommonMessage(withText: "[BasketPresenter/loadProduct]: product - \(product.id)")
                         loadedProducts.append(product)
                     }
                 }
@@ -104,13 +104,13 @@ final class BasketPresenter {
     private func loadOrder() {
         orderService.makeOrderRequest(ofType: .get, withNfts: nil) { [weak self] result in
             guard let self else { return }
-            print("[BasketPresenter/loadOrder]: заказ загружен")
+            self.logger.sendCommonMessage(withText: "[BasketPresenter/loadOrder]: заказ загружен")
             switch result {
             case .failure(let error):
-                print("[BasketPresenter/loadOrder]: error - \(error)")
+                self.logger.sendErrorMessage(withText: "[BasketPresenter/loadOrder]: error", andError: error)
             case .success(let order):
                 self.order = order
-                print("[BasketPresenter/loadOrder]: order - \(self.order.nfts.description)")
+                self.logger.sendCommonMessage(withText: "[BasketPresenter/loadOrder]: order - \(self.order.nfts.description)")
                 if !self.order.nfts.isEmpty {
                     self.orderDelivered()
                 }
@@ -128,12 +128,10 @@ final class BasketPresenter {
             }
             switch result {
             case .failure(let error):
-                print("[BasketPresenter/saveOrder]: заказ не сохранен")
-                print("[BasketPresenter/saveOrder]: error - \(error)")
+                self.logger.sendErrorMessage(withText: "[BasketPresenter/saveOrder]: заказ не сохранен", andError: error)
                 self.viewController?.showUpdatingStatus(false)
             case .success(let order):
-                print("[BasketPresenter/saveOrder]: заказ сохранен")
-                print("[BasketPresenter/saveOrder]: order - \(order)")
+                self.logger.sendCommonMessage(withText: "[BasketPresenter/saveOrder]: заказ сохранен\norder - \(order)")
                 self.viewController?.showUpdatingStatus(true)
                 self.order = order
                 self.products.remove(at: chosenProductIndex)
@@ -160,13 +158,13 @@ extension BasketPresenter: BasketPresenterProtocol {
     }
     
     func viewWillAppear() {
-        print("[BasketPresenter/viewWillAppear]: запуск сетевых запросов")
+        logger.sendCommonMessage(withText: "[BasketPresenter/viewWillAppear]: запуск сетевых запросов")
         viewController?.hideTable()
         loadOrder()
     }
     
     func viewDidDisappear() {
-        print("[BasketPresenter/viewDidDisappear]: приостановка сетевых запросов")
+        logger.sendCommonMessage(withText: "[BasketPresenter/viewDidDisappear]: приостановка сетевых запросов")
         orderService.stopTasks()
         productsService.stopLoadingProducts()
     }

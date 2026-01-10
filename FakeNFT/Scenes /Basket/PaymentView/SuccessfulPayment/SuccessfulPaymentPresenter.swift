@@ -8,6 +8,7 @@ final class SuccessfulPaymentPresenter {
     
     weak private var viewController: SuccessfulPaymentViewControllerProtocol?
     private var orderService: OrderService
+    private let logger = StatusLogger.shared
     
     // MARK: - Initializers
     
@@ -26,10 +27,15 @@ extension SuccessfulPaymentPresenter: SuccessfulPaymentPresenterProtocol {
         orderService.makeOrderRequest(ofType: .put, withNfts: []) { [weak self] result in
             switch result {
             case .failure(let error):
-                print("[SuccessfulPaymentPresenter/cleanOrder]: возникла ошибка при очистке заказа - \(error)")
+                self?.logger.sendErrorMessage(
+                    withText: "[SuccessfulPaymentPresenter/cleanOrder]: возникла ошибка при очистке заказа",
+                    andError: error
+                )
                 self?.viewController?.showError()
             case .success:
-                print("[SuccessfulPaymentPresenter/cleanOrder]: заказ очищен, возвращение в корзину")
+                self?.logger.sendCommonMessage(
+                    withText: "[SuccessfulPaymentPresenter/cleanOrder]: заказ очищен, возвращение в корзину"
+                )
                 self?.viewController?.returnToBasket()
             }
         }

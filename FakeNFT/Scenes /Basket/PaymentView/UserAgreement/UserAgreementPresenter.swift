@@ -12,6 +12,7 @@ final class UserAgreementPresenter {
     
     private weak var viewController: UserAgreementWebViewProtocol?
     private let userAgreementRequest: NetworkRequest
+    private let logger = StatusLogger.shared
     
     // MARK: - Initializers
     
@@ -35,25 +36,25 @@ extension UserAgreementPresenter: UserAgreementPresenterProtocol {
     func viewWillAppear() {
         guard let request = makeRequest()
         else {
-            print("[UserAgreementPresenter/viewWillAppear]: неверный запрос")
+            logger.sendWarningMessage(withText: "[UserAgreementPresenter/viewWillAppear]: неверный запрос")
             viewController?.showError()
             return
         }
-        print("[UserAgreementPresenter/viewWillAppear]: запрос сформирован. Начало загрузки страницы")
+        logger.sendCommonMessage(withText: "[UserAgreementPresenter/viewWillAppear]: запрос сформирован. Начало загрузки страницы")
         updateProgress(toValue: 0.0)
         viewController?.startLoadingPage(withRequest: request)
     }
     
     func viewDidDisappear() {
-        print("[UserAgreementPresenter/viewDidDisppear]: прекращение загрузки страницы")
+        logger.sendCommonMessage(withText: "[UserAgreementPresenter/viewDidDisppear]: прекращение загрузки страницы")
         viewController?.stopLoadingPage()
     }
     
     func updateProgress(toValue value: Double) {
-        print("[UserAgreementPresenter/updateProgress]: Страница загружена на \(round(100 * value))%")
+        logger.sendCommonMessage(withText: "[UserAgreementPresenter/updateProgress]: Страница загружена на \(round(100 * value))%")
         viewController?.setNewProgressValue(CGFloat(value))
         if abs(value - 1.0) <= 0.001 {
-            print("[UserAgreementPresenter/updateProgress]: Страница загружена")
+            logger.sendCommonMessage(withText: "[UserAgreementPresenter/updateProgress]: Страница загружена")
             viewController?.hideProgress()
         }
     }

@@ -8,6 +8,7 @@ protocol OrderService {
 }
 
 final class OrderLoader: OrderService {
+    private let logger = StatusLogger.shared
     private let networkClient: NetworkClient
     private var tasks: [HttpMethod: NetworkTask?] = [.get: nil, .put: nil, .post: nil]
 
@@ -23,7 +24,7 @@ final class OrderLoader: OrderService {
             dto = OrderDto(nfts: nfts)
         }
         let request = OrderRequest(dto: dto, httpMethod: httpMethod)
-        print("[OrderLoader/makeOrderRequest (\(httpMethod.rawValue)-request)]: \(request)")
+        logger.sendCommonMessage(withText: "[OrderLoader/makeOrderRequest (\(httpMethod.rawValue)-request)]: \(request)")
         tasks[httpMethod] = networkClient.send(request: request, type: Order.self) { [weak self] result in
             defer { self?.tasks[httpMethod] = nil }
             switch result {

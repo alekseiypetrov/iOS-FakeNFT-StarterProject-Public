@@ -82,6 +82,8 @@
 		97ACA3142EFEACCE00450217 /* OrderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA3132EFEACCE00450217 /* OrderService.swift */; };
 		97ACA3172EFEB7CF00450217 /* BasketProductService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97ACA3162EFEB7CF00450217 /* BasketProductService.swift */; };
 		97E267032F126BF400A16ADA /* AccessibilityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 978D7A8D2F125EDA00B72A61 /* AccessibilityIdentifier.swift */; };
+		97E267072F12706F00A16ADA /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = 97E267062F12706F00A16ADA /* Logging */; };
+		97E267092F12708200A16ADA /* StatusLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E267082F12708200A16ADA /* StatusLogger.swift */; };
 		E19CD5AB2A98B56600CA39A5 /* NftImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E19CD5AA2A98B56600CA39A5 /* NftImageCollectionViewCell.swift */; };
 		E1A1B9DA2AA01CE400C3AFBC /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1A1B9D92AA01CE400C3AFBC /* TabBarController.swift */; };
 		E1CD40DC2A96BECC00BE7FE8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E1CD40DB2A96BECC00BE7FE8 /* Localizable.strings */; };
@@ -181,6 +183,7 @@
 		97ACA3112EFEABE400450217 /* OrderRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderRequest.swift; sourceTree = "<group>"; };
 		97ACA3132EFEACCE00450217 /* OrderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderService.swift; sourceTree = "<group>"; };
 		97ACA3162EFEB7CF00450217 /* BasketProductService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasketProductService.swift; sourceTree = "<group>"; };
+		97E267082F12708200A16ADA /* StatusLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusLogger.swift; sourceTree = "<group>"; };
 		E19CD5AA2A98B56600CA39A5 /* NftImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NftImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		E1A1B9D92AA01CE400C3AFBC /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		E1CD40D82A96BE7D00BE7FE8 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
@@ -193,6 +196,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				97E267072F12706F00A16ADA /* Logging in Frameworks */,
 				9747E8BA2F014FCE00AB3C70 /* ProgressHUD in Frameworks */,
 				9747E8B92F014FCE00AB3C70 /* Kingfisher in Frameworks */,
 			);
@@ -387,6 +391,7 @@
 				0CFCB74A2A780EA80009A829 /* UIView+Constraints.swift */,
 				9747E8BB2F0151AB00AB3C70 /* UIProgressHUD.swift */,
 				978D7A8D2F125EDA00B72A61 /* AccessibilityIdentifier.swift */,
+				97E267082F12708200A16ADA /* StatusLogger.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -591,6 +596,7 @@
 			packageProductDependencies = (
 				974147B02EFED02A004EC15C /* Kingfisher */,
 				974147B32EFED045004EC15C /* ProgressHUD */,
+				97E267062F12706F00A16ADA /* Logging */,
 			);
 			productName = FakeNFT;
 			productReference = 3F68069329CBBAF100B4F915 /* FakeNFT.app */;
@@ -668,6 +674,7 @@
 			packageReferences = (
 				974147AF2EFED02A004EC15C /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				974147B22EFED045004EC15C /* XCRemoteSwiftPackageReference "ProgressHUD" */,
+				97E267052F12706F00A16ADA /* XCRemoteSwiftPackageReference "swift-log" */,
 			);
 			productRefGroup = 3F68069429CBBAF100B4F915 /* Products */;
 			projectDirPath = "";
@@ -763,6 +770,7 @@
 				0CF2C2E12A784C7000FDC837 /* LinePageControl.swift in Sources */,
 				3F6806D329CBBE9600B4F915 /* NetworkRequest.swift in Sources */,
 				9747BF1B2F03E7AC0029F5F3 /* CurrencyRequest.swift in Sources */,
+				97E267092F12708200A16ADA /* StatusLogger.swift in Sources */,
 				974147B82F013685004EC15C /* SortingParametersStorage.swift in Sources */,
 				978D7A7D2F10689600B72A61 /* SuccessfulPaymentViewController.swift in Sources */,
 				0CFCB7492A7808900009A829 /* TestCatalogController.swift in Sources */,
@@ -1143,6 +1151,14 @@
 				minimumVersion = 13.6.2;
 			};
 		};
+		97E267052F12706F00A16ADA /* XCRemoteSwiftPackageReference "swift-log" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-log";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.6.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1155,6 +1171,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 974147B22EFED045004EC15C /* XCRemoteSwiftPackageReference "ProgressHUD" */;
 			productName = ProgressHUD;
+		};
+		97E267062F12706F00A16ADA /* Logging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 97E267052F12706F00A16ADA /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = Logging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
