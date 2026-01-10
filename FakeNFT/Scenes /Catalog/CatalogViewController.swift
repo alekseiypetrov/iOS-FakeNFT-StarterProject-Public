@@ -65,12 +65,9 @@ final class CatalogViewController: UIViewController {
     private func setupActivityIndicator() {
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(activityIndicator)
-        
-        NSLayoutConstraint.activate([
-            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
-        
+
+        activityIndicator.constraintCenters(to: view)
+
         activityIndicator.hidesWhenStopped = true
     }
     
@@ -91,7 +88,7 @@ extension CatalogViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let count = presenter.itemsAmount
-        print("📊 numberOfRows =", count)
+        print("📊 [CatalogViewController/numberOfRows]: \(count)")
         return count
     }
     
@@ -129,7 +126,7 @@ extension CatalogViewController: CatalogViewProtocol {
     }
     
     func reloadData() {
-        print("🔄 CatalogViewController reloadData")
+        print("🔄 [CatalogViewController/reloadData]")
         tableView.reloadData()
     }
 }
