@@ -31,7 +31,7 @@ final class PaymentPresenter {
     weak private var viewController: PaymentViewControllerProtocol?
     private var currencies: [Currency] = []
     private var currencyService: CurrencyService
-    private var chosenCurrency: Int? = nil
+    private var chosenCurrency: Int?
     private var paymentService: PaymentService
     
     // MARK: - Initializers
