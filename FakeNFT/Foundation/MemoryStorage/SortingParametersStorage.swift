@@ -15,3 +15,10 @@ final class SortingParametersStorage {
         shared.standard.synchronize()
     }
 }
+
+enum SortOption: String {
+    case byPrice
+    case byRating
+    case byName
+    case byNftsAmount
+}
