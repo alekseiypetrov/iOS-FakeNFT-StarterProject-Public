@@ -7,6 +7,7 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     private weak var view: CatalogViewProtocol?
     private let catalogService: CatalogService
     private var collections: [NFTCollection] = []
+    private var currentSort: SortOption = .byNftsAmount
 
     // MARK: - Public properties
 
@@ -50,5 +51,31 @@ final class CatalogPresenter: CatalogPresenterProtocol {
 
     func collection(at index: Int) -> NFTCollection {
         collections[index]
+    }
+    
+    // MARK: Метод изменения сортировки
+    func didSelectSort(_ option: SortOption) {
+        currentSort = option
+
+        SortingParametersStorage.save(
+            parameter: option.rawValue,
+            forKey: SortKeys.catalog
+        )
+
+        applySorting()
+        view?.reloadData()
+    }
+    
+    private func applySorting() {
+        switch currentSort {
+        case .byName:
+            collections.sort { $0.name < $1.name }
+
+        case .byNftsAmount:
+            collections.sort { $0.nfts.count > $1.nfts.count }
+
+        default:
+            break
+        }
     }
 }
