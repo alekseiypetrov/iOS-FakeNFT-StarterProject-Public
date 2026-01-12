@@ -49,6 +49,7 @@ final class CatalogPresenter: CatalogPresenterProtocol {
                     
                 case .failure(let error):
                     print("❌ [CatalogPresenter/loadCollections]: \(error)")
+                    self.view?.showError(message: "Не удалось загрузить каталог. Проверьте соединение с интернетом.")
                 }
             }
         }

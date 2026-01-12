@@ -168,6 +168,27 @@ extension CatalogViewController: CatalogViewProtocol {
         print("🔄 [CatalogViewController/reloadData]")
         tableView.reloadData()
     }
+    
+    // MARK: Обработка ошибок загрузки данных
+    func showError(message: String) {
+        let alert = UIAlertController(
+            title: "Ошибка",
+            message: message,
+            preferredStyle: .alert
+        )
+
+        alert.addAction(
+            UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
+                self?.presenter.viewDidLoad()
+            }
+        )
+
+        alert.addAction(
+            UIAlertAction(title: "Закрыть", style: .cancel)
+        )
+
+        present(alert, animated: true)
+    }
 }
 
 extension CatalogViewController: UITableViewDelegate {
