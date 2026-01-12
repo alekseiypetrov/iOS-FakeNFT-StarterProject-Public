@@ -66,9 +66,9 @@ final class CatalogViewController: UIViewController {
     private func setupActivityIndicator() {
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(activityIndicator)
-
+        
         activityIndicator.constraintCenters(to: view)
-
+        
         activityIndicator.hidesWhenStopped = true
     }
     
@@ -90,23 +90,23 @@ final class CatalogViewController: UIViewController {
             message: nil,
             preferredStyle: .actionSheet
         )
-
+        
         alert.addAction(
             UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
                 self?.presenter.didSelectSort(.byName)
             }
         )
-
+        
         alert.addAction(
             UIAlertAction(title: "По количеству NFT", style: .default) { [weak self] _ in
                 self?.presenter.didSelectSort(.byNftsAmount)
             }
         )
-
+        
         alert.addAction(
             UIAlertAction(title: "Закрыть", style: .cancel)
         )
-
+        
         present(alert, animated: true)
     }
     
