@@ -49,11 +49,15 @@ final class NftServiceImpl: NftService {
     func loadNfts(ids: [String], completion: @escaping NftsCompletion) {
         var loadedNfts: [Nft] = []
         var currentIndex = 0
+        var isCompleted = false
         
         print("🧩 [NftService/loadNfts]: start loading \(ids.count) NFTs")
         
         func loadNext() {
+            guard !isCompleted else { return }
+            
             guard currentIndex < ids.count else {
+                isCompleted = true
                 print("✅ [NftService/loadNfts]: finished loading \(loadedNfts.count) NFTs")
                 completion(.success(loadedNfts))
                 return
@@ -61,6 +65,8 @@ final class NftServiceImpl: NftService {
             
             let id = ids[currentIndex]
             loadNft(id: id) { result in
+                guard !isCompleted else { return }
+                
                 switch result {
                 case .success(let nft):
                     print("📦 [NftService/loadNfts]: appended NFT, id = \(nft.id)")
@@ -70,6 +76,7 @@ final class NftServiceImpl: NftService {
                     
                 case .failure(let error):
                     print("❌ [NftService/loadNfts]: failed on id = \(id), error = \(error)")
+                    isCompleted = true
                     completion(.failure(error))
                 }
             }
