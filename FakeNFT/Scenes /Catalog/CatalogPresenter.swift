@@ -31,6 +31,9 @@ final class CatalogPresenter: CatalogPresenterProtocol {
 
     func viewDidLoad() {
         print("🚀 [CatalogPresenter/viewDidLoad]: view loaded")
+        
+        restoreSorting()
+        
         view?.showLoading()
 
         catalogService.loadCollections { [weak self] result in
@@ -41,6 +44,7 @@ final class CatalogPresenter: CatalogPresenterProtocol {
             switch result {
             case .success(let collections):
                 self.collections = collections
+                self.applySorting()
                 self.view?.reloadData()
 
             case .failure(let error):
@@ -51,6 +55,19 @@ final class CatalogPresenter: CatalogPresenterProtocol {
 
     func collection(at index: Int) -> NFTCollection {
         collections[index]
+    }
+    
+    // MARK: Метод сохранения сортировки
+    private func restoreSorting() {
+        guard
+            let rawValue = SortingParametersStorage.getParameter(fromKey: SortKeys.catalog),
+            let savedSort = SortOption(rawValue: rawValue)
+        else {
+            currentSort = .byNftsAmount // сортировка по умолчанию
+            return
+        }
+
+        currentSort = savedSort
     }
     
     // MARK: Метод изменения сортировки
