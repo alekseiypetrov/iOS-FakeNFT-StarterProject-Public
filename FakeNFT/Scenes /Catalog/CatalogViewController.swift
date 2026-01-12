@@ -32,6 +32,7 @@ final class CatalogViewController: UIViewController {
         setupUI()
         setupTableView()
         setupActivityIndicator()
+        setupSortButton()
         presenter.viewDidLoad()
     }
     
@@ -69,6 +70,44 @@ final class CatalogViewController: UIViewController {
         activityIndicator.constraintCenters(to: view)
 
         activityIndicator.hidesWhenStopped = true
+    }
+    
+    //MARK: кнопка сортировки
+    private func setupSortButton() {
+        let sortButton = UIBarButtonItem(
+            image: UIImage(systemName: "line.3.horizontal.decrease"),
+            style: .plain,
+            target: self,
+            action: #selector(didTapSort)
+        )
+        navigationItem.rightBarButtonItem = sortButton
+    }
+    
+    // Обработчик нажатия
+    @objc private func didTapSort() {
+        let alert = UIAlertController(
+            title: "Сортировка",
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+
+        alert.addAction(
+            UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
+                self?.presenter.didSelectSort(.byName)
+            }
+        )
+
+        alert.addAction(
+            UIAlertAction(title: "По количеству NFT", style: .default) { [weak self] _ in
+                self?.presenter.didSelectSort(.byNftsAmount)
+            }
+        )
+
+        alert.addAction(
+            UIAlertAction(title: "Закрыть", style: .cancel)
+        )
+
+        present(alert, animated: true)
     }
     
     // MARK: - Navigation
