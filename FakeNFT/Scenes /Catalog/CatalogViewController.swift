@@ -74,12 +74,15 @@ final class CatalogViewController: UIViewController {
     
     //MARK: кнопка сортировки
     private func setupSortButton() {
+        let image = UIImage(named: "Vector")?.withRenderingMode(.alwaysOriginal)
+        
         let sortButton = UIBarButtonItem(
-            image: UIImage(systemName: "line.3.horizontal.decrease"),
+            image: image,
             style: .plain,
             target: self,
             action: #selector(didTapSort)
         )
+        
         navigationItem.rightBarButtonItem = sortButton
     }
     
