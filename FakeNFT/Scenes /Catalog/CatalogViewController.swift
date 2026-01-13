@@ -40,7 +40,7 @@ final class CatalogViewController: UIViewController {
     
     private func setupUI() {
         view.backgroundColor = .systemBackground
-        title = "Каталог"
+        navigationItem.title = nil
     }
     
     private func setupTableView() {
