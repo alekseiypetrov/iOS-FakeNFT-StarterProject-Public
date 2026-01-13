@@ -61,6 +61,7 @@ final class CatalogViewController: UIViewController {
         
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.separatorStyle = .none
     }
     
     private func setupActivityIndicator() {
