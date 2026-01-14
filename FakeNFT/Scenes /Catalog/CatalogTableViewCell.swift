@@ -111,6 +111,28 @@ final class CatalogTableViewCell: UITableViewCell {
         }
     }
     
+    func setPreviewImageURLs(_ urls: [URL?]) {
+        let imageViews = [firstImageView, secondImageView, thirdImageView]
+
+        for (imageView, url) in zip(imageViews, urls) {
+            imageView.image = nil
+            imageView.backgroundColor = .systemGray4
+
+            guard let url else { continue }
+
+            URLSession.shared.dataTask(with: url) { [weak imageView] data, _, _ in
+                guard
+                    let data,
+                    let image = UIImage(data: data)
+                else { return }
+
+                DispatchQueue.main.async {
+                    imageView?.image = image
+                }
+            }.resume()
+        }
+    }
+    
     // MARK: - Configuration
     
     func configure(title: String, count: Int) {

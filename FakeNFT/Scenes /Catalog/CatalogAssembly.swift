@@ -10,7 +10,8 @@ final class CatalogAssembly {
 
     func build() -> UIViewController {
         let presenter = CatalogPresenter(
-            catalogService: servicesAssembly.catalogService
+            catalogService: servicesAssembly.catalogService,
+            nftService: servicesAssembly.nftService
         )
 
         let viewController = CatalogViewController(

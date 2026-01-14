@@ -5,4 +5,9 @@ protocol CatalogPresenterProtocol: AnyObject {
     func viewDidLoad()
     func collection(at index: Int) -> NFTCollection
     func didSelectSort(_ option: SortOption)
+    
+    func loadPreviewImages(
+        for collectionIndex: Int,
+        completion: @escaping ([URL?]) -> Void
+    )
 }

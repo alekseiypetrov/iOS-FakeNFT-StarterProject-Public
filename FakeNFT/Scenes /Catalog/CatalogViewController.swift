@@ -148,11 +148,19 @@ extension CatalogViewController: UITableViewDataSource {
         }
         
         let collection = presenter.collection(at: indexPath.row)
+        let nftIds = Array(collection.nfts.prefix(3))
+        print("🎨 Preview NFT ids:", nftIds)
         
         cell.configure(
             title: collection.name,
             count: collection.nfts.count
         )
+        
+        // заглушка для превью
+        cell.setPreviewImageURLs([])
+        presenter.loadPreviewImages(for: indexPath.row) { [weak cell] urls in
+            cell?.setPreviewImageURLs(urls)
+        }
         
         return cell
     }

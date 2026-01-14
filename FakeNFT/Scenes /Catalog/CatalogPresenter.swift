@@ -6,6 +6,7 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     
     private weak var view: CatalogViewProtocol?
     private let catalogService: CatalogService
+    private let nftService: NftService
     private var collections: [NFTCollection] = []
     private var currentSort: SortOption = .byNftsAmount
     
@@ -17,8 +18,9 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     
     // MARK: - Init
     
-    init(catalogService: CatalogService) {
+    init(catalogService: CatalogService, nftService: NftService) {
         self.catalogService = catalogService
+        self.nftService = nftService
     }
     
     // MARK: - Configuration
@@ -95,6 +97,41 @@ final class CatalogPresenter: CatalogPresenterProtocol {
             
         default:
             break
+        }
+    }
+    
+    func loadPreviewImages(
+        for collectionIndex: Int,
+        completion: @escaping ([URL?]) -> Void
+    ) {
+        guard collections.indices.contains(collectionIndex) else {
+            completion([])
+            return
+        }
+
+        let nftIds = Array(collections[collectionIndex].nfts.prefix(3))
+
+        var imageURLs: [URL?] = Array(repeating: nil, count: nftIds.count)
+        let group = DispatchGroup()
+
+        for (index, nftId) in nftIds.enumerated() {
+            group.enter()
+
+            nftService.loadNft(id: nftId) { result in
+                defer { group.leave() }
+
+                switch result {
+                case .success(let nft):
+                    imageURLs[index] = URL(string: nft.images.first ?? "")
+
+                case .failure:
+                    imageURLs[index] = nil
+                }
+            }
+        }
+
+        group.notify(queue: .main) {
+            completion(imageURLs)
         }
     }
 }
