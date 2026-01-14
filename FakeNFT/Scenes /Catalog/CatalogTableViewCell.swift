@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class CatalogTableViewCell: UITableViewCell {
     
@@ -104,8 +105,10 @@ final class CatalogTableViewCell: UITableViewCell {
         super.prepareForReuse()
         
         titleLabel.text = nil
+        titleLabel.attributedText = nil
         
         [firstImageView, secondImageView, thirdImageView].forEach {
+            $0.kf.cancelDownloadTask()
             $0.image = nil
             $0.backgroundColor = .systemGray4
         }
@@ -114,22 +117,22 @@ final class CatalogTableViewCell: UITableViewCell {
     func setPreviewImageURLs(_ urls: [URL?]) {
         let imageViews = [firstImageView, secondImageView, thirdImageView]
 
-        for (imageView, url) in zip(imageViews, urls) {
+        for (index, imageView) in imageViews.enumerated() {
+            let url = index < urls.count ? urls[index] : nil
+
+            // Сброс на заглушку
             imageView.image = nil
             imageView.backgroundColor = .systemGray4
 
             guard let url else { continue }
 
-            URLSession.shared.dataTask(with: url) { [weak imageView] data, _, _ in
-                guard
-                    let data,
-                    let image = UIImage(data: data)
-                else { return }
-
-                DispatchQueue.main.async {
-                    imageView?.image = image
-                }
-            }.resume()
+            imageView.kf.setImage(
+                with: url,
+                options: [
+                    .transition(.fade(0.2)),
+                    .cacheOriginalImage
+                ]
+            )
         }
     }
     
