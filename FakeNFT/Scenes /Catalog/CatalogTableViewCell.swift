@@ -1,85 +1,141 @@
 import UIKit
 
 final class CatalogTableViewCell: UITableViewCell {
-
+    
     static let reuseIdentifier = "CatalogTableViewCell"
-
+    
     // MARK: - UI
-
-    private lazy var coverImageView: UIImageView = {
-        let imageView = UIImageView()
-        return imageView
-    }()
-
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         return label
     }()
-
-    private lazy var countLabel: UILabel = {
-        let label = UILabel()
-        return label
-    }()
-
+    
+    // MARK: - Preview
+    private let previewContainerView = UIView()
+    
+    private let firstImageView = UIImageView()
+    private let secondImageView = UIImageView()
+    private let thirdImageView = UIImageView()
+    
     // MARK: - Init
-
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
         setupLayout()
     }
-
+    
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         nil
     }
-
+    
     // MARK: - Setup
-
+    
     private func setupUI() {
         selectionStyle = .none
-
-        coverImageView.contentMode = .scaleAspectFill
-        coverImageView.clipsToBounds = true
-        coverImageView.backgroundColor = .systemGray5
-
-        titleLabel.font = .systemFont(ofSize: 17, weight: .medium)
+        
+        titleLabel.font = .systemFont(ofSize: 17, weight: .bold)
+        titleLabel.textColor = UIColor(named: "ypBlack")
         titleLabel.numberOfLines = 1
-
-        countLabel.font = .systemFont(ofSize: 13)
-        countLabel.textColor = .secondaryLabel
+        
+        previewContainerView.backgroundColor = .systemGray5
+        previewContainerView.layer.cornerRadius = 12
+        previewContainerView.clipsToBounds = true
+        
+        [firstImageView, secondImageView, thirdImageView].forEach {
+            $0.contentMode = .scaleAspectFill
+            $0.clipsToBounds = true
+            $0.backgroundColor = .systemGray4 // заглушка
+        }
     }
-
+    
     private func setupLayout() {
-        coverImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        previewContainerView.translatesAutoresizingMaskIntoConstraints = false
+        firstImageView.translatesAutoresizingMaskIntoConstraints = false
+        secondImageView.translatesAutoresizingMaskIntoConstraints = false
+        thirdImageView.translatesAutoresizingMaskIntoConstraints = false
+        
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        countLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        contentView.addSubview(coverImageView)
+        
+        contentView.addSubview(previewContainerView)
         contentView.addSubview(titleLabel)
-        contentView.addSubview(countLabel)
-
+        
+        previewContainerView.addSubview(firstImageView)
+        previewContainerView.addSubview(secondImageView)
+        previewContainerView.addSubview(thirdImageView)
+        
         NSLayoutConstraint.activate([
-            coverImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            coverImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            coverImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-            coverImageView.widthAnchor.constraint(equalToConstant: 60),
-            coverImageView.heightAnchor.constraint(equalToConstant: 60),
-
-            titleLabel.leadingAnchor.constraint(equalTo: coverImageView.trailingAnchor, constant: 12),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            titleLabel.topAnchor.constraint(equalTo: coverImageView.topAnchor),
-
-            countLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            countLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-            countLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor)
+            previewContainerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            previewContainerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            previewContainerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            previewContainerView.heightAnchor.constraint(equalToConstant: 179)
         ])
+        
+        // Превью
+        NSLayoutConstraint.activate([
+            firstImageView.leadingAnchor.constraint(equalTo: previewContainerView.leadingAnchor),
+            firstImageView.topAnchor.constraint(equalTo: previewContainerView.topAnchor),
+            firstImageView.bottomAnchor.constraint(equalTo: previewContainerView.bottomAnchor),
+            
+            secondImageView.leadingAnchor.constraint(equalTo: firstImageView.trailingAnchor),
+            secondImageView.topAnchor.constraint(equalTo: previewContainerView.topAnchor),
+            secondImageView.bottomAnchor.constraint(equalTo: previewContainerView.bottomAnchor),
+            secondImageView.widthAnchor.constraint(equalTo: firstImageView.widthAnchor),
+            
+            thirdImageView.leadingAnchor.constraint(equalTo: secondImageView.trailingAnchor),
+            thirdImageView.topAnchor.constraint(equalTo: previewContainerView.topAnchor),
+            thirdImageView.bottomAnchor.constraint(equalTo: previewContainerView.bottomAnchor),
+            thirdImageView.widthAnchor.constraint(equalTo: firstImageView.widthAnchor),
+            thirdImageView.trailingAnchor.constraint(equalTo: previewContainerView.trailingAnchor)
+        ])
+        
+        // Заголовок под превью
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: previewContainerView.bottomAnchor, constant: 12),
+            titleLabel.leadingAnchor.constraint(equalTo: previewContainerView.leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: previewContainerView.trailingAnchor),
+            titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
+        ])
+        
     }
-
-    // MARK: - Configuration (заглушка)
-
-    func configure(title: String, countText: String) {
-        titleLabel.text = title
-        countLabel.text = countText
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        titleLabel.text = nil
+        
+        [firstImageView, secondImageView, thirdImageView].forEach {
+            $0.image = nil
+            $0.backgroundColor = .systemGray4
+        }
+    }
+    
+    // MARK: - Configuration
+    
+    func configure(title: String, count: Int) {
+        let titleAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 17, weight: .bold),
+            .foregroundColor: UIColor(named: "ypBlack") ?? .black
+        ]
+        
+        let countAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 17, weight: .bold),
+            .foregroundColor: UIColor(named: "ypBlack") ?? .black
+        ]
+        
+        let attributedText = NSMutableAttributedString(
+            string: title,
+            attributes: titleAttributes
+        )
+        
+        attributedText.append(
+            NSAttributedString(
+                string: " (\(count))",
+                attributes: countAttributes
+            )
+        )
+        
+        titleLabel.attributedText = attributedText
     }
 }

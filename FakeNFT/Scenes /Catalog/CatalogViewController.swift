@@ -151,7 +151,7 @@ extension CatalogViewController: UITableViewDataSource {
         
         cell.configure(
             title: collection.name,
-            countText: "\(collection.nfts.count) NFT"
+            count: collection.nfts.count
         )
         
         return cell
