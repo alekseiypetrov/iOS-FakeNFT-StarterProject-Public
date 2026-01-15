@@ -78,6 +78,19 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     func collectionAuthorWebsite() -> URL? {
         collection?.website
     }
+    
+    func headerViewModel() -> NftCollectionHeaderViewModel {
+        let previewURLs = cellModels
+            .prefix(3)
+            .compactMap { $0.imageURL }
+
+        return NftCollectionHeaderViewModel(
+            title: collection?.name ?? "",
+            authorName: collection?.author ?? "",
+            description: collection?.description ?? "",
+            previewImageURLs: previewURLs
+        )
+    }
 
     // MARK: - Actions
 

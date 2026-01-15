@@ -14,7 +14,8 @@ protocol NftCollectionPresenterProtocol: AnyObject {
     func collectionAuthorName() -> String
     func collectionDescription() -> String
     func collectionCoverURL() -> URL?
-    func collectionAuthorWebsite() -> URL? 
+    func collectionAuthorWebsite() -> URL?
+    func headerViewModel() -> NftCollectionHeaderViewModel
 
     // MARK: - Actions
     func didTapFavorite(at index: Int)

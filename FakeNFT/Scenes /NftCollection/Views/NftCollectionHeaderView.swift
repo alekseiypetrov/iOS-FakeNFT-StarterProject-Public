@@ -64,14 +64,10 @@ final class NftCollectionHeaderView: UIView {
 
     // MARK: - Configuration
 
-    func configure(
-        title: String,
-        author: String,
-        description: String
-    ) {
-        titleLabel.text = title
-        authorLabel.text = "Автор коллекции: \(author)"
-        descriptionLabel.text = description
+    func configure(with viewModel: NftCollectionHeaderViewModel) {
+        titleLabel.text = viewModel.title
+        authorLabel.text = "Автор коллекции: \(viewModel.authorName)"
+        descriptionLabel.text = viewModel.description
     }
 
     // MARK: - Setup

@@ -36,7 +36,7 @@ final class NftCollectionViewController: UIViewController {
     
     @available(*, unavailable)
     required init?(coder: NSCoder) {
-        return nil
+        nil
     }
     
     // MARK: - Lifecycle
@@ -97,13 +97,6 @@ final class NftCollectionViewController: UIViewController {
         
         collectionView.register(NftCollectionCell.self)
     }
-    
-    private func openAuthorWebsite() {
-        guard let url = presenter.collectionAuthorWebsite() else { return }
-        
-        let webViewController = WebViewViewController(url: url)
-        navigationController?.pushViewController(webViewController, animated: true)
-    }
 }
 
 // MARK: - NftCollectionViewProtocol
@@ -119,23 +112,19 @@ extension NftCollectionViewController: NftCollectionViewProtocol {
     }
     
     func reloadData() {
-        headerView.configure(
-            title: presenter.collectionName(),
-            author: presenter.collectionAuthorName(),
-            description: presenter.collectionDescription()
-            //coverURL: presenter.collectionCoverURL()
-        )
-        
+        let headerViewModel = presenter.headerViewModel()
+        headerView.configure(with: headerViewModel)
+
         headerView.onAuthorTap = { [weak self] in
             guard
                 let self,
                 let url = self.presenter.collectionAuthorWebsite()
             else { return }
-            
+
             let vc = WebViewViewController(url: url)
             self.navigationController?.pushViewController(vc, animated: true)
         }
-        
+
         collectionView.reloadData()
     }
     
