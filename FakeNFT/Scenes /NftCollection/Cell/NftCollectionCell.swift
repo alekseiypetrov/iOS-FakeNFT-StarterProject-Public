@@ -91,6 +91,7 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
     private func setupCartButton() {
         cartButton.setImage(UIImage(systemName: "cart"), for: .normal)
         cartButton.tintColor = .label
+        cartButton.adjustsImageWhenHighlighted = false
     }
     
     private func setupStacks() {
@@ -159,12 +160,14 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
         )
         favoriteButton.tintColor = model.isFavorite ? .systemRed : .secondaryLabel
         
-        let cartImage = model.isInCart ? "cart.fill" : "cart"
+        let cartImageName = model.isInCart
+            ? "copDeleteFromCart"
+            : "copAddToCart"
+
         cartButton.setImage(
-            UIImage(systemName: cartImage),
+            UIImage(named: cartImageName),
             for: .normal
         )
-        cartButton.tintColor = model.isInCart ? .systemBlue : .secondaryLabel
         
         self.onFavoriteTap = onFavoriteTap
         self.onCartTap = onCartTap

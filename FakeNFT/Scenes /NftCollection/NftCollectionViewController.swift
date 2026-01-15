@@ -75,9 +75,9 @@ final class NftCollectionViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             // Header
-            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            headerView.topAnchor.constraint(equalTo: view.topAnchor),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
             // CollectionView
             collectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 16),
