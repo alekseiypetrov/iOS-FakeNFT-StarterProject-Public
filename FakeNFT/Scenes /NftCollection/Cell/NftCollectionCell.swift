@@ -7,7 +7,7 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
     private let favoriteButton = UIButton(type: .system)
     
     private let titleLabel = UILabel()
-    private let ratingLabel = UILabel()
+    private let ratingImageView = UIImageView()
     private let priceLabel = UILabel()
     private let cartButton = UIButton(type: .system)
     
@@ -81,9 +81,6 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
         titleLabel.font = .systemFont(ofSize: 14, weight: .medium)
         titleLabel.numberOfLines = 1
         
-        ratingLabel.font = .systemFont(ofSize: 12)
-        ratingLabel.textColor = .secondaryLabel
-        
         priceLabel.font = .systemFont(ofSize: 12, weight: .medium)
         priceLabel.textColor = .label
     }
@@ -102,8 +99,11 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
         bottomStack.alignment = .center
         bottomStack.distribution = .equalSpacing
         
+        ratingImageView.contentMode = .left
+        ratingImageView.translatesAutoresizingMaskIntoConstraints = false
+
+        infoStack.addArrangedSubview(ratingImageView)
         infoStack.addArrangedSubview(titleLabel)
-        infoStack.addArrangedSubview(ratingLabel)
         
         bottomStack.addArrangedSubview(priceLabel)
         bottomStack.addArrangedSubview(cartButton)
@@ -150,15 +150,19 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
         onCartTap: @escaping () -> Void
     ) {
         titleLabel.text = model.name
-        ratingLabel.text = "⭐️ \(model.rating)"
         priceLabel.text = "\(model.price) ETH"
         
-        let favoriteImage = model.isFavorite ? "heart.fill" : "heart"
+        let rating = max(0, min(5, model.rating))
+        ratingImageView.image = UIImage(named: "copRating\(rating)")
+        
+        let favoriteImageName = model.isFavorite
+            ? "copFavouritePressed"
+            : "copFavouriteDefault"
+
         favoriteButton.setImage(
-            UIImage(systemName: favoriteImage),
+            UIImage(named: favoriteImageName),
             for: .normal
         )
-        favoriteButton.tintColor = model.isFavorite ? .systemRed : .secondaryLabel
         
         let cartImageName = model.isInCart
             ? "copDeleteFromCart"

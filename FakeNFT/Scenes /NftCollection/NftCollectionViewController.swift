@@ -183,22 +183,17 @@ extension NftCollectionViewController: UICollectionViewDelegateFlowLayout {
     ) -> CGSize {
 
         let itemsPerRow: CGFloat = 3
-        let interItemSpacing: CGFloat = 12
         let sectionInset: CGFloat = 16
+        let interItemSpacing: CGFloat = 12
 
         let totalSpacing =
             sectionInset * 2 +
             interItemSpacing * (itemsPerRow - 1)
 
-        let availableWidth =
-            collectionView.bounds.width - totalSpacing
+        let availableWidth = collectionView.bounds.width - totalSpacing
+        let itemWidth = availableWidth / itemsPerRow
 
-        let itemWidth = floor(availableWidth / itemsPerRow)
-
-        return CGSize(
-            width: itemWidth,
-            height: 192
-        )
+        return CGSize(width: itemWidth, height: 192)
     }
     
     func collectionView(
