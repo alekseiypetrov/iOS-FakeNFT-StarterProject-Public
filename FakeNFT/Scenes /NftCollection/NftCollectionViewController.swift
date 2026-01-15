@@ -122,8 +122,8 @@ extension NftCollectionViewController: NftCollectionViewProtocol {
         headerView.configure(
             title: presenter.collectionName(),
             author: presenter.collectionAuthorName(),
-            description: presenter.collectionDescription(),
-            coverURL: presenter.collectionCoverURL()
+            description: presenter.collectionDescription()
+            //coverURL: presenter.collectionCoverURL()
         )
         
         headerView.onAuthorTap = { [weak self] in
