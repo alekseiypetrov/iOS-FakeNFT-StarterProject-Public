@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class NftCollectionHeaderView: UIView {
 
@@ -68,6 +69,7 @@ final class NftCollectionHeaderView: UIView {
         titleLabel.text = viewModel.title
         authorLabel.text = "Автор коллекции: \(viewModel.authorName)"
         descriptionLabel.text = viewModel.description
+        setPreviewImageURLs(viewModel.previewImageURLs)
     }
 
     // MARK: - Setup
@@ -137,5 +139,30 @@ final class NftCollectionHeaderView: UIView {
 
     @objc private func authorTapped() {
         onAuthorTap?()
+    }
+    
+    // MARK: - Preview images
+
+    func setPreviewImageURLs(_ urls: [URL]) {
+        let imageViews = [firstImageView, secondImageView, thirdImageView]
+
+        for (imageView, url) in zip(imageViews, urls) {
+            imageView.kf.setImage(
+                with: url,
+                placeholder: nil,
+                options: [
+                    .transition(.fade(0.2)),
+                    .cacheOriginalImage
+                ]
+            )
+        }
+
+        // Если картинок меньше 3 — остальные остаются серыми
+        if urls.count < imageViews.count {
+            for imageView in imageViews.dropFirst(urls.count) {
+                imageView.image = nil
+                imageView.backgroundColor = .systemGray4
+            }
+        }
     }
 }
