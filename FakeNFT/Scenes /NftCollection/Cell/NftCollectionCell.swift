@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
     
@@ -151,6 +152,22 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
         onFavoriteTap: @escaping () -> Void,
         onCartTap: @escaping () -> Void
     ) {
+        
+        if let url = model.imageURL {
+            imageView.kf.setImage(
+                with: url,
+                placeholder: nil,
+                options: [
+                    .transition(.fade(0.2)),
+                    .cacheOriginalImage
+                ]
+            )
+            imageView.backgroundColor = .clear
+        } else {
+            imageView.image = nil
+            imageView.backgroundColor = .systemGray3
+        }
+        
         titleLabel.text = model.name
         priceLabel.text = "\(model.price) ETH"
         

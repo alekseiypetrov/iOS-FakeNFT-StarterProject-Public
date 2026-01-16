@@ -292,9 +292,9 @@
 			isa = PBXGroup;
 			children = (
 				0256A8902EFE5207009AC89B /* CatalogService.swift */,
+				558E39E62C68CE0900FB86AC /* NftService.swift */,
 				3FC8C38F29D245250081F015 /* Requests */,
 				0C79EE6B2A76DE2E00EE90EA /* ServicesAssemly.swift */,
-				558E39E62C68CE0900FB86AC /* NftService.swift */,
 				0CFCB73F2A78002A0009A829 /* ExamplePutService.swift */,
 			);
 			path = Services;
