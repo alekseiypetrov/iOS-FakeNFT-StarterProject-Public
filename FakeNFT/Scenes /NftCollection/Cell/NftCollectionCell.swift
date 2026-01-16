@@ -82,11 +82,23 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
     }
     
     private func setupLabels() {
-        titleLabel.font = .systemFont(ofSize: 14, weight: .medium)
+        // Название NFT
+        titleLabel.font = .systemFont(ofSize: 17, weight: .bold)
+        titleLabel.textColor = UIColor(named: "ypBlack") ?? .label
         titleLabel.numberOfLines = 1
-        
-        priceLabel.font = .systemFont(ofSize: 12, weight: .medium)
-        priceLabel.textColor = .label
+
+        // Цена NFT
+        let priceFont = UIFont.systemFont(ofSize: 10, weight: .medium)
+        let priceAttributes: [NSAttributedString.Key: Any] = [
+            .font: priceFont,
+            .kern: -0.24,
+            .foregroundColor: UIColor(named: "ypBlack") ?? .label
+        ]
+
+        priceLabel.attributedText = NSAttributedString(
+            string: "",
+            attributes: priceAttributes
+        )
     }
     
     private func setupCartButton() {
@@ -101,23 +113,26 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
         
         bottomStack.axis = .horizontal
         bottomStack.alignment = .center
-        bottomStack.distribution = .equalSpacing
+        bottomStack.spacing = 8
+        bottomStack.distribution = .fill
         
         ratingImageView.contentMode = .left
         ratingImageView.translatesAutoresizingMaskIntoConstraints = false
 
         infoStack.addArrangedSubview(ratingImageView)
-        infoStack.addArrangedSubview(titleLabel)
+        infoStack.addArrangedSubview(bottomStack)
+        infoStack.addArrangedSubview(priceLabel)
         
-        bottomStack.addArrangedSubview(priceLabel)
+        bottomStack.addArrangedSubview(titleLabel)
+        bottomStack.addArrangedSubview(UIView())
         bottomStack.addArrangedSubview(cartButton)
         
         infoStack.translatesAutoresizingMaskIntoConstraints = false
         bottomStack.translatesAutoresizingMaskIntoConstraints = false
         
         contentView.addSubview(infoStack)
-        contentView.addSubview(bottomStack)
     }
+    
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -136,14 +151,11 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
             // Info stack
             infoStack.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             infoStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            infoStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            
-            // Bottom stack
-            bottomStack.topAnchor.constraint(equalTo: infoStack.bottomAnchor, constant: 8),
-            bottomStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            bottomStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            bottomStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8)
+            infoStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8)
         ])
+        
+        cartButton.setContentHuggingPriority(.required, for: .horizontal)
+        cartButton.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
     
     // MARK: - Configuration
@@ -170,7 +182,17 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
         }
         
         titleLabel.text = model.name
-        priceLabel.text = "\(model.price) ETH"
+        
+        let priceText = "\(model.price) ETH"
+
+        priceLabel.attributedText = NSAttributedString(
+            string: priceText,
+            attributes: [
+                .font: UIFont.systemFont(ofSize: 10, weight: .medium),
+                .kern: -0.24,
+                .foregroundColor: UIColor(named: "ypBlack") ?? .label
+            ]
+        )
         
         let rating = max(0, min(5, model.rating))
         ratingImageView.image = UIImage(named: "copRating\(rating)")
