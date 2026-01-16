@@ -189,17 +189,17 @@ extension CatalogViewController: CatalogViewProtocol {
             message: message,
             preferredStyle: .alert
         )
-
+        
         alert.addAction(
             UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
                 self?.presenter.viewDidLoad()
             }
         )
-
+        
         alert.addAction(
             UIAlertAction(title: "Закрыть", style: .cancel)
         )
-
+        
         present(alert, animated: true)
     }
 }

@@ -50,12 +50,12 @@ final class NftCollectionViewController: UIViewController {
     }
     
     // MARK: - TabBar visibility
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
     }
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         tabBarController?.tabBar.isHidden = false
@@ -118,17 +118,17 @@ extension NftCollectionViewController: NftCollectionViewProtocol {
     func reloadData() {
         let headerViewModel = presenter.headerViewModel()
         headerView.configure(with: headerViewModel)
-
+        
         headerView.onAuthorTap = { [weak self] in
             guard
                 let self,
                 let url = self.presenter.collectionAuthorWebsite()
             else { return }
-
+            
             let vc = WebViewViewController(url: url)
             self.navigationController?.pushViewController(vc, animated: true)
         }
-
+        
         collectionView.reloadData()
     }
     
@@ -185,18 +185,18 @@ extension NftCollectionViewController: UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-
+        
         let itemsPerRow: CGFloat = 3
         let sectionInset: CGFloat = 16
         let interItemSpacing: CGFloat = 12
-
+        
         let totalSpacing =
-            sectionInset * 2 +
-            interItemSpacing * (itemsPerRow - 1)
-
+        sectionInset * 2 +
+        interItemSpacing * (itemsPerRow - 1)
+        
         let availableWidth = collectionView.bounds.width - totalSpacing
         let itemWidth = availableWidth / itemsPerRow
-
+        
         return CGSize(width: itemWidth, height: 192)
     }
     
@@ -212,7 +212,7 @@ extension NftCollectionViewController: UICollectionViewDelegateFlowLayout {
             right: 16
         )
     }
-
+    
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -220,7 +220,7 @@ extension NftCollectionViewController: UICollectionViewDelegateFlowLayout {
     ) -> CGFloat {
         12
     }
-
+    
     func collectionView(
         _ collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
