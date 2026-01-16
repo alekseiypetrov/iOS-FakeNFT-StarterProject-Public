@@ -67,7 +67,31 @@ final class NftCollectionHeaderView: UIView {
 
     func configure(with viewModel: NftCollectionHeaderViewModel) {
         titleLabel.text = viewModel.title
-        authorLabel.text = "Автор коллекции: \(viewModel.authorName)"
+        
+        let prefixAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 13, weight: .regular),
+            .foregroundColor: UIColor(named: "ypBlack") ?? .label
+        ]
+
+        let authorAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 13, weight: .regular),
+            .foregroundColor: UIColor.systemBlue
+        ]
+
+        let text = NSMutableAttributedString(
+            string: "Автор коллекции: ",
+            attributes: prefixAttributes
+        )
+
+        text.append(
+            NSAttributedString(
+                string: viewModel.authorName,
+                attributes: authorAttributes
+            )
+        )
+
+        authorLabel.attributedText = text
+        
         descriptionLabel.text = viewModel.description
         setPreviewImageURLs(viewModel.previewImageURLs)
     }

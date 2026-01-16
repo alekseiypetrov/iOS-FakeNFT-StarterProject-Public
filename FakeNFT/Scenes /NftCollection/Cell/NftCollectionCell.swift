@@ -4,12 +4,12 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
     
     // MARK: - UI
     private let imageView = UIImageView()
-    private let favoriteButton = UIButton(type: .system)
+    private let favoriteButton = UIButton(type: .custom)
     
     private let titleLabel = UILabel()
     private let ratingImageView = UIImageView()
     private let priceLabel = UILabel()
-    private let cartButton = UIButton(type: .system)
+    private let cartButton = UIButton(type: .custom)
     
     private let infoStack = UIStackView()
     private let bottomStack = UIStackView()
@@ -69,11 +69,13 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
     
     private func setupFavoriteButton() {
         favoriteButton.translatesAutoresizingMaskIntoConstraints = false
-        favoriteButton.setImage(UIImage(systemName: "heart"), for: .normal)
-        favoriteButton.tintColor = .white
-        favoriteButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
-        favoriteButton.layer.cornerRadius = 14
-        
+        favoriteButton.backgroundColor = .clear
+        favoriteButton.layer.cornerRadius = 0
+        favoriteButton.clipsToBounds = false
+        favoriteButton.tintColor = .clear
+        favoriteButton.adjustsImageWhenHighlighted = false
+        favoriteButton.contentEdgeInsets = .zero
+
         contentView.addSubview(favoriteButton)
     }
     
@@ -156,8 +158,8 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
         ratingImageView.image = UIImage(named: "copRating\(rating)")
         
         let favoriteImageName = model.isFavorite
-            ? "copFavouritePressed"
-            : "copFavouriteDefault"
+            ? "copFavouriteDefault"
+            : "copFavouritePressed"
 
         favoriteButton.setImage(
             UIImage(named: favoriteImageName),

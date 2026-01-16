@@ -46,6 +46,7 @@ final class NftCollectionViewController: UIViewController {
         setupUI()
         setupCollectionView()
         presenter.viewDidLoad()
+        navigationItem.backButtonTitle = ""
     }
     
     // MARK: - TabBar visibility
@@ -64,6 +65,9 @@ final class NftCollectionViewController: UIViewController {
     
     private func setupUI() {
         view.backgroundColor = .systemBackground
+        
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationController?.navigationBar.tintColor = UIColor(named: "ypBlack") ?? .label
         
         headerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(headerView)

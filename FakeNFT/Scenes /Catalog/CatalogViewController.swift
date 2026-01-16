@@ -34,6 +34,7 @@ final class CatalogViewController: UIViewController {
         setupActivityIndicator()
         setupSortButton()
         presenter.viewDidLoad()
+        navigationItem.backButtonTitle = ""
     }
     
     // MARK: - Setup
