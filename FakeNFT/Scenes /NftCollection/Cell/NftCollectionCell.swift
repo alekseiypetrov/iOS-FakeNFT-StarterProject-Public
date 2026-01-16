@@ -44,7 +44,7 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
     // MARK: - Setup
     
     private func setupUI() {
-        contentView.backgroundColor = .systemGray5
+        contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 12
         contentView.clipsToBounds = true
         
@@ -64,6 +64,7 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
         imageView.contentMode = .scaleAspectFill
         imageView.backgroundColor = .systemGray3
         imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 12
         
         contentView.addSubview(imageView)
     }
