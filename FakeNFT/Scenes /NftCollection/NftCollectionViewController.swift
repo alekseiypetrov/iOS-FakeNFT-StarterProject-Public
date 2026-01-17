@@ -36,7 +36,7 @@ final class NftCollectionViewController: UIViewController {
     
     @available(*, unavailable)
     required init?(coder: NSCoder) {
-        return nil
+        nil
     }
     
     // MARK: - Lifecycle
@@ -46,15 +46,16 @@ final class NftCollectionViewController: UIViewController {
         setupUI()
         setupCollectionView()
         presenter.viewDidLoad()
+        navigationItem.backButtonTitle = ""
     }
     
     // MARK: - TabBar visibility
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = true
     }
-
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         tabBarController?.tabBar.isHidden = false
@@ -64,6 +65,9 @@ final class NftCollectionViewController: UIViewController {
     
     private func setupUI() {
         view.backgroundColor = .systemBackground
+        
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationController?.navigationBar.tintColor = UIColor(named: "ypBlack") ?? .label
         
         headerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(headerView)
@@ -75,9 +79,9 @@ final class NftCollectionViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             // Header
-            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            headerView.topAnchor.constraint(equalTo: view.topAnchor),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
             // CollectionView
             collectionView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 16),
@@ -97,13 +101,6 @@ final class NftCollectionViewController: UIViewController {
         
         collectionView.register(NftCollectionCell.self)
     }
-    
-    private func openAuthorWebsite() {
-        guard let url = presenter.collectionAuthorWebsite() else { return }
-        
-        let webViewController = WebViewViewController(url: url)
-        navigationController?.pushViewController(webViewController, animated: true)
-    }
 }
 
 // MARK: - NftCollectionViewProtocol
@@ -119,12 +116,8 @@ extension NftCollectionViewController: NftCollectionViewProtocol {
     }
     
     func reloadData() {
-        headerView.configure(
-            title: presenter.collectionName(),
-            author: presenter.collectionAuthorName(),
-            description: presenter.collectionDescription(),
-            coverURL: presenter.collectionCoverURL()
-        )
+        let headerViewModel = presenter.headerViewModel()
+        headerView.configure(with: headerViewModel)
         
         headerView.onAuthorTap = { [weak self] in
             guard
@@ -193,11 +186,46 @@ extension NftCollectionViewController: UICollectionViewDelegateFlowLayout {
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
         
-        let spacing: CGFloat = 12
-        let totalSpacing = spacing
-        let availableWidth = collectionView.bounds.width - totalSpacing
-        let width = availableWidth / 2
+        let itemsPerRow: CGFloat = 3
+        let sectionInset: CGFloat = 16
+        let interItemSpacing: CGFloat = 12
         
-        return CGSize(width: width, height: width + 80)
+        let totalSpacing =
+        sectionInset * 2 +
+        interItemSpacing * (itemsPerRow - 1)
+        
+        let availableWidth = collectionView.bounds.width - totalSpacing
+        let itemWidth = availableWidth / itemsPerRow
+        
+        return CGSize(width: itemWidth, height: 192)
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        insetForSectionAt section: Int
+    ) -> UIEdgeInsets {
+        UIEdgeInsets(
+            top: 0,
+            left: 16,
+            bottom: 16,
+            right: 16
+        )
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        minimumLineSpacingForSectionAt section: Int
+    ) -> CGFloat {
+        12
+    }
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        minimumInteritemSpacingForSectionAt section: Int
+    ) -> CGFloat {
+        12
     }
 }

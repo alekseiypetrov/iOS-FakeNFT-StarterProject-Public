@@ -1,15 +1,16 @@
 import UIKit
+import Kingfisher
 
 final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
     
     // MARK: - UI
     private let imageView = UIImageView()
-    private let favoriteButton = UIButton(type: .system)
+    private let favoriteButton = UIButton(type: .custom)
     
     private let titleLabel = UILabel()
-    private let ratingLabel = UILabel()
+    private let ratingImageView = UIImageView()
     private let priceLabel = UILabel()
-    private let cartButton = UIButton(type: .system)
+    private let cartButton = UIButton(type: .custom)
     
     private let infoStack = UIStackView()
     private let bottomStack = UIStackView()
@@ -43,7 +44,7 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
     // MARK: - Setup
     
     private func setupUI() {
-        contentView.backgroundColor = .systemGray5
+        contentView.backgroundColor = .white
         contentView.layer.cornerRadius = 12
         contentView.clipsToBounds = true
         
@@ -63,34 +64,47 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
         imageView.contentMode = .scaleAspectFill
         imageView.backgroundColor = .systemGray3
         imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 12
         
         contentView.addSubview(imageView)
     }
     
     private func setupFavoriteButton() {
         favoriteButton.translatesAutoresizingMaskIntoConstraints = false
-        favoriteButton.setImage(UIImage(systemName: "heart"), for: .normal)
-        favoriteButton.tintColor = .white
-        favoriteButton.backgroundColor = UIColor.black.withAlphaComponent(0.3)
-        favoriteButton.layer.cornerRadius = 14
+        favoriteButton.backgroundColor = .clear
+        favoriteButton.layer.cornerRadius = 0
+        favoriteButton.clipsToBounds = false
+        favoriteButton.tintColor = .clear
+        favoriteButton.adjustsImageWhenHighlighted = false
+        favoriteButton.contentEdgeInsets = .zero
         
         contentView.addSubview(favoriteButton)
     }
     
     private func setupLabels() {
-        titleLabel.font = .systemFont(ofSize: 14, weight: .medium)
+        // Название NFT
+        titleLabel.font = .systemFont(ofSize: 17, weight: .bold)
+        titleLabel.textColor = UIColor(named: "ypBlack") ?? .label
         titleLabel.numberOfLines = 1
         
-        ratingLabel.font = .systemFont(ofSize: 12)
-        ratingLabel.textColor = .secondaryLabel
+        // Цена NFT
+        let priceFont = UIFont.systemFont(ofSize: 10, weight: .medium)
+        let priceAttributes: [NSAttributedString.Key: Any] = [
+            .font: priceFont,
+            .kern: -0.24,
+            .foregroundColor: UIColor(named: "ypBlack") ?? .label
+        ]
         
-        priceLabel.font = .systemFont(ofSize: 12, weight: .medium)
-        priceLabel.textColor = .label
+        priceLabel.attributedText = NSAttributedString(
+            string: "",
+            attributes: priceAttributes
+        )
     }
     
     private func setupCartButton() {
         cartButton.setImage(UIImage(systemName: "cart"), for: .normal)
         cartButton.tintColor = .label
+        cartButton.adjustsImageWhenHighlighted = false
     }
     
     private func setupStacks() {
@@ -99,20 +113,26 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
         
         bottomStack.axis = .horizontal
         bottomStack.alignment = .center
-        bottomStack.distribution = .equalSpacing
+        bottomStack.spacing = 8
+        bottomStack.distribution = .fill
         
-        infoStack.addArrangedSubview(titleLabel)
-        infoStack.addArrangedSubview(ratingLabel)
+        ratingImageView.contentMode = .left
+        ratingImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        bottomStack.addArrangedSubview(priceLabel)
+        infoStack.addArrangedSubview(ratingImageView)
+        infoStack.addArrangedSubview(bottomStack)
+        infoStack.addArrangedSubview(priceLabel)
+        
+        bottomStack.addArrangedSubview(titleLabel)
+        bottomStack.addArrangedSubview(UIView())
         bottomStack.addArrangedSubview(cartButton)
         
         infoStack.translatesAutoresizingMaskIntoConstraints = false
         bottomStack.translatesAutoresizingMaskIntoConstraints = false
         
         contentView.addSubview(infoStack)
-        contentView.addSubview(bottomStack)
     }
+    
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
@@ -131,14 +151,11 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
             // Info stack
             infoStack.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8),
             infoStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            infoStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            
-            // Bottom stack
-            bottomStack.topAnchor.constraint(equalTo: infoStack.bottomAnchor, constant: 8),
-            bottomStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            bottomStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            bottomStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8)
+            infoStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8)
         ])
+        
+        cartButton.setContentHuggingPriority(.required, for: .horizontal)
+        cartButton.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
     
     // MARK: - Configuration
@@ -148,23 +165,55 @@ final class NftCollectionCell: UICollectionViewCell, ReuseIdentifying {
         onFavoriteTap: @escaping () -> Void,
         onCartTap: @escaping () -> Void
     ) {
+        
+        if let url = model.imageURL {
+            imageView.kf.setImage(
+                with: url,
+                placeholder: nil,
+                options: [
+                    .transition(.fade(0.2)),
+                    .cacheOriginalImage
+                ]
+            )
+            imageView.backgroundColor = .clear
+        } else {
+            imageView.image = nil
+            imageView.backgroundColor = .systemGray3
+        }
+        
         titleLabel.text = model.name
-        ratingLabel.text = "⭐️ \(model.rating)"
-        priceLabel.text = "\(model.price) ETH"
         
-        let favoriteImage = model.isFavorite ? "heart.fill" : "heart"
+        let priceText = "\(model.price) ETH"
+        
+        priceLabel.attributedText = NSAttributedString(
+            string: priceText,
+            attributes: [
+                .font: UIFont.systemFont(ofSize: 10, weight: .medium),
+                .kern: -0.24,
+                .foregroundColor: UIColor(named: "ypBlack") ?? .label
+            ]
+        )
+        
+        let rating = max(0, min(5, model.rating))
+        ratingImageView.image = UIImage(named: "copRating\(rating)")
+        
+        let favoriteImageName = model.isFavorite
+        ? "copFavouriteDefault"
+        : "copFavouritePressed"
+        
         favoriteButton.setImage(
-            UIImage(systemName: favoriteImage),
+            UIImage(named: favoriteImageName),
             for: .normal
         )
-        favoriteButton.tintColor = model.isFavorite ? .systemRed : .secondaryLabel
         
-        let cartImage = model.isInCart ? "cart.fill" : "cart"
+        let cartImageName = model.isInCart
+        ? "copDeleteFromCart"
+        : "copAddToCart"
+        
         cartButton.setImage(
-            UIImage(systemName: cartImage),
+            UIImage(named: cartImageName),
             for: .normal
         )
-        cartButton.tintColor = model.isInCart ? .systemBlue : .secondaryLabel
         
         self.onFavoriteTap = onFavoriteTap
         self.onCartTap = onCartTap

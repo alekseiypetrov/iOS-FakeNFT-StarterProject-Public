@@ -32,14 +32,16 @@ final class CatalogViewController: UIViewController {
         setupUI()
         setupTableView()
         setupActivityIndicator()
+        setupSortButton()
         presenter.viewDidLoad()
+        navigationItem.backButtonTitle = ""
     }
     
     // MARK: - Setup
     
     private func setupUI() {
         view.backgroundColor = .systemBackground
-        title = "Каталог"
+        navigationItem.title = nil
     }
     
     private func setupTableView() {
@@ -60,15 +62,57 @@ final class CatalogViewController: UIViewController {
         
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.separatorStyle = .none
     }
     
     private func setupActivityIndicator() {
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(activityIndicator)
-
+        
         activityIndicator.constraintCenters(to: view)
-
+        
         activityIndicator.hidesWhenStopped = true
+    }
+    
+    //MARK: кнопка сортировки
+    private func setupSortButton() {
+        let image = UIImage(named: "Vector")?.withRenderingMode(.alwaysOriginal)
+        
+        let sortButton = UIBarButtonItem(
+            image: image,
+            style: .plain,
+            target: self,
+            action: #selector(didTapSort)
+        )
+        
+        navigationItem.rightBarButtonItem = sortButton
+    }
+    
+    // Обработчик нажатия
+    @objc private func didTapSort() {
+        let alert = UIAlertController(
+            title: "Сортировка",
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+        
+        alert.addAction(
+            UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
+                self?.presenter.didSelectSort(.byName)
+            }
+        )
+        
+        alert.addAction(
+            UIAlertAction(title: "По количеству NFT", style: .default) { [weak self] _ in
+                self?.presenter.didSelectSort(.byNftsAmount)
+            }
+        )
+        
+        alert.addAction(
+            UIAlertAction(title: "Закрыть", style: .cancel)
+        )
+        
+        present(alert, animated: true)
     }
     
     // MARK: - Navigation
@@ -105,11 +149,19 @@ extension CatalogViewController: UITableViewDataSource {
         }
         
         let collection = presenter.collection(at: indexPath.row)
+        let nftIds = Array(collection.nfts.prefix(3))
+        print("🎨 Preview NFT ids:", nftIds)
         
         cell.configure(
             title: collection.name,
-            countText: "\(collection.nfts.count) NFT"
+            count: collection.nfts.count
         )
+        
+        // заглушка для превью
+        cell.setPreviewImageURLs([])
+        presenter.loadPreviewImages(for: indexPath.row) { [weak cell] urls in
+            cell?.setPreviewImageURLs(urls)
+        }
         
         return cell
     }
@@ -128,6 +180,27 @@ extension CatalogViewController: CatalogViewProtocol {
     func reloadData() {
         print("🔄 [CatalogViewController/reloadData]")
         tableView.reloadData()
+    }
+    
+    // MARK: Обработка ошибок загрузки данных
+    func showError(message: String) {
+        let alert = UIAlertController(
+            title: "Ошибка",
+            message: message,
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(
+            UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
+                self?.presenter.viewDidLoad()
+            }
+        )
+        
+        alert.addAction(
+            UIAlertAction(title: "Закрыть", style: .cancel)
+        )
+        
+        present(alert, animated: true)
     }
 }
 
