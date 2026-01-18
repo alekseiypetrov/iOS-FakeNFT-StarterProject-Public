@@ -1,0 +1,28 @@
+{
+  "pins" : [
+    {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher.git",
+      "state" : {
+<<<<<<< HEAD
+        "revision" : "2ef543ee21d63734e1c004ad6c870255e8716c50",
+        "version" : "7.12.0"
+=======
+        "revision" : "d30a5fad881137e2267f96a8e3fc35c58999bb94",
+        "version" : "8.6.2"
+>>>>>>> d6bf91a (feat+fix(core+ui): реализованы 2 запроса в сеть - получение корзины с id товаров и запрос каждого товара по id. Также изменена модель BasketProduct под получаемые данные с API, добавлена модель Order для получения массива id товаров. В BasketPresenter добавлены сетевые сервисы для осуществления запросов в сеть. В BasketViewController добавлен лейбл, показывающийся при пустой корзине, и скрывающийся, если загруженная из сети корзина оказалась не пустой.)
+      }
+    },
+    {
+      "identity" : "progresshud",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/relatedcode/ProgressHUD",
+      "state" : {
+        "revision" : "46792db49f80454879a939f9b2be31bb61c37b0c",
+        "version" : "13.8.6"
+      }
+    }
+  ],
+  "version" : 2
+}
