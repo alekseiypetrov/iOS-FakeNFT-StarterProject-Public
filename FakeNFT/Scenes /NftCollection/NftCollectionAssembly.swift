@@ -17,7 +17,8 @@ final class NftCollectionAssembly {
         let presenter = NftCollectionPresenter(
             collectionId: collectionId,
             catalogService: servicesAssembly.catalogService,
-            nftService: servicesAssembly.nftService
+            nftService: servicesAssembly.nftService,
+            orderService: servicesAssembly.orderService
         )
 
         let viewController = NftCollectionViewController(presenter: presenter)

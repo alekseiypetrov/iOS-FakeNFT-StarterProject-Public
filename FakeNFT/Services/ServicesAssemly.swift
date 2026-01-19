@@ -21,4 +21,8 @@ final class ServicesAssembly {
     var catalogService: CatalogService {
         CatalogService(networkClient: networkClient)
     }
+    
+    var orderService: OrderService {
+        OrderLoader(networkClient: networkClient)
+    }
 }

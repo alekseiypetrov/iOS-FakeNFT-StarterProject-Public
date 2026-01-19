@@ -9,6 +9,7 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     private let collectionId: String
     private let catalogService: CatalogService
     private let nftService: NftService
+    private let orderService: OrderService
     
     // MARK: - Data
     
@@ -20,11 +21,13 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     init(
         collectionId: String,
         catalogService: CatalogService,
-        nftService: NftService
+        nftService: NftService,
+        orderService: OrderService
     ) {
         self.collectionId = collectionId
         self.catalogService = catalogService
         self.nftService = nftService
+        self.orderService = orderService
     }
     
     // MARK: - Lifecycle
@@ -101,7 +104,41 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     
     func didTapCart(at index: Int) {
         guard cellModels.indices.contains(index) else { return }
-        cellModels[index].isInCart.toggle()
+
+        let nftId = cellModels[index].id
+
+        // 1. Получаем актуальный order
+        orderService.makeOrderRequest(
+            ofType: .get,
+            withNfts: nil
+        ) { [weak self] result in
+            guard let self else { return }
+
+            switch result {
+            case .failure:
+                return
+
+            case .success(let order):
+                var updatedNfts = order.nfts
+
+                if updatedNfts.contains(nftId) {
+                    updatedNfts.removeAll { $0 == nftId }
+                } else {
+                    updatedNfts.append(nftId)
+                }
+
+                // 2. Сохраняем обновлённый order
+                self.orderService.makeOrderRequest(
+                    ofType: .put,
+                    withNfts: updatedNfts
+                ) { _ in
+                    DispatchQueue.main.async {
+                        self.cellModels[index].isInCart.toggle()
+                        self.view?.reloadData()
+                    }
+                }
+            }
+        }
     }
     
     // MARK: - Private
