@@ -27,10 +27,10 @@ final class TabBarController: UITabBarController {
 
         // Корзина
         let basketVC = BasketViewController()
-        let basketNav = UINavigationController(rootViewController: basketVC)
-        basketNav.tabBarItem = basketTabBarItem
-
+        basketVC.tabBarItem = basketTabBarItem
+        _ = BasketPresenter(viewController: basketVC)
+        
         tabBar.unselectedItemTintColor = UIColor(resource: .ypBlack)
-        viewControllers = [catalogNav, basketNav]
+        viewControllers = [catalogNav, basketVC]
     }
 }
