@@ -104,29 +104,29 @@ final class NftCollectionPresenter: NftCollectionPresenterProtocol {
     
     func didTapCart(at index: Int) {
         guard cellModels.indices.contains(index) else { return }
-
+        
         let nftId = cellModels[index].id
-
+        
         // 1. Получаем актуальный order
         orderService.makeOrderRequest(
             ofType: .get,
             withNfts: nil
         ) { [weak self] result in
             guard let self else { return }
-
+            
             switch result {
             case .failure:
                 return
-
+                
             case .success(let order):
                 var updatedNfts = order.nfts
-
+                
                 if updatedNfts.contains(nftId) {
                     updatedNfts.removeAll { $0 == nftId }
                 } else {
                     updatedNfts.append(nftId)
                 }
-
+                
                 // 2. Сохраняем обновлённый order
                 self.orderService.makeOrderRequest(
                     ofType: .put,
