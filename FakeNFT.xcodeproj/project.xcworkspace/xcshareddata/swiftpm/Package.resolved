@@ -1,12 +1,13 @@
 {
+  "originHash" : "da047497378c2bc9f376edcbf7fa6604bc5f5f24c3930cb473189b061f74d96a",
   "pins" : [
     {
       "identity" : "kingfisher",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/onevcat/Kingfisher.git",
       "state" : {
-        "revision" : "af4be924ad984cf4d16f4ae4df424e79a443d435",
-        "version" : "7.6.2"
+        "revision" : "d30a5fad881137e2267f96a8e3fc35c58999bb94",
+        "version" : "8.6.2"
       }
     },
     {
@@ -14,10 +15,19 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/relatedcode/ProgressHUD",
       "state" : {
-        "revision" : "2b80c6f5a091c76a01f080545723f9b0bcf928cd",
-        "version" : "13.6.2"
+        "revision" : "46792db49f80454879a939f9b2be31bb61c37b0c",
+        "version" : "13.8.6"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log",
+      "state" : {
+        "revision" : "7ee16e465622412764b0ff0c1301801dc71b8f61",
+        "version" : "1.9.0"
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

@@ -1,0 +1,314 @@
+import UIKit
+
+protocol ProductTableViewCellDelegate: AnyObject {
+    func deleteButtonPushedInCell(withTitle name: String)
+}
+
+protocol BasketViewControllerProtocol: AnyObject {
+    func configure(_ presenter: BasketPresenterProtocol)
+    func updateInfoInPaymentCard(newCount: Int, newCost: Double)
+    func updateCellsFromTable()
+    func deleteCellFromTable(at index: Int)
+    func showTable()
+    func hideTable()
+    func showUpdatingStatus(_ isSuccessful: Bool)
+}
+
+final class BasketViewController: UIViewController {
+    
+    // MARK: - Constants
+    
+    private enum Constants {
+        static let sizeOfSortingButton = CGSize(width: 42.0, height: 42.0)
+        static let parameters: [String: SortOption] = [
+            NSLocalizedString("Basket.alertController.sortByPrice", comment: ""): .byPrice,
+            NSLocalizedString("Basket.alertController.sortByRating", comment: ""): .byRating,
+            NSLocalizedString("Basket.alertController.sortByName", comment: ""): .byName
+        ]
+        enum Heights {
+            static let ofCardView: CGFloat = 76.0
+            static let ofCellInTable: CGFloat = 140.0
+        }
+    }
+    
+    // MARK: - UI-elements
+    
+    private lazy var emptyBasketLabel: UILabel = {
+        let label = UILabel()
+        label.textAlignment = .center
+        label.text = NSLocalizedString("Basket.emptyBasketTitle", comment: "")
+        label.font = .bodyBold
+        label.accessibilityIdentifier = AccessibilityIdentifier.BasketView.titleOfEmptyList
+        return label
+    }()
+    
+    private lazy var sortingButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(resource: .nbSort), for: .normal)
+        button.addTarget(self, action: #selector(sortingButtonPressed), for: .touchUpInside)
+        button.tintColor = UIColor(resource: .ypBlack)
+        button.widthAnchor.constraint(equalToConstant: Constants.sizeOfSortingButton.width).isActive = true
+        button.heightAnchor.constraint(equalToConstant: Constants.sizeOfSortingButton.height).isActive = true
+        return button
+    }()
+    
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView(frame: .zero)
+        tableView.rowHeight = Constants.Heights.ofCellInTable
+        tableView.backgroundColor = UIColor(resource: .ypWhite)
+        tableView.separatorStyle = .none
+        tableView.allowsSelection = false
+        tableView.isScrollEnabled = true
+        tableView.dataSource = self
+        tableView.register(ProductTableViewCell.self)
+        return tableView
+    }()
+    
+    private lazy var paymentCard: PaymentCardView = {
+        PaymentCardView { [weak self] in
+            let paymentController = PaymentViewController()
+            let paymentPresenter = PaymentPresenter(viewController: paymentController)
+            let navigationController = UINavigationController(rootViewController: paymentController)
+            navigationController.modalPresentationStyle = .fullScreen
+            self?.present(navigationController, animated: true)
+        }
+    }()
+    
+    private lazy var blurView: UIVisualEffectView = {
+        let blurEffect = UIBlurEffect(style: .systemMaterial)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        return blurView
+    }()
+    
+    private lazy var confirmingDeletionView: ConfirmingDeletionView = {
+        ConfirmingDeletionView { [weak self] isDelete in
+            if isDelete {
+                self?.showProgress()
+                self?.presenter?.deleteProduct()
+            }
+            self?.hideBlur()
+        }
+    }()
+    
+    // MARK: - Private Properties
+    
+    private var presenter: BasketPresenterProtocol?
+    
+    // MARK: - Lifecycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        presenter?.viewWillAppear()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        hideProgress()
+        presenter?.viewDidDisappear()
+    }
+    
+    // MARK: - Actions
+    
+    @objc
+    private func sortingButtonPressed() {
+        let alert = UIAlertController(
+            title: NSLocalizedString("Basket.alertController.title", comment: ""),
+            message: nil,
+            preferredStyle: .actionSheet
+        )
+        for (title, parameter) in Constants.parameters {
+            alert.addAction(
+                UIAlertAction(
+                    title: title,
+                    style: .default,
+                    handler: { [weak self] _ in
+                        self?.showProgress()
+                        self?.presenter?.sortParameterChanged(to: parameter)
+                    }
+                )
+            )
+        }
+        alert.addAction(
+            UIAlertAction(
+                title: NSLocalizedString("Basket.alertController.close", comment: ""),
+                style: .cancel
+            )
+        )
+        present(alert, animated: true)
+    }
+    
+    // MARK: - Private Methods
+    
+    private func setupUI() {
+        view.backgroundColor = UIColor(resource: .ypWhite)
+        
+        [emptyBasketLabel, sortingButton, tableView, paymentCard]
+            .forEach({
+                view.addSubview($0)
+                $0.translatesAutoresizingMaskIntoConstraints = false
+            })
+        emptyBasketLabel.constraintCenters(to: view)
+        NSLayoutConstraint.activate([
+            
+            // sortingButton Constraints
+            
+            sortingButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 2.0),
+            sortingButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -9.0),
+            
+            // tableView Constraints
+            
+            tableView.topAnchor.constraint(equalTo: sortingButton.bottomAnchor, constant: 20.0),
+            tableView.bottomAnchor.constraint(equalTo: paymentCard.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            // paymentCard Constraints
+            
+            paymentCard.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            paymentCard.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            paymentCard.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            paymentCard.heightAnchor.constraint(equalToConstant: Constants.Heights.ofCardView)
+        ])
+    }
+    
+    private func showProgress() {
+        UIProgressHUD.show()
+    }
+    
+    private func hideProgress() {
+        UIProgressHUD.dismiss()
+    }
+    
+    private func requestToReloadPaymentCard() {
+        sortingButton.isEnabled = false
+        paymentCard.changeButtonState(toEnable: false)
+        presenter?.countNewInfoForPaymentCard()
+    }
+}
+
+// MARK: - BasketViewController + BasketViewControllerProtocol
+
+extension BasketViewController: BasketViewControllerProtocol {
+    func configure(_ presenter: BasketPresenterProtocol) {
+        self.presenter = presenter
+    }
+    
+    func updateInfoInPaymentCard(newCount: Int, newCost: Double) {
+        paymentCard.updateAmountNfts(newCount)
+        paymentCard.updateTotalCost(newCost)
+        sortingButton.isEnabled = true
+        paymentCard.changeButtonState(toEnable: true)
+    }
+    
+    func updateCellsFromTable() {
+        hideProgress()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+        requestToReloadPaymentCard()
+    }
+    
+    func deleteCellFromTable(at index: Int) {
+        tableView.performBatchUpdates({
+            let indexPath = IndexPath(row: index, section: 0)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }, completion: { [weak self] _ in
+            self?.requestToReloadPaymentCard()
+        })
+    }
+    
+    func showTable() {
+        emptyBasketLabel.isHidden = true
+        sortingButton.isEnabled = false
+        paymentCard.changeButtonState(toEnable: false)
+        showProgress()
+        [sortingButton, tableView, paymentCard]
+            .forEach({
+                $0.isHidden = false
+            })
+    }
+    
+    func hideTable() {
+        [sortingButton, tableView, paymentCard]
+            .forEach({
+                $0.isHidden = true
+            })
+        emptyBasketLabel.isHidden = false
+    }
+    
+    func showUpdatingStatus(_ isSuccessful: Bool) {
+        hideProgress()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            isSuccessful ? UIProgressHUD.showSuccess() : UIProgressHUD.showError()
+        }
+    }
+}
+
+// MARK: - BasketViewController + UITableViewDataSource
+
+extension BasketViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        presenter?.productsAmount ?? 0
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell: ProductTableViewCell = tableView.dequeueReusableCell()
+        guard let currentProduct = presenter?.getCurrentProduct(at: indexPath.row)
+        else { return cell }
+        cell.configure(by: currentProduct, withDelegate: self)
+        return cell
+    }
+}
+
+// MARK: - BasketViewController + ProductTableViewCellDelegate
+
+extension BasketViewController: ProductTableViewCellDelegate {
+    func deleteButtonPushedInCell(withTitle name: String) {
+        guard let product = presenter?.findProduct(withName: name),
+              let imageUrl = product.images.first
+        else { return }
+        showBlur()
+        showConfirmingDeletionView(withImageUrl: imageUrl)
+    }
+    
+    private func showBlur() {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first(where: { $0.isKeyWindow })
+        else { return }
+        blurView.frame = window.bounds
+        blurView.alpha = 0
+        window.addSubview(blurView)
+        UIView.animate(withDuration: 0.3) {
+            self.blurView.alpha = 1
+        }
+    }
+    
+    private func hideBlur() {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.blurView.alpha = 0
+        }, completion: { _ in
+            self.blurView.removeFromSuperview()
+        })
+    }
+    
+    private func showConfirmingDeletionView(withImageUrl imageUrl: String) {
+        confirmingDeletionView.imageOfNft = imageUrl
+        confirmingDeletionView.removeFromSuperview()
+        confirmingDeletionView.isUserInteractionEnabled = true
+        blurView.contentView.addSubview(confirmingDeletionView)
+        NSLayoutConstraint.activate([
+            confirmingDeletionView.centerXAnchor.constraint(equalTo: blurView.contentView.centerXAnchor),
+            confirmingDeletionView.centerYAnchor.constraint(equalTo: blurView.contentView.centerYAnchor),
+            confirmingDeletionView.widthAnchor.constraint(equalToConstant: view.bounds.width),
+            confirmingDeletionView.heightAnchor.constraint(equalToConstant: view.bounds.width)
+        ])
+        confirmingDeletionView.setNeedsLayout()
+        confirmingDeletionView.layoutIfNeeded()
+    }
+}
